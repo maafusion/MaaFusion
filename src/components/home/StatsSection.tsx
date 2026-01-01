@@ -1,6 +1,6 @@
 export function StatsSection() {
   return (
-    <section className="py-24 bg-cream text-charcoal relative overflow-hidden">
+    <section className="py-12 bg-cream text-charcoal relative overflow-hidden">
       <div className="container mx-auto px-6 lg:px-12">
         <div className="flex flex-col md:flex-row gap-16 items-center">
 
