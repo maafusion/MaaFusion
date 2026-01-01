@@ -17,7 +17,7 @@ export function Footer() {
               </div>
             </div>
             <p className="text-muted-foreground text-sm max-w-md">
-              Crafting exquisite jewelry and Murti designs with precision and artistry. 
+              Crafting exquisite jewelry and Murti designs with precision and artistry.
               Each piece tells a story of tradition meeting contemporary elegance.
             </p>
           </div>
@@ -34,11 +34,6 @@ export function Footer() {
               <li>
                 <Link to="/about" className="text-sm text-muted-foreground hover:text-primary transition-colors">
                   About Us
-                </Link>
-              </li>
-              <li>
-                <Link to="/gallery" className="text-sm text-muted-foreground hover:text-primary transition-colors">
-                  Gallery
                 </Link>
               </li>
               <li>

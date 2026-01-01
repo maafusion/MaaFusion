@@ -1,16 +1,13 @@
 import { Link } from 'react-router-dom';
 import { ArrowRight, Sparkles } from 'lucide-react';
 import { Button } from '@/components/ui/button';
-import { useAuth } from '@/hooks/useAuth';
 
 export function HeroSection() {
-  const { user } = useAuth();
-
   return (
     <section className="relative min-h-[90vh] flex items-center justify-center overflow-hidden">
       {/* Background gradient */}
       <div className="absolute inset-0 bg-gradient-to-br from-background via-background to-charcoal" />
-      
+
       {/* Decorative elements */}
       <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-primary/5 rounded-full blur-3xl animate-float" />
       <div className="absolute bottom-1/4 right-1/4 w-80 h-80 bg-primary/10 rounded-full blur-3xl animate-float" style={{ animationDelay: '-3s' }} />
@@ -35,32 +32,21 @@ export function HeroSection() {
 
           {/* Subheadline */}
           <p className="text-lg md:text-xl text-muted-foreground max-w-2xl mx-auto mb-10 animate-fade-up" style={{ animationDelay: '0.2s' }}>
-            Where tradition meets contemporary elegance. Explore our curated collection 
+            Where tradition meets contemporary elegance. Explore our curated collection
             of high-quality renders showcasing the finest craftsmanship.
           </p>
 
           {/* CTA Buttons */}
           <div className="flex flex-col sm:flex-row items-center justify-center gap-4 animate-fade-up" style={{ animationDelay: '0.3s' }}>
-            {user ? (
-              <Button variant="luxury" size="xl" asChild>
-                <Link to="/gallery">
-                  Explore Gallery
-                  <ArrowRight className="ml-2 w-5 h-5" />
-                </Link>
-              </Button>
-            ) : (
-              <>
-                <Button variant="luxury" size="xl" asChild>
-                  <Link to="/auth?mode=signup">
-                    Get Started
-                    <ArrowRight className="ml-2 w-5 h-5" />
-                  </Link>
-                </Button>
-                <Button variant="luxury-outline" size="xl" asChild>
-                  <Link to="/about">Learn More</Link>
-                </Button>
-              </>
-            )}
+            <Button variant="luxury" size="xl" asChild>
+              <Link to="/contact">
+                Get In Touch
+                <ArrowRight className="ml-2 w-5 h-5" />
+              </Link>
+            </Button>
+            <Button variant="luxury-outline" size="xl" asChild>
+              <Link to="/about">Learn More</Link>
+            </Button>
           </div>
         </div>
       </div>
