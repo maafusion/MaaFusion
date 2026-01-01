@@ -1,70 +1,74 @@
 import { Link } from 'react-router-dom';
 
 export function Footer() {
+  const currentYear = new Date().getFullYear();
+
   return (
-    <footer className="border-t border-border bg-card">
-      <div className="container mx-auto px-4 py-12">
-        <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
-          {/* Brand */}
-          <div className="md:col-span-2">
-            <div className="flex items-center gap-3 mb-4">
-              <div className="w-10 h-10 rounded-full bg-gold-gradient flex items-center justify-center">
-                <span className="font-display text-primary-foreground text-xl font-bold">M</span>
-              </div>
-              <div>
-                <span className="font-display text-xl text-foreground">Maa Fusion</span>
-                <span className="font-display text-xl text-primary ml-1">Creations</span>
-              </div>
-            </div>
-            <p className="text-muted-foreground text-sm max-w-md">
-              Crafting exquisite jewelry and Murti designs with precision and artistry.
-              Each piece tells a story of tradition meeting contemporary elegance.
+    <footer className="bg-cream border-t border-charcoal/10 pt-24 pb-12">
+      <div className="container mx-auto px-6 lg:px-12">
+        <div className="grid grid-cols-1 md:grid-cols-4 gap-12 mb-24">
+
+          {/* Brand Column */}
+          <div className="md:col-span-2 space-y-6">
+            <Link to="/" className="inline-block">
+              <span className="font-serif text-3xl text-charcoal tracking-tight">MaaFusion</span>
+            </Link>
+            <p className="font-sans text-charcoal/60 text-sm max-w-sm leading-relaxed">
+              We create digital masterpieces that bridge the gap between ancient tradition and modern luxury.
+              Elevating the art of jewelry and murti design.
             </p>
           </div>
 
-          {/* Quick Links */}
+          {/* Links Column */}
           <div>
-            <h4 className="font-display text-lg text-foreground mb-4">Quick Links</h4>
-            <ul className="space-y-2">
-              <li>
-                <Link to="/" className="text-sm text-muted-foreground hover:text-primary transition-colors">
-                  Home
-                </Link>
-              </li>
-              <li>
-                <Link to="/about" className="text-sm text-muted-foreground hover:text-primary transition-colors">
-                  About Us
-                </Link>
-              </li>
-              <li>
-                <Link to="/contact" className="text-sm text-muted-foreground hover:text-primary transition-colors">
-                  Contact
-                </Link>
-              </li>
+            <h4 className="font-serif text-lg text-charcoal mb-6">Studio</h4>
+            <ul className="space-y-4">
+              {[
+                { label: 'Home', path: '/' },
+                { label: 'About Us', path: '/about' },
+                { label: 'Contact', path: '/contact' },
+                { label: 'Portfolio', path: '/portfolio' }
+              ].map((item) => (
+                <li key={item.label}>
+                  <Link
+                    to={item.path}
+                    className="font-sans text-sm text-charcoal/60 hover:text-gold-dark transition-colors uppercase tracking-widest"
+                  >
+                    {item.label}
+                  </Link>
+                </li>
+              ))}
             </ul>
           </div>
 
-          {/* Legal */}
+          {/* Legal Column */}
           <div>
-            <h4 className="font-display text-lg text-foreground mb-4">Legal</h4>
-            <ul className="space-y-2">
-              <li>
-                <Link to="/terms" className="text-sm text-muted-foreground hover:text-primary transition-colors">
-                  Terms of Use
-                </Link>
-              </li>
-              <li>
-                <Link to="/privacy" className="text-sm text-muted-foreground hover:text-primary transition-colors">
-                  Privacy Policy
-                </Link>
-              </li>
+            <h4 className="font-serif text-lg text-charcoal mb-6">Legal</h4>
+            <ul className="space-y-4">
+              {[
+                { label: 'Terms of Use', path: '/terms' },
+                { label: 'Privacy Policy', path: '/privacy' }
+              ].map((item) => (
+                <li key={item.label}>
+                  <Link
+                    to={item.path}
+                    className="font-sans text-sm text-charcoal/60 hover:text-gold-dark transition-colors uppercase tracking-widest"
+                  >
+                    {item.label}
+                  </Link>
+                </li>
+              ))}
             </ul>
           </div>
         </div>
 
-        <div className="mt-12 pt-8 border-t border-border">
-          <p className="text-center text-sm text-muted-foreground">
-            © {new Date().getFullYear()} Maa Fusion Creations. All rights reserved.
+        {/* Bottom Bar */}
+        <div className="flex flex-col md:flex-row items-center justify-between pt-8 border-t border-charcoal/10 gap-4">
+          <p className="font-sans text-xs text-charcoal/40 uppercase tracking-widest">
+            © {currentYear} Maa Fusion Creations
+          </p>
+          <p className="font-sans text-xs text-charcoal/40 uppercase tracking-widest">
+            Designed with Intention
           </p>
         </div>
       </div>

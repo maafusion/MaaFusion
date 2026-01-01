@@ -29,17 +29,18 @@ export default function About() {
     <Layout>
       {/* Hero */}
       <section className="py-24 relative overflow-hidden">
-        <div className="absolute inset-0 bg-gradient-to-br from-background via-charcoal to-background" />
-        <div className="absolute top-1/2 right-0 w-96 h-96 bg-primary/10 rounded-full blur-3xl" />
-        
+        <div className="absolute inset-0 bg-cream" />
+        <div className="absolute top-0 right-0 w-[500px] h-[500px] bg-gold/5 rounded-full blur-[100px] opacity-60" />
+        <div className="absolute bottom-0 left-0 w-[300px] h-[300px] bg-gold/10 rounded-full blur-[80px] opacity-40" />
+
         <div className="container mx-auto px-4 relative z-10">
           <div className="max-w-3xl">
-            <h1 className="font-display text-5xl md:text-6xl font-bold text-foreground mb-6 animate-fade-up">
-              About <span className="text-gold-gradient">Maa Fusion</span>
+            <h1 className="font-display text-5xl md:text-6xl font-bold text-charcoal mb-6 animate-fade-up">
+              About <span className="text-gold-dark">Maa Fusion</span>
             </h1>
-            <p className="text-xl text-muted-foreground animate-fade-up" style={{ animationDelay: '0.1s' }}>
-              For over 15 years, we've been at the forefront of jewelry and Murti design, 
-              blending traditional artistry with contemporary aesthetics to create pieces 
+            <p className="text-xl text-charcoal/70 animate-fade-up" style={{ animationDelay: '0.1s' }}>
+              For over 15 years, we've been at the forefront of jewelry and Murti design,
+              blending traditional artistry with contemporary aesthetics to create pieces
               that transcend time.
             </p>
           </div>
@@ -56,39 +57,34 @@ export default function About() {
               </h2>
               <div className="space-y-4 text-muted-foreground">
                 <p>
-                  Maa Fusion Creations was born from a deep reverence for traditional Indian 
-                  craftsmanship and a vision to bring it into the modern era. Our journey 
-                  began with a simple belief: that true beauty lies in the perfect harmony 
+                  Maa Fusion Creations was born from a deep reverence for traditional Indian
+                  craftsmanship and a vision to bring it into the modern era. Our journey
+                  began with a simple belief: that true beauty lies in the perfect harmony
                   of tradition and innovation.
                 </p>
                 <p>
-                  Today, we stand as a testament to that belief. Our team of skilled designers 
-                  and artisans work tirelessly to create designs that honor our rich heritage 
-                  while embracing contemporary sensibilities. Each piece in our portfolio 
-                  represents countless hours of dedication, creativity, and an unwavering 
+                  Today, we stand as a testament to that belief. Our team of skilled designers
+                  and artisans work tirelessly to create designs that honor our rich heritage
+                  while embracing contemporary sensibilities. Each piece in our portfolio
+                  represents countless hours of dedication, creativity, and an unwavering
                   commitment to excellence.
                 </p>
                 <p>
-                  From intricate pendant designs to majestic Murti creations, we bring dreams 
-                  to life through the art of digital rendering, allowing our clients to 
+                  From intricate pendant designs to majestic Murti creations, we bring dreams
+                  to life through the art of digital rendering, allowing our clients to
                   visualize their perfect piece before it's brought into physical existence.
                 </p>
               </div>
             </div>
             <div className="relative">
-              <div className="aspect-square rounded-lg overflow-hidden card-luxury">
+              <div className="aspect-square rounded-lg overflow-hidden card-luxury group relative">
                 <img
-                  src="https://images.unsplash.com/photo-1617038220319-276d3cfab638?w=600&h=600&fit=crop"
+                  src="https://p7fzjac0b1.ufs.sh/f/XMtknvqcEipySlqg2tpdRxTN6fP4CitI3KnQwoy12Ur0ZjHa"
                   alt="Jewelry craftsmanship"
-                  className="w-full h-full object-cover"
+                  className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
                 />
               </div>
-              <div className="absolute -bottom-6 -left-6 w-32 h-32 bg-gold-gradient rounded-lg flex items-center justify-center">
-                <div className="text-center text-primary-foreground">
-                  <div className="font-display text-3xl font-bold">15+</div>
-                  <div className="text-sm">Years</div>
-                </div>
-              </div>
+
             </div>
           </div>
         </div>
@@ -136,9 +132,9 @@ export default function About() {
               Meet the <span className="text-gold-gradient">Artisans</span>
             </h2>
             <p className="text-muted-foreground mb-8">
-              Behind every stunning design is a team of passionate artists, designers, 
-              and craftspeople who bring decades of combined experience to every project. 
-              Our team blends traditional techniques with cutting-edge technology to 
+              Behind every stunning design is a team of passionate artists, designers,
+              and craftspeople who bring decades of combined experience to every project.
+              Our team blends traditional techniques with cutting-edge technology to
               create renders that capture the true essence of each piece.
             </p>
             <div className="inline-flex items-center gap-4 px-6 py-3 rounded-full border border-primary/30 bg-primary/5">

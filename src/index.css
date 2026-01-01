@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600;700&family=Inter:wght@300;400;500;600&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;0,600;0,700;1,400&family=Inter:wght@300;400;500;600&display=swap');
 
 @tailwind base;
 @tailwind components;
@@ -6,87 +6,71 @@
 
 @layer base {
   :root {
-    /* Luxury dark theme - Charcoal & Gold */
-    --background: 220 15% 8%;
-    --foreground: 45 20% 95%;
+    /* Ethereal Light Theme - Cream & Gold */
+    --background: 40 20% 97%; /* Soft Cream */
+    --foreground: 220 10% 15%; /* Deep Charcoal (not black) */
 
-    --card: 220 15% 12%;
-    --card-foreground: 45 20% 95%;
+    --card: 0 0% 100%;
+    --card-foreground: 220 10% 15%;
 
-    --popover: 220 15% 10%;
-    --popover-foreground: 45 20% 95%;
+    --popover: 0 0% 100%;
+    --popover-foreground: 220 10% 15%;
 
-    /* Gold primary */
-    --primary: 42 65% 55%;
-    --primary-foreground: 220 15% 8%;
+    /* Gold/Bronze Accents */
+    --primary: 42 50% 50%;
+    --primary-foreground: 0 0% 100%;
 
-    /* Muted gold secondary */
-    --secondary: 220 15% 18%;
-    --secondary-foreground: 45 15% 85%;
+    --secondary: 40 10% 90%;
+    --secondary-foreground: 220 10% 15%;
 
-    --muted: 220 12% 20%;
-    --muted-foreground: 45 10% 60%;
+    --muted: 40 10% 94%;
+    --muted-foreground: 220 5% 45%;
 
-    --accent: 42 45% 40%;
-    --accent-foreground: 45 20% 95%;
+    --accent: 42 40% 90%; /* Soft gold wash */
+    --accent-foreground: 42 50% 30%;
 
-    --destructive: 0 62% 50%;
-    --destructive-foreground: 45 20% 95%;
+    --destructive: 0 84% 60%;
+    --destructive-foreground: 0 0% 98%;
 
-    --border: 220 10% 20%;
-    --input: 220 12% 18%;
-    --ring: 42 65% 55%;
+    --border: 40 10% 90%;
+    --input: 40 10% 90%;
+    --ring: 42 50% 50%;
 
     --radius: 0.5rem;
 
-    /* Custom luxury colors */
-    --gold: 42 65% 55%;
-    --gold-light: 42 55% 70%;
-    --gold-dark: 42 70% 40%;
-    --champagne: 45 35% 85%;
-    --charcoal: 220 15% 12%;
-    --charcoal-dark: 220 15% 8%;
-
-    /* Gradients */
-    --gradient-gold: linear-gradient(135deg, hsl(42 65% 55%), hsl(42 55% 70%));
-    --gradient-dark: linear-gradient(180deg, hsl(220 15% 12%), hsl(220 15% 8%));
-    --gradient-shimmer: linear-gradient(90deg, transparent, hsl(42 65% 55% / 0.1), transparent);
-
-    /* Shadows */
-    --shadow-gold: 0 4px 30px hsl(42 65% 55% / 0.15);
-    --shadow-card: 0 8px 32px hsl(0 0% 0% / 0.3);
-    --shadow-elevated: 0 20px 60px hsl(0 0% 0% / 0.4);
-
-    --sidebar-background: 220 15% 10%;
-    --sidebar-foreground: 45 20% 95%;
-    --sidebar-primary: 42 65% 55%;
-    --sidebar-primary-foreground: 220 15% 8%;
-    --sidebar-accent: 220 15% 18%;
-    --sidebar-accent-foreground: 45 20% 95%;
-    --sidebar-border: 220 10% 20%;
-    --sidebar-ring: 42 65% 55%;
+    /* Custom Palette */
+    --gold: 42 50% 50%;
+    --gold-light: 42 40% 75%;
+    --gold-dark: 42 60% 35%;
+    
+    --cream: 40 20% 97%;
+    --cream-soft: 40 20% 99%;
+    
+    --charcoal: 220 10% 15%;
+    --charcoal-muted: 220 5% 45%;
   }
 
+  /* Force light mode styles even if system is dark */
   .dark {
-    --background: 220 15% 8%;
-    --foreground: 45 20% 95%;
-    --card: 220 15% 12%;
-    --card-foreground: 45 20% 95%;
-    --popover: 220 15% 10%;
-    --popover-foreground: 45 20% 95%;
-    --primary: 42 65% 55%;
-    --primary-foreground: 220 15% 8%;
-    --secondary: 220 15% 18%;
-    --secondary-foreground: 45 15% 85%;
-    --muted: 220 12% 20%;
-    --muted-foreground: 45 10% 60%;
-    --accent: 42 45% 40%;
-    --accent-foreground: 45 20% 95%;
-    --destructive: 0 62% 50%;
-    --destructive-foreground: 45 20% 95%;
-    --border: 220 10% 20%;
-    --input: 220 12% 18%;
-    --ring: 42 65% 55%;
+    --background: 40 20% 97%;
+    --foreground: 220 10% 15%;
+    --card: 0 0% 100%;
+    --card-foreground: 220 10% 15%;
+    --popover: 0 0% 100%;
+    --popover-foreground: 220 10% 15%;
+    --primary: 42 50% 50%;
+    --primary-foreground: 0 0% 100%;
+    --secondary: 40 10% 90%;
+    --secondary-foreground: 220 10% 15%;
+    --muted: 40 10% 94%;
+    --muted-foreground: 220 5% 45%;
+    --accent: 42 40% 90%;
+    --accent-foreground: 42 50% 30%;
+    --destructive: 0 84% 60%;
+    --destructive-foreground: 0 0% 98%;
+    --border: 40 10% 90%;
+    --input: 40 10% 90%;
+    --ring: 42 50% 50%;
   }
 }
 
@@ -96,149 +80,50 @@
   }
 
   body {
-    @apply bg-background text-foreground antialiased;
-    font-family: 'Inter', system-ui, sans-serif;
+    @apply bg-background text-foreground antialiased selection:bg-gold/20 selection:text-charcoal;
+    font-feature-settings: "ss01", "ss02", "cv01", "cv02";
   }
 
   h1, h2, h3, h4, h5, h6 {
-    font-family: 'Playfair Display', serif;
+    @apply font-serif tracking-tight text-foreground;
   }
 }
 
 @layer components {
-  .text-gold-gradient {
-    @apply bg-clip-text text-transparent;
-    background-image: linear-gradient(135deg, hsl(42 65% 55%), hsl(42 55% 70%));
+  /* Minimalist Button */
+  .btn-minimal {
+    @apply inline-flex items-center justify-center rounded-sm px-6 py-2 text-sm font-medium transition-all duration-300;
+    @apply border border-transparent hover:border-gold/30 hover:bg-gold/5;
+  }
+  
+  /* Magnetic/Floating effects would be JS/React mostly, but basics here */
+  .hover-lift {
+    @apply transition-transform duration-500 ease-out hover:-translate-y-1;
   }
 
-  .border-gold-gradient {
-    border-image: linear-gradient(135deg, hsl(42 65% 55%), hsl(42 55% 70%)) 1;
-  }
-
-  .bg-gold-gradient {
-    background: linear-gradient(135deg, hsl(42 65% 55%), hsl(42 55% 70%));
-  }
-
-  .card-luxury {
-    @apply bg-card border border-border rounded-lg;
-    box-shadow: var(--shadow-card);
-  }
-
-  .card-luxury-hover {
-    @apply card-luxury transition-all duration-500;
-  }
-
-  .card-luxury-hover:hover {
-    @apply border-primary/30;
-    box-shadow: var(--shadow-gold);
-    transform: translateY(-4px);
-  }
-
-  .btn-luxury {
-    @apply relative overflow-hidden;
-  }
-
-  .btn-luxury::before {
-    content: '';
-    @apply absolute inset-0 opacity-0 transition-opacity duration-300;
-    background: var(--gradient-shimmer);
-  }
-
-  .btn-luxury:hover::before {
-    @apply opacity-100;
-    animation: shimmer 1.5s infinite;
-  }
-
-  .glass-effect {
-    @apply backdrop-blur-md bg-background/80;
+  .text-balance {
+    text-wrap: balance;
   }
 }
 
-@layer utilities {
-  .animate-fade-in {
-    animation: fadeIn 0.6s ease-out forwards;
-  }
-
-  .animate-fade-up {
-    animation: fadeUp 0.8s ease-out forwards;
-  }
-
-  .animate-scale-in {
-    animation: scaleIn 0.5s ease-out forwards;
-  }
-
-  .animate-shimmer {
-    animation: shimmer 2s infinite;
-  }
-
-  .animate-float {
-    animation: float 6s ease-in-out infinite;
-  }
+/* Lenis / Smooth Scroll overrides if needed */
+html.lenis {
+  height: auto;
 }
 
-@keyframes fadeIn {
-  from {
-    opacity: 0;
-  }
-  to {
-    opacity: 1;
-  }
+.lenis.lenis-smooth {
+  scroll-behavior: auto;
 }
 
-@keyframes fadeUp {
-  from {
-    opacity: 0;
-    transform: translateY(30px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
+.lenis.lenis-smooth [data-lenis-prevent] {
+  overscroll-behavior: contain;
 }
 
-@keyframes scaleIn {
-  from {
-    opacity: 0;
-    transform: scale(0.95);
-  }
-  to {
-    opacity: 1;
-    transform: scale(1);
-  }
+.lenis.lenis-stopped {
+  overflow: hidden;
 }
 
-@keyframes shimmer {
-  0% {
-    transform: translateX(-100%);
-  }
-  100% {
-    transform: translateX(100%);
-  }
+.lenis.lenis-scrolling iframe {
+  pointer-events: none;
 }
 
-@keyframes float {
-  0%, 100% {
-    transform: translateY(0);
-  }
-  50% {
-    transform: translateY(-10px);
-  }
-}
-
-/* Scrollbar styling */
-::-webkit-scrollbar {
-  width: 8px;
-  height: 8px;
-}
-
-::-webkit-scrollbar-track {
-  @apply bg-background;
-}
-
-::-webkit-scrollbar-thumb {
-  @apply bg-muted rounded-full;
-}
-
-::-webkit-scrollbar-thumb:hover {
-  @apply bg-muted-foreground/50;
-}
