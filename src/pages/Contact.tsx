@@ -68,15 +68,16 @@ export default function Contact() {
     <Layout>
       {/* Hero */}
       <section className="py-24 relative overflow-hidden">
-        <div className="absolute inset-0 bg-gradient-to-br from-background via-charcoal to-background" />
-        <div className="absolute bottom-0 left-1/4 w-96 h-96 bg-primary/10 rounded-full blur-3xl" />
+        <div className="absolute inset-0 bg-cream" />
+        <div className="absolute top-0 right-0 w-[500px] h-[500px] bg-gold/5 rounded-full blur-[100px] opacity-60" />
+        <div className="absolute bottom-0 left-0 w-[300px] h-[300px] bg-gold/10 rounded-full blur-[80px] opacity-40" />
 
         <div className="container mx-auto px-4 relative z-10">
           <div className="max-w-3xl mx-auto text-center">
-            <h1 className="font-display text-5xl md:text-6xl font-bold text-foreground mb-6 animate-fade-up">
-              Get in <span className="text-gold-gradient">Touch</span>
+            <h1 className="font-display text-5xl md:text-6xl font-bold text-charcoal mb-6 animate-fade-up">
+              Get in <span className="text-gold-dark">Touch</span>
             </h1>
-            <p className="text-xl text-muted-foreground animate-fade-up" style={{ animationDelay: '0.1s' }}>
+            <p className="text-xl text-charcoal/70 animate-fade-up" style={{ animationDelay: '0.1s' }}>
               Have a question or want to discuss a project? We'd love to hear from you.
             </p>
           </div>

@@ -6,60 +6,72 @@ import { FEATURED_COLLECTIONS } from '@/data/collections';
 
 export function FeaturedSection() {
   return (
-    <section className="py-24">
-      <div className="container mx-auto px-4">
+    <section className="py-32 bg-cream text-charcoal overflow-hidden">
+      <div className="container mx-auto px-6 lg:px-12">
         {/* Section Header */}
-        <div className="text-center mb-16">
-          <h2 className="font-display text-4xl md:text-5xl font-bold text-foreground mb-4">
-            Featured <span className="text-gold-gradient">Collections</span>
-          </h2>
-          <p className="text-muted-foreground max-w-2xl mx-auto">
-            Explore our signature collections, each piece meticulously designed
-            to capture the essence of elegance and tradition.
-          </p>
+        <div className="flex flex-col md:flex-row items-end justify-between mb-24 gap-8">
+          <div className="max-w-2xl">
+            <h2 className="font-serif text-5xl md:text-7xl text-charcoal mb-6 leading-[0.9]">
+              Curated <br />
+              <span className="italic text-charcoal/50">Collections</span>
+            </h2>
+            <p className="text-charcoal/60 text-lg font-sans max-w-md">
+              A selection of our finest digital sculptures and jewelry designs,
+              crafted with precision and artistic vision.
+            </p>
+          </div>
+          <div className="hidden md:block">
+            <Button variant="ghost" asChild className="group hover:bg-transparent px-0 hover:text-gold-dark text-charcoal transition-colors">
+              <Link to="/contact" className="gap-2">
+                <span className="font-serif italic tracking-wider text-sm border-b border-charcoal/30 group-hover:border-gold-dark pb-1">View Full Portfolio</span>
+                <ArrowRight className="w-4 h-4 transition-transform duration-300 group-hover:translate-x-1" />
+              </Link>
+            </Button>
+          </div>
         </div>
 
-        {/* Categories Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+        {/* Categories Grid - Conceptual Asymmetry */}
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-8 lg:gap-12">
           {FEATURED_COLLECTIONS.map((category, index) => (
             <div
               key={category.title}
-              className="group card-luxury-hover overflow-hidden animate-fade-up"
-              style={{ animationDelay: `${index * 0.15}s` }}
+              className={`group flex flex-col space-y-6 ${index === 1 ? 'md:mt-24' : index === 2 ? 'md:mt-12' : ''
+                }`}
             >
-              <div className="relative h-64 overflow-hidden">
-                <ImageHoverCarousel
-                  images={category.images}
-                  alt={category.title}
-                  className="w-full h-full transition-transform duration-700 group-hover:scale-110"
-                />
-                <div className="absolute inset-0 bg-gradient-to-t from-background/90 via-background/20 to-transparent pointer-events-none" />
+              <div
+                className="relative aspect-[3/4] overflow-hidden bg-white shadow-soft transition-transform duration-700 hover:-translate-y-2"
+              >
+                <div className="absolute inset-0 p-4">
+                  <div className="w-full h-full relative overflow-hidden bg-gray-50">
+                    <ImageHoverCarousel
+                      images={category.images}
+                      alt={category.title}
+                      className="w-full h-full object-cover transition-transform duration-1000 group-hover:scale-105"
+                    />
+                  </div>
+                </div>
               </div>
-              <div className="p-6">
-                <h3 className="font-display text-xl font-semibold text-foreground mb-2">
+
+              <div className="flex flex-col items-start px-2">
+                <span className="font-sans text-[10px] tracking-widest uppercase text-gold-dark mb-2">0{index + 1} / Collection</span>
+                <h3 className="font-serif text-3xl text-charcoal group-hover:text-gold-dark transition-colors duration-300 mb-2">
                   {category.title}
                 </h3>
-                <p className="text-muted-foreground text-sm mb-4">
+                <p className="text-charcoal/60 text-sm font-sans line-clamp-2 leading-relaxed">
                   {category.description}
                 </p>
-                <Button variant="luxury-ghost" size="sm" className="group/btn" asChild>
-                  <Link to="/contact">
-                    Inquire Now
-                    <ArrowRight className="ml-2 w-4 h-4 transition-transform group-hover/btn:translate-x-1" />
-                  </Link>
-                </Button>
+                <Link to="/contact" className="mt-4 text-xs font-serif italic border-b border-transparent group-hover:border-charcoal/30 transition-all">
+                  Explore
+                </Link>
               </div>
             </div>
           ))}
         </div>
 
-        {/* CTA */}
-        <div className="text-center mt-16">
-          <Button variant="luxury" size="lg" asChild>
-            <Link to="/contact">
-              Contact Us for Custom Designs
-              <ArrowRight className="ml-2 w-5 h-5" />
-            </Link>
+        {/* Mobile CTA */}
+        <div className="mt-16 md:hidden text-center">
+          <Button variant="outline" asChild className="border-charcoal/20 text-charcoal">
+            <Link to="/contact">View All Works</Link>
           </Button>
         </div>
       </div>
