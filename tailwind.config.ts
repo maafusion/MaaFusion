@@ -15,7 +15,7 @@ export default {
     extend: {
       fontFamily: {
         serif: ['"Playfair Display"', 'serif'],
-        sans: ['"Inter"', 'sans-serif'], // Keeping Inter as the geometric sans for now, can swap to Outfit if added
+        sans: ['"Inter"', 'sans-serif'],
       },
       colors: {
         border: "hsl(var(--border))",

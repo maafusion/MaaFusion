@@ -6,14 +6,13 @@ import { FEATURED_COLLECTIONS } from '@/data/collections';
 
 export function FeaturedSection() {
   return (
-    <section className="py-32 bg-cream text-charcoal overflow-hidden">
+    <section className="py-12 bg-cream text-charcoal overflow-hidden">
       <div className="container mx-auto px-6 lg:px-12">
         {/* Section Header */}
-        <div className="flex flex-col md:flex-row items-end justify-between mb-24 gap-8">
+        <div className="flex flex-col md:flex-row items-end justify-between mb-16 gap-8">
           <div className="max-w-2xl">
-            <h2 className="font-serif text-5xl md:text-7xl text-charcoal mb-6 leading-[0.9]">
-              Curated <br />
-              <span className="italic text-charcoal/50">Collections</span>
+            <h2 className="font-serif text-4xl md:text-5xl text-charcoal mb-6 leading-tight">
+              Curated <span className="italic text-charcoal/50">Collections</span>
             </h2>
             <p className="text-charcoal/60 text-lg font-sans max-w-md">
               A selection of our finest digital sculptures and jewelry designs,
@@ -35,8 +34,7 @@ export function FeaturedSection() {
           {FEATURED_COLLECTIONS.map((category, index) => (
             <div
               key={category.title}
-              className={`group flex flex-col space-y-6 ${index === 1 ? 'md:mt-24' : index === 2 ? 'md:mt-12' : ''
-                }`}
+              className="group flex flex-col space-y-6"
             >
               <div
                 className="relative aspect-[3/4] overflow-hidden bg-white shadow-soft transition-transform duration-700 hover:-translate-y-2"
@@ -70,8 +68,11 @@ export function FeaturedSection() {
 
         {/* Mobile CTA */}
         <div className="mt-16 md:hidden text-center">
-          <Button variant="outline" asChild className="border-charcoal/20 text-charcoal">
-            <Link to="/contact">View All Works</Link>
+          <Button variant="ghost" asChild className="group hover:bg-transparent px-0 hover:text-gold-dark text-charcoal transition-colors">
+            <Link to="/contact" className="gap-2">
+              <span className="font-serif italic tracking-wider text-sm border-b border-charcoal/30 group-hover:border-gold-dark pb-1">View Full Portfolio</span>
+              <ArrowRight className="w-4 h-4 transition-transform duration-300 group-hover:translate-x-1" />
+            </Link>
           </Button>
         </div>
       </div>

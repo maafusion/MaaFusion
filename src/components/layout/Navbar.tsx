@@ -51,8 +51,8 @@ export function Navbar() {
                 key={link.name}
                 to={link.href}
                 className={`relative text-xs font-sans font-medium tracking-widest uppercase transition-all duration-300 hover:-translate-y-1 ${isActive(link.href)
-                    ? 'text-gold-dark'
-                    : 'text-charcoal/70 hover:text-charcoal'
+                  ? 'text-gold-dark'
+                  : 'text-charcoal/70 hover:text-charcoal'
                   }`}
               >
                 {link.name}
@@ -65,7 +65,7 @@ export function Navbar() {
             {/* Minimalist CTA */}
             <Link
               to="/contact"
-              className={`hidden lg:inline-flex text-xs font-serif italic border-b border-charcoal/30 hover:border-gold-dark hover:text-gold-dark transition-colors duration-300 pb-0.5 ml-4`}
+              className={`hidden lg:inline-flex text-sm font-serif italic tracking-wider border-b border-charcoal/30 hover:border-gold-dark hover:text-gold-dark transition-colors duration-300 pb-1 ml-4`}
             >
               Inquire
             </Link>
