@@ -65,7 +65,7 @@ export default function About() {
                 <p>
                   Today, we stand as a testament to that belief. Our team of skilled designers
                   and artisans work tirelessly to create designs that honor our rich heritage
-                  while embracing contemporary sensibilities. Each piece in our portfolio
+                  while embracing contemporary sensibilities. Each piece in our gallery
                   represents countless hours of dedication, creativity, and an unwavering
                   commitment to excellence.
                 </p>

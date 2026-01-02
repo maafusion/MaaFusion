@@ -21,8 +21,8 @@ export function FeaturedSection() {
           </div>
           <div className="hidden md:block">
             <Button variant="ghost" asChild className="group hover:bg-transparent px-0 hover:text-gold-dark text-charcoal transition-colors">
-              <Link to="/contact" className="gap-2">
-                <span className="font-serif italic tracking-wider text-sm border-b border-charcoal/30 group-hover:border-gold-dark pb-1">View Full Portfolio</span>
+              <Link to="/gallery" className="gap-2">
+                <span className="font-serif italic tracking-wider text-sm border-b border-charcoal/30 group-hover:border-gold-dark pb-1">View Full Gallery</span>
                 <ArrowRight className="w-4 h-4 transition-transform duration-300 group-hover:translate-x-1" />
               </Link>
             </Button>
@@ -58,7 +58,7 @@ export function FeaturedSection() {
                 <p className="text-charcoal/60 text-sm font-sans line-clamp-2 leading-relaxed">
                   {category.description}
                 </p>
-                <Link to="/contact" className="mt-4 text-xs font-serif italic border-b border-transparent group-hover:border-charcoal/30 transition-all">
+                <Link to="/contact" className="mt-4 text-sm font-serif italic border-b border-transparent group-hover:border-charcoal/30 transition-all">
                   Explore
                 </Link>
               </div>
@@ -69,8 +69,8 @@ export function FeaturedSection() {
         {/* Mobile CTA */}
         <div className="mt-16 md:hidden text-center">
           <Button variant="ghost" asChild className="group hover:bg-transparent px-0 hover:text-gold-dark text-charcoal transition-colors">
-            <Link to="/contact" className="gap-2">
-              <span className="font-serif italic tracking-wider text-sm border-b border-charcoal/30 group-hover:border-gold-dark pb-1">View Full Portfolio</span>
+            <Link to="/gallery" className="gap-2">
+              <span className="font-serif italic tracking-wider text-sm border-b border-charcoal/30 group-hover:border-gold-dark pb-1">View Full Gallery</span>
               <ArrowRight className="w-4 h-4 transition-transform duration-300 group-hover:translate-x-1" />
             </Link>
           </Button>

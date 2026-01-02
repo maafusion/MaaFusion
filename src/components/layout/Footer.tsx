@@ -27,7 +27,7 @@ export function Footer() {
                 { label: 'Home', path: '/' },
                 { label: 'About Us', path: '/about' },
                 { label: 'Contact', path: '/contact' },
-                { label: 'Portfolio', path: '/portfolio' }
+                { label: 'Gallery', path: '/gallery' }
               ].map((item) => (
                 <li key={item.label}>
                   <Link
