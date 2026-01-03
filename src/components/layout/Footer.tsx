@@ -65,7 +65,7 @@ export function Footer() {
         {/* Bottom Bar */}
         <div className="flex flex-col md:flex-row items-center justify-between pt-8 border-t border-charcoal/10 gap-4">
           <p className="font-sans text-xs text-charcoal/40 uppercase tracking-widest">
-            © {currentYear} Maa Fusion Creations
+            Copyright {currentYear} Maa Fusion Creations
           </p>
           <p className="font-sans text-xs text-charcoal/40 uppercase tracking-widest">
             Designed with Intention

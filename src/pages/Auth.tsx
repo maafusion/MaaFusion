@@ -7,7 +7,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { useToast } from "@/hooks/use-toast";
 import { useAuth } from "@/hooks/use-auth";
-import { supabase } from "@/lib/supabaseClient";
+import { setRememberPreference, supabase } from "@/lib/supabaseClient";
 
 type AuthMode = "sign-in" | "sign-up";
 
@@ -83,6 +83,7 @@ export default function Auth() {
       return;
     }
 
+    setRememberPreference(rememberMe);
     const { error } = await supabase.auth.signInWithPassword({ email, password });
     if (error) {
       toast({
@@ -112,6 +113,7 @@ export default function Auth() {
     }
     const whatsappValue = isWhatsappSame ? phone : whatsapp;
 
+    setRememberPreference(true);
     const { error: signUpError } = await supabase.auth.signUp({
       email,
       password,
