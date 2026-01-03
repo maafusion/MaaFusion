@@ -1,4 +1,4 @@
-import { useState, useRef } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { cn } from '@/lib/utils';
 
 interface ImageHoverCarouselProps {
@@ -12,6 +12,9 @@ export function ImageHoverCarousel({ images, alt, className }: ImageHoverCarouse
     const intervalRef = useRef<NodeJS.Timeout | null>(null);
 
     const handleMouseEnter = () => {
+        if (images.length < 2) {
+            return;
+        }
         // Clear any existing interval
         if (intervalRef.current) {
             clearInterval(intervalRef.current);
@@ -36,6 +39,15 @@ export function ImageHoverCarousel({ images, alt, className }: ImageHoverCarouse
         }
         setCurrentIndex(0);
     };
+
+    useEffect(() => {
+        return () => {
+            if (intervalRef.current) {
+                clearInterval(intervalRef.current);
+                intervalRef.current = null;
+            }
+        };
+    }, []);
 
     return (
         <div

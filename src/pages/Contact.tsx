@@ -37,6 +37,11 @@ const contactInfo = [
   },
 ];
 
+const encodeForm = (data: Record<string, string>) =>
+  Object.keys(data)
+    .map((key) => `${encodeURIComponent(key)}=${encodeURIComponent(data[key] ?? "")}`)
+    .join("&");
+
 export default function Contact() {
   const [isLoading, setIsLoading] = useState(false);
   const { toast } = useToast();
@@ -49,19 +54,37 @@ export default function Contact() {
   const onSubmit = async (data: ContactFormData) => {
     setIsLoading(true);
 
-    // Simulate form submission delay
-    await new Promise(resolve => setTimeout(resolve, 1000));
+    try {
+      const response = await fetch('/', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+        body: encodeForm({
+          'form-name': 'contact',
+          name: data.name,
+          email: data.email,
+          phone: data.phone ?? '',
+          message: data.message,
+        }),
+      });
+      if (!response.ok) {
+        throw new Error('Form submission failed');
+      }
 
-    setIsLoading(false);
+      toast({
+        title: 'Message Sent!',
+        description: "Thank you for reaching out. We'll get back to you soon.",
+      });
 
-    // For now, just show success message
-    // TODO: Integrate with email service or backend API
-    toast({
-      title: 'Message Sent!',
-      description: "Thank you for reaching out. We'll get back to you soon.",
-    });
-
-    form.reset();
+      form.reset();
+    } catch (error) {
+      toast({
+        title: 'Message failed',
+        description: 'Please try again or email us directly.',
+        variant: 'destructive',
+      });
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   return (
@@ -130,7 +153,16 @@ export default function Contact() {
                 Send a Message
               </h2>
 
-              <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
+              <form
+                name="contact"
+                method="POST"
+                data-netlify="true"
+                data-netlify-honeypot="bot-field"
+                onSubmit={form.handleSubmit(onSubmit)}
+                className="space-y-6"
+              >
+                <input type="hidden" name="form-name" value="contact" />
+                <input type="hidden" name="bot-field" />
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                   <div className="space-y-2">
                     <Label htmlFor="name">Name *</Label>
