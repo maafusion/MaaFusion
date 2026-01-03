@@ -30,7 +30,7 @@ export default function Auth() {
   const [mode, setMode] = useState<AuthMode>(paramMode);
   const [form, setForm] = useState(DEFAULT_FORM);
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const [rememberMe, setRememberMe] = useState(false);
+  const [rememberMe, setRememberMe] = useState(true);
   const [isWhatsappSame, setIsWhatsappSame] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
 
