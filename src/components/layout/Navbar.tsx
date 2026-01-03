@@ -56,6 +56,16 @@ export function Navbar() {
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
+  useEffect(() => {
+    if (isOpen) {
+      document.body.style.overflow = 'hidden';
+      return () => {
+        document.body.style.overflow = '';
+      };
+    }
+    document.body.style.overflow = '';
+  }, [isOpen]);
+
   return (
     <nav
       className={`fixed top-0 left-0 right-0 z-50 transition-all duration-500 ${isScrolled ? 'bg-cream/80 backdrop-blur-md py-4 shadow-sm' : 'bg-transparent py-8'
@@ -152,14 +162,14 @@ export function Navbar() {
           {/* Mobile Menu Button */}
           <button
             onClick={() => setIsOpen(!isOpen)}
-            className="md:hidden relative z-50 p-2 text-charcoal hover:bg-black/5 rounded-full transition-colors"
+            className="relative z-[70] rounded-full p-2 text-charcoal transition-colors hover:bg-black/5 md:hidden"
           >
             {isOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
           </button>
         </div>
 
         {/* Mobile Navigation */}
-          <div className={`fixed inset-0 bg-cream/95 backdrop-blur-xl z-40 flex items-center justify-center transition-all duration-500 ease-in-out md:hidden ${isOpen ? 'opacity-100 translate-y-0' : 'opacity-0 -translate-y-full pointer-events-none'
+          <div className={`fixed inset-0 bg-cream/95 backdrop-blur-xl z-[60] flex items-center justify-center transition-all duration-500 ease-in-out md:hidden ${isOpen ? 'opacity-100 translate-y-0' : 'opacity-0 -translate-y-full pointer-events-none'
             }`}>
           <div className="flex flex-col items-center gap-8">
             {publicLinks.map((link, idx) => (
@@ -203,14 +213,7 @@ export function Navbar() {
                   onClick={() => setIsOpen(false)}
                   className="rounded-full border border-charcoal/20 bg-white/80 px-6 py-3 text-xs uppercase tracking-[0.3em] text-charcoal transition-all hover:border-gold/40"
                 >
-                  Sign in
-                </Link>
-                <Link
-                  to="/auth?mode=sign-up"
-                  onClick={() => setIsOpen(false)}
-                  className="rounded-full border border-charcoal/20 bg-charcoal px-6 py-3 text-xs uppercase tracking-[0.3em] text-cream transition-all hover:bg-charcoal/90"
-                >
-                  Sign up
+                  Login
                 </Link>
               </div>
             )}

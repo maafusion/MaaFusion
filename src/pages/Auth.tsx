@@ -1,5 +1,6 @@
 import { useEffect, useMemo, useState } from "react";
-import { useNavigate, useSearchParams } from "react-router-dom";
+import { Link, useNavigate, useSearchParams } from "react-router-dom";
+import { Eye, EyeOff } from "lucide-react";
 import { Layout } from "@/components/layout/Layout";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -29,6 +30,9 @@ export default function Auth() {
   const [mode, setMode] = useState<AuthMode>(paramMode);
   const [form, setForm] = useState(DEFAULT_FORM);
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [rememberMe, setRememberMe] = useState(false);
+  const [isWhatsappSame, setIsWhatsappSame] = useState(false);
+  const [showPassword, setShowPassword] = useState(false);
 
   useEffect(() => {
     setMode(paramMode);
@@ -40,21 +44,27 @@ export default function Auth() {
     }
   }, [user, navigate]);
 
-  const headline = useMemo(
-    () => (mode === "sign-in" ? "Welcome back to MaaFusion." : "Create your MaaFusion account."),
-    [mode],
-  );
-
-  const subcopy = useMemo(
-    () =>
-      mode === "sign-in"
-        ? "Access your studio updates, saved inspiration, and project details in one place."
-        : "Join the studio to track inquiries, save inspiration, and manage your project journey.",
-    [mode],
-  );
+  const headline = useMemo(() => "Welcome to MaaFusion", []);
 
   const updateField = (name: keyof typeof form) => (event: React.ChangeEvent<HTMLInputElement>) => {
     setForm((prev) => ({ ...prev, [name]: event.target.value }));
+  };
+
+  const handlePhoneChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const value = event.target.value;
+    setForm((prev) => ({
+      ...prev,
+      phone: value,
+      ...(isWhatsappSame ? { whatsapp: value } : {}),
+    }));
+  };
+
+  const handleWhatsappSameToggle = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const checked = event.target.checked;
+    setIsWhatsappSame(checked);
+    if (checked) {
+      setForm((prev) => ({ ...prev, whatsapp: prev.phone }));
+    }
   };
 
   const setAuthMode = (nextMode: AuthMode) => {
@@ -92,14 +102,15 @@ export default function Auth() {
 
   const handleSignUp = async () => {
     const { firstName, lastName, email, phone, whatsapp, password } = form;
-    if (!firstName || !lastName || !email || !phone || !whatsapp || !password) {
+    if (!firstName || !lastName || !email || !phone || !password) {
       toast({
         title: "Complete the form",
-        description: "Please fill in all fields to create your account.",
+        description: "Please fill in all required fields to create your account.",
         variant: "destructive",
       });
       return;
     }
+    const whatsappValue = isWhatsappSame ? phone : whatsapp;
 
     const { error: signUpError } = await supabase.auth.signUp({
       email,
@@ -109,7 +120,7 @@ export default function Auth() {
           first_name: firstName,
           last_name: lastName,
           phone,
-          whatsapp,
+          ...(whatsappValue ? { whatsapp: whatsappValue } : {}),
         },
       },
     });
@@ -167,63 +178,21 @@ export default function Auth() {
           <div className="absolute inset-0 bg-[radial-gradient(circle_at_top,_rgba(255,255,255,0.6),_transparent_55%)]" />
         </div>
 
-        <div className="relative container mx-auto px-6 py-24 lg:px-12 lg:py-28">
-          <div className="grid items-center gap-12 lg:grid-cols-[1.1fr_0.9fr]">
-            <div className="space-y-6">
-              <span className="inline-flex items-center gap-2 rounded-full border border-gold/30 bg-white/70 px-4 py-1 text-xs font-sans uppercase tracking-[0.3em] text-charcoal/70">
+        <div className="relative container mx-auto flex justify-center px-6 py-24 lg:px-12 lg:py-28">
+          <div className="mx-auto w-full max-w-xl rounded-3xl border border-gold/20 bg-white/80 p-8 text-center shadow-[0_30px_80px_-60px_rgba(55,44,31,0.6)] backdrop-blur">
+            <div className="space-y-3">
+              <span className="inline-flex items-center justify-center gap-2 rounded-full border border-gold/30 bg-white/70 px-4 py-1 text-xs font-sans uppercase tracking-[0.3em] text-charcoal/70">
                 Client portal
               </span>
-              <div className="space-y-4">
-                <h1 className="text-4xl font-serif text-charcoal sm:text-5xl">{headline}</h1>
-                <p className="max-w-xl text-base text-charcoal/70 sm:text-lg">{subcopy}</p>
-              </div>
-              <div className="grid gap-4 text-sm text-charcoal/70 sm:grid-cols-2">
-                <div className="rounded-2xl border border-gold/20 bg-white/70 p-4 backdrop-blur">
-                  <p className="font-medium text-charcoal">Streamlined collaboration</p>
-                  <p className="mt-1 text-xs uppercase tracking-[0.2em] text-charcoal/50">Centralize details</p>
-                </div>
-                <div className="rounded-2xl border border-gold/20 bg-white/70 p-4 backdrop-blur">
-                  <p className="font-medium text-charcoal">Saved inspiration</p>
-                  <p className="mt-1 text-xs uppercase tracking-[0.2em] text-charcoal/50">Build your moodboard</p>
-                </div>
-              </div>
+              <h1 className="text-4xl font-serif text-charcoal sm:text-5xl">{headline}</h1>
+              <p className="text-sm uppercase tracking-[0.3em] text-charcoal/60">
+                {mode === "sign-in" ? "Sign in" : "Sign up"}
+              </p>
             </div>
 
-            <div className="rounded-3xl border border-gold/20 bg-white/80 p-8 shadow-[0_30px_80px_-60px_rgba(55,44,31,0.6)] backdrop-blur">
-              <div className="flex items-center justify-between">
-                <div>
-                  <p className="text-xs uppercase tracking-[0.3em] text-charcoal/60">Secure access</p>
-                  <h2 className="text-2xl font-serif text-charcoal">
-                    {mode === "sign-in" ? "Sign in" : "Sign up"}
-                  </h2>
-                </div>
-                <div className="flex rounded-full border border-charcoal/10 bg-cream/60 p-1 text-xs font-semibold uppercase tracking-widest">
-                  <button
-                    type="button"
-                    onClick={() => setAuthMode("sign-in")}
-                    className={`rounded-full px-4 py-2 transition-all ${mode === "sign-in"
-                        ? "bg-charcoal text-cream shadow-sm"
-                        : "text-charcoal/60 hover:text-charcoal"
-                      }`}
-                  >
-                    SIGN IN
-                  </button>
-                  <button
-                    type="button"
-                    onClick={() => setAuthMode("sign-up")}
-                    className={`rounded-full px-4 py-2 transition-all ${mode === "sign-up"
-                        ? "bg-charcoal text-cream shadow-sm"
-                        : "text-charcoal/60 hover:text-charcoal"
-                      }`}
-                  >
-                    SIGN UP
-                  </button>
-                </div>
-              </div>
-
-              <form className="mt-8 space-y-5" onSubmit={handleSubmit}>
-                {mode === "sign-up" && (
-                  <div className="grid gap-5 sm:grid-cols-2">
+            <form className="mt-8 space-y-5 text-center" onSubmit={handleSubmit}>
+              {mode === "sign-up" && (
+                  <div className="grid gap-5 text-left sm:grid-cols-2">
                     <div className="space-y-2">
                       <Label htmlFor="firstName">First name</Label>
                       <Input
@@ -233,7 +202,7 @@ export default function Auth() {
                         required
                         value={form.firstName}
                         onChange={updateField("firstName")}
-                        placeholder="Ava"
+                        placeholder="Aarav"
                       />
                     </div>
                     <div className="space-y-2">
@@ -245,13 +214,13 @@ export default function Auth() {
                         required
                         value={form.lastName}
                         onChange={updateField("lastName")}
-                        placeholder="Brooks"
+                        placeholder="Sharma"
                       />
                     </div>
                   </div>
                 )}
 
-                <div className="space-y-2">
+                <div className="space-y-2 text-left">
                   <Label htmlFor="email">Email</Label>
                   <Input
                     id="email"
@@ -261,12 +230,12 @@ export default function Auth() {
                     required
                     value={form.email}
                     onChange={updateField("email")}
-                    placeholder="you@email.com"
+                    placeholder="aarav.sharma@example.com"
                   />
                 </div>
 
                 {mode === "sign-up" && (
-                  <div className="grid gap-5 sm:grid-cols-2">
+                  <div className="grid gap-5 text-left sm:grid-cols-2">
                     <div className="space-y-2">
                       <Label htmlFor="phone">Phone number</Label>
                       <Input
@@ -276,39 +245,71 @@ export default function Auth() {
                         autoComplete="tel"
                         required
                         value={form.phone}
-                        onChange={updateField("phone")}
-                        placeholder="(555) 987-6543"
+                        onChange={handlePhoneChange}
+                        placeholder="+91 98765 43210"
                       />
                     </div>
                     <div className="space-y-2">
-                      <Label htmlFor="whatsapp">WhatsApp number</Label>
+                      <Label htmlFor="whatsapp">WhatsApp number (optional)</Label>
                       <Input
                         id="whatsapp"
                         name="whatsapp"
                         type="tel"
                         autoComplete="tel"
-                        required
                         value={form.whatsapp}
                         onChange={updateField("whatsapp")}
-                        placeholder="(555) 222-1133"
+                        disabled={isWhatsappSame}
+                        placeholder="+91 98765 43210"
                       />
+                      <label className="flex items-center gap-2 text-xs text-charcoal/70">
+                        <input
+                          type="checkbox"
+                          className="h-4 w-4 rounded border-charcoal/20 text-charcoal focus:ring-charcoal"
+                          checked={isWhatsappSame}
+                          onChange={handleWhatsappSameToggle}
+                        />
+                        Same as phone number
+                      </label>
                     </div>
                   </div>
                 )}
 
-                <div className="space-y-2">
+                <div className="space-y-2 text-left">
                   <Label htmlFor="password">Password</Label>
-                  <Input
-                    id="password"
-                    name="password"
-                    type="password"
-                    autoComplete={mode === "sign-up" ? "new-password" : "current-password"}
-                    required
-                    value={form.password}
-                    onChange={updateField("password")}
-                    placeholder="••••••••"
-                  />
+                  <div className="relative">
+                    <Input
+                      id="password"
+                      name="password"
+                      type={showPassword ? "text" : "password"}
+                      autoComplete={mode === "sign-up" ? "new-password" : "current-password"}
+                      required
+                      value={form.password}
+                      onChange={updateField("password")}
+                      placeholder="********"
+                      className="pr-12"
+                    />
+                    <button
+                      type="button"
+                      onClick={() => setShowPassword((prev) => !prev)}
+                      className="absolute right-3 top-1/2 -translate-y-1/2 text-charcoal/60 transition hover:text-charcoal"
+                      aria-label={showPassword ? "Hide password" : "Show password"}
+                    >
+                      {showPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
+                    </button>
+                  </div>
                 </div>
+
+                {mode === "sign-in" && (
+                  <label className="flex items-center gap-2 text-left text-xs text-charcoal/70">
+                    <input
+                      type="checkbox"
+                      className="h-4 w-4 rounded border-charcoal/20 text-charcoal focus:ring-charcoal"
+                      checked={rememberMe}
+                      onChange={(event) => setRememberMe(event.target.checked)}
+                    />
+                    Remember me
+                  </label>
+                )}
 
                 <Button type="submit" variant="luxury" className="w-full" disabled={isSubmitting}>
                   {isSubmitting
@@ -318,12 +319,49 @@ export default function Auth() {
                       : "Create account and sign in"}
                 </Button>
 
+                {mode === "sign-in" ? (
+                  <p className="text-xs text-charcoal/60">
+                    Don&apos;t have an account?{" "}
+                    <button
+                      type="button"
+                      onClick={() => setAuthMode("sign-up")}
+                      className="font-semibold text-charcoal underline decoration-gold/60 underline-offset-4"
+                    >
+                      Create one
+                    </button>
+                  </p>
+                ) : (
+                  <p className="text-xs text-charcoal/60">
+                    Already have an account?{" "}
+                    <button
+                      type="button"
+                      onClick={() => setAuthMode("sign-in")}
+                      className="font-semibold text-charcoal underline decoration-gold/60 underline-offset-4"
+                    >
+                      Sign in
+                    </button>
+                  </p>
+                )}
+
                 <p className="text-xs text-charcoal/60">
-                  By continuing, you agree to MaaFusion&apos;s Terms and Privacy Policy.
+                  By continuing, you agree to MaaFusion&apos;s{" "}
+                  <Link
+                    to="/terms"
+                    className="font-semibold text-charcoal underline decoration-gold/60 underline-offset-4"
+                  >
+                    Terms
+                  </Link>{" "}
+                  and{" "}
+                  <Link
+                    to="/privacy"
+                    className="font-semibold text-charcoal underline decoration-gold/60 underline-offset-4"
+                  >
+                    Privacy Policy
+                  </Link>
+                  .
                 </p>
               </form>
             </div>
-          </div>
         </div>
       </section>
     </Layout>
