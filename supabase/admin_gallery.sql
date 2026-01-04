@@ -11,10 +11,16 @@ $$;
 create table if not exists public.products (
   id uuid primary key default gen_random_uuid(),
   name text not null,
+  description text not null default '',
+  price numeric(10,2) not null default 0,
   category public.product_category not null,
   created_at timestamptz not null default now(),
   created_by uuid default auth.uid()
 );
+
+alter table public.products
+  add column if not exists description text not null default '',
+  add column if not exists price numeric(10,2) not null default 0;
 
 create table if not exists public.product_images (
   id uuid primary key default gen_random_uuid(),
