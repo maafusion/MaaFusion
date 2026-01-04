@@ -13,6 +13,7 @@ import { useAuth } from '@/hooks/use-auth';
 
 const publicLinks = [
   { name: 'Home', href: '/' },
+  { name: 'Gallery', href: '/gallery' },
   { name: 'About', href: '/about' },
   { name: 'Contact', href: '/contact' },
 ];
