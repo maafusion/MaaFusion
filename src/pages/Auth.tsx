@@ -196,6 +196,11 @@ export default function Auth() {
                   Please log in to view the gallery content.
                 </p>
               )}
+              {reason === "admin" && (
+                <p className="text-sm font-medium text-charcoal/80">
+                  Sign in with an administrator account to access the admin dashboard.
+                </p>
+              )}
             </div>
 
             <form className="mt-8 space-y-5 text-center" onSubmit={handleSubmit}>

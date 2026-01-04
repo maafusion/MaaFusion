@@ -22,7 +22,7 @@ export function Navbar() {
   const [isOpen, setIsOpen] = useState(false);
   const [isScrolled, setIsScrolled] = useState(false);
   const location = useLocation();
-  const { user, loading, signOut } = useAuth();
+  const { user, loading, signOut, isAdmin } = useAuth();
 
   const isActive = (path: string) => location.pathname === path;
   const isAuthPage = location.pathname === '/auth';
@@ -135,6 +135,16 @@ export function Navbar() {
                       {phone && <p className="text-xs text-charcoal/60">{phone}</p>}
                     </div>
                     <DropdownMenuSeparator />
+                    {isAdmin && (
+                      <>
+                        <DropdownMenuItem asChild>
+                          <Link to="/admin" className="text-charcoal/80">
+                            Admin dashboard
+                          </Link>
+                        </DropdownMenuItem>
+                        <DropdownMenuSeparator />
+                      </>
+                    )}
                     <DropdownMenuItem
                       onSelect={(event) => {
                         event.preventDefault();
@@ -196,6 +206,15 @@ export function Navbar() {
                     {user?.email && <p className="text-xs text-charcoal/60">{user.email}</p>}
                   </div>
                 </div>
+                {isAdmin && (
+                  <Link
+                    to="/admin"
+                    onClick={() => setIsOpen(false)}
+                    className="text-sm uppercase tracking-[0.3em] text-charcoal/70 hover:text-charcoal transition-colors"
+                  >
+                    Admin dashboard
+                  </Link>
+                )}
                 <button
                   type="button"
                   onClick={async () => {

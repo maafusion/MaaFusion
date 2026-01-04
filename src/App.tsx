@@ -11,11 +11,13 @@ import Privacy from "./pages/Privacy";
 import NotFound from "./pages/NotFound";
 import Auth from "./pages/Auth";
 
-import ComingSoon from "./pages/ComingSoon";
+import Gallery from "./pages/Gallery";
+import Admin from "./pages/Admin";
 
 import ScrollToTop from "./components/ScrollToTop";
 import { AuthProvider } from "./hooks/use-auth";
 import ProtectedRoute from "./components/ProtectedRoute";
+import AdminRoute from "./components/AdminRoute";
 
 const queryClient = new QueryClient();
 
@@ -37,8 +39,16 @@ const App = () => (
               path="/gallery"
               element={
                 <ProtectedRoute reason="gallery">
-                  <ComingSoon />
+                  <Gallery />
                 </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/admin"
+              element={
+                <AdminRoute>
+                  <Admin />
+                </AdminRoute>
               }
             />
             <Route path="/auth" element={<Auth />} />
