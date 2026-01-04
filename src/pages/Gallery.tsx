@@ -1,7 +1,21 @@
 import { useEffect, useMemo, useState } from "react";
 import { Layout } from "@/components/layout/Layout";
 import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
 import { ImageHoverCarousel } from "@/components/ui/image-hover-carousel";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { Textarea } from "@/components/ui/textarea";
+import { useAuth } from "@/hooks/use-auth";
+import { useToast } from "@/hooks/use-toast";
 import { supabase } from "@/lib/supabaseClient";
 import {
   PRODUCT_CATEGORIES,
@@ -18,15 +32,37 @@ type ProductImageRow = {
 type ProductRow = {
   id: string;
   name: string;
+  description: string;
+  price: number;
   category: ProductCategory;
   created_at: string;
   product_images?: ProductImageRow[];
 };
 
+const emptyInquiryForm = {
+  firstName: "",
+  lastName: "",
+  email: "",
+  phone: "",
+  requirements: "",
+};
+
 export default function Gallery() {
+  const { user } = useAuth();
+  const { toast } = useToast();
+  const currencyFormatter = useMemo(
+    () => new Intl.NumberFormat("en-IN", { style: "currency", currency: "INR" }),
+    [],
+  );
   const [products, setProducts] = useState<ProductRow[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [isEnquiryOpen, setIsEnquiryOpen] = useState(false);
+  const [selectedProduct, setSelectedProduct] = useState<ProductRow | null>(null);
+  const [isDetailsOpen, setIsDetailsOpen] = useState(false);
+  const [detailsProduct, setDetailsProduct] = useState<ProductRow | null>(null);
+  const [inquiryForm, setInquiryForm] = useState(emptyInquiryForm);
+  const [isSending, setIsSending] = useState(false);
 
   useEffect(() => {
     let isMounted = true;
@@ -35,7 +71,9 @@ export default function Gallery() {
       setError(null);
       const { data, error: queryError } = await supabase
         .from("products")
-        .select("id, name, category, created_at, product_images (id, storage_path, sort_order)")
+        .select(
+          "id, name, description, price, category, created_at, product_images (id, storage_path, sort_order)",
+        )
         .order("created_at", { ascending: false })
         .order("sort_order", { ascending: true, foreignTable: "product_images" });
 
@@ -66,6 +104,88 @@ export default function Gallery() {
     });
     return grouped;
   }, [products]);
+
+  const detailsImages = useMemo(() => {
+    if (!detailsProduct?.product_images?.length) return [];
+    const orderedImages = [...detailsProduct.product_images].sort(
+      (a, b) => (a.sort_order ?? 0) - (b.sort_order ?? 0),
+    );
+    return orderedImages.map((image) => getPublicImageUrl(image.storage_path));
+  }, [detailsProduct]);
+
+  const handleOpenDetails = (product: ProductRow) => {
+    setDetailsProduct(product);
+    setIsDetailsOpen(true);
+  };
+
+  useEffect(() => {
+    if (!isEnquiryOpen || !selectedProduct) return;
+    const metadata = (user?.user_metadata ?? {}) as Record<string, unknown>;
+    const firstName = typeof metadata.first_name === "string" ? metadata.first_name.trim() : "";
+    const lastName = typeof metadata.last_name === "string" ? metadata.last_name.trim() : "";
+    const phone = typeof metadata.phone === "string" ? metadata.phone.trim() : "";
+    setInquiryForm({
+      firstName,
+      lastName,
+      email: user?.email ?? "",
+      phone,
+      requirements: "",
+    });
+  }, [isEnquiryOpen, selectedProduct, user]);
+
+  const handleOpenInquiry = (product: ProductRow) => {
+    setSelectedProduct(product);
+    setIsEnquiryOpen(true);
+  };
+
+  const handleSendInquiry = async () => {
+    if (!selectedProduct || isSending) return;
+    const firstName = inquiryForm.firstName.trim();
+    const lastName = inquiryForm.lastName.trim();
+    const email = inquiryForm.email.trim();
+    const phone = inquiryForm.phone.trim();
+    const requirements = inquiryForm.requirements.trim();
+
+    if (!email || !requirements) {
+      toast({
+        title: "Missing details",
+        description: "Email and requirements are required to send an inquiry.",
+        variant: "destructive",
+      });
+      return;
+    }
+
+    setIsSending(true);
+    const { error: insertError } = await supabase.from("product_inquiries").insert({
+      product_id: selectedProduct.id,
+      product_name: selectedProduct.name,
+      user_id: user?.id ?? null,
+      first_name: firstName || null,
+      last_name: lastName || null,
+      email,
+      phone: phone || null,
+      requirements,
+    });
+
+    if (insertError) {
+      toast({
+        title: "Unable to send inquiry",
+        description: insertError.message,
+        variant: "destructive",
+      });
+      setIsSending(false);
+      return;
+    }
+
+    toast({
+      title: "Inquiry sent",
+      description: "We'll review your request and get back to you shortly.",
+    });
+    setIsSending(false);
+    setIsEnquiryOpen(false);
+    setSelectedProduct(null);
+    setInquiryForm(emptyInquiryForm);
+  };
 
   return (
     <Layout>
@@ -147,9 +267,19 @@ export default function Gallery() {
                             </div>
                             <div>
                               <h3 className="font-serif text-2xl text-charcoal">{product.name}</h3>
+                              <p className="mt-3 text-lg font-semibold text-gold-dark">
+                                {currencyFormatter.format(product.price)}
+                              </p>
                               <p className="mt-2 text-sm text-charcoal/60">
                                 {imageUrls.length} image{imageUrls.length === 1 ? "" : "s"}
                               </p>
+                              <Button
+                                variant="luxury"
+                                className="mt-4 w-full"
+                                onClick={() => handleOpenDetails(product)}
+                              >
+                                View more details
+                              </Button>
                             </div>
                           </div>
                         );
@@ -162,6 +292,162 @@ export default function Gallery() {
           )}
         </div>
       </section>
+
+      <Dialog
+        open={isEnquiryOpen}
+        onOpenChange={(open) => {
+          setIsEnquiryOpen(open);
+          if (!open) {
+            setSelectedProduct(null);
+          }
+        }}
+      >
+        <DialogContent className="sm:max-w-[520px]">
+          <DialogHeader>
+            <DialogTitle>Enquire about {selectedProduct?.name ?? "this product"}</DialogTitle>
+            <DialogDescription>
+              Confirm your details and share the requirements for this piece.
+            </DialogDescription>
+          </DialogHeader>
+          <form
+            className="space-y-5"
+            onSubmit={(event) => {
+              event.preventDefault();
+              handleSendInquiry();
+            }}
+          >
+            <div className="grid gap-4 sm:grid-cols-2">
+              <div className="space-y-2">
+                <Label htmlFor="inquiry-first-name">First name</Label>
+                <Input
+                  id="inquiry-first-name"
+                  value={inquiryForm.firstName}
+                  onChange={(event) =>
+                    setInquiryForm((prev) => ({ ...prev, firstName: event.target.value }))
+                  }
+                  placeholder="First name"
+                />
+              </div>
+              <div className="space-y-2">
+                <Label htmlFor="inquiry-last-name">Last name</Label>
+                <Input
+                  id="inquiry-last-name"
+                  value={inquiryForm.lastName}
+                  onChange={(event) =>
+                    setInquiryForm((prev) => ({ ...prev, lastName: event.target.value }))
+                  }
+                  placeholder="Last name"
+                />
+              </div>
+            </div>
+            <div className="space-y-2">
+              <Label htmlFor="inquiry-email">Email *</Label>
+              <Input
+                id="inquiry-email"
+                type="email"
+                value={inquiryForm.email}
+                onChange={(event) =>
+                  setInquiryForm((prev) => ({ ...prev, email: event.target.value }))
+                }
+                placeholder="you@example.com"
+                required
+              />
+            </div>
+            <div className="space-y-2">
+              <Label htmlFor="inquiry-phone">Phone</Label>
+              <Input
+                id="inquiry-phone"
+                value={inquiryForm.phone}
+                onChange={(event) =>
+                  setInquiryForm((prev) => ({ ...prev, phone: event.target.value }))
+                }
+                placeholder="Phone number"
+              />
+            </div>
+            <div className="space-y-2">
+              <Label htmlFor="inquiry-requirements">Requirements *</Label>
+              <Textarea
+                id="inquiry-requirements"
+                value={inquiryForm.requirements}
+                onChange={(event) =>
+                  setInquiryForm((prev) => ({ ...prev, requirements: event.target.value }))
+                }
+                placeholder="Share sizing, materials, timeline, or any personalization."
+                rows={4}
+                required
+              />
+            </div>
+            <DialogFooter>
+              <Button type="submit" variant="luxury" disabled={isSending}>
+                {isSending ? "Sending..." : "Send"}
+              </Button>
+            </DialogFooter>
+          </form>
+        </DialogContent>
+      </Dialog>
+
+      <Dialog
+        open={isDetailsOpen}
+        onOpenChange={(open) => {
+          setIsDetailsOpen(open);
+          if (!open) {
+            setDetailsProduct(null);
+          }
+        }}
+      >
+        <DialogContent className="sm:max-w-[760px]">
+          <DialogHeader>
+            <DialogTitle>{detailsProduct?.name ?? "Product details"}</DialogTitle>
+            <DialogDescription>
+              Review images, description, and pricing before inquiring.
+            </DialogDescription>
+          </DialogHeader>
+          {detailsProduct && (
+            <div className="grid gap-6 md:grid-cols-[1.1fr_0.9fr]">
+              <div className="space-y-4">
+                <div className="relative aspect-[3/4] overflow-hidden bg-white shadow-soft">
+                  {detailsImages.length ? (
+                    <ImageHoverCarousel
+                      images={detailsImages}
+                      alt={detailsProduct.name}
+                      className="h-full w-full object-cover"
+                    />
+                  ) : (
+                    <div className="flex h-full w-full items-center justify-center bg-white text-xs uppercase tracking-[0.3em] text-charcoal/40">
+                      No images
+                    </div>
+                  )}
+                </div>
+              </div>
+              <div className="space-y-4">
+                <div>
+                  <p className="text-xs uppercase tracking-[0.3em] text-charcoal/50">Description</p>
+                  <p className="mt-2 text-sm text-charcoal/80">
+                    {detailsProduct.description}
+                  </p>
+                </div>
+                <div>
+                  <p className="text-xs uppercase tracking-[0.3em] text-charcoal/50">Price</p>
+                  <p className="mt-2 text-lg font-semibold text-charcoal">
+                    {currencyFormatter.format(detailsProduct.price)}
+                  </p>
+                </div>
+                <DialogFooter className="sm:justify-start">
+                  <Button
+                    variant="luxury"
+                    onClick={() => {
+                      handleOpenInquiry(detailsProduct);
+                      setIsDetailsOpen(false);
+                    }}
+                  >
+                    Enquire Now
+                  </Button>
+                </DialogFooter>
+              </div>
+            </div>
+          )}
+        </DialogContent>
+      </Dialog>
     </Layout>
   );
 }

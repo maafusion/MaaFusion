@@ -13,6 +13,7 @@ import Auth from "./pages/Auth";
 
 import Gallery from "./pages/Gallery";
 import Admin from "./pages/Admin";
+import AdminInquiries from "./pages/AdminInquiries";
 
 import ScrollToTop from "./components/ScrollToTop";
 import { AuthProvider } from "./hooks/use-auth";
@@ -48,6 +49,14 @@ const App = () => (
               element={
                 <AdminRoute>
                   <Admin />
+                </AdminRoute>
+              }
+            />
+            <Route
+              path="/admin/inquiries"
+              element={
+                <AdminRoute>
+                  <AdminInquiries />
                 </AdminRoute>
               }
             />

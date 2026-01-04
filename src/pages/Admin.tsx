@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { Layout } from "@/components/layout/Layout";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -7,6 +7,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { ImageHoverCarousel } from "@/components/ui/image-hover-carousel";
+import { Textarea } from "@/components/ui/textarea";
 import { useToast } from "@/hooks/use-toast";
 import { supabase } from "@/lib/supabaseClient";
 import {
@@ -26,6 +27,8 @@ type ProductImageRow = {
 type ProductRow = {
   id: string;
   name: string;
+  description: string;
+  price: number;
   category: ProductCategory;
   created_at: string;
   product_images?: ProductImageRow[];
@@ -33,6 +36,8 @@ type ProductRow = {
 
 const emptyForm = {
   name: "",
+  description: "",
+  price: "",
   category: "" as ProductCategory | "",
 };
 
@@ -42,12 +47,16 @@ export default function Admin() {
   const [loading, setLoading] = useState(true);
   const [form, setForm] = useState(emptyForm);
   const [isCreating, setIsCreating] = useState(false);
+  const [createFiles, setCreateFiles] = useState<File[]>([]);
+  const createFileInputRef = useRef<HTMLInputElement | null>(null);
 
   const loadProducts = async () => {
     setLoading(true);
     const { data, error } = await supabase
       .from("products")
-      .select("id, name, category, created_at, product_images (id, storage_path, sort_order)")
+      .select(
+        "id, name, description, price, category, created_at, product_images (id, storage_path, sort_order)",
+      )
       .order("created_at", { ascending: false })
       .order("sort_order", { ascending: true, foreignTable: "product_images" });
 
@@ -73,50 +82,130 @@ export default function Admin() {
   const handleCreate = async () => {
     if (isCreating) return;
     const name = form.name.trim();
-    if (!name || !form.category) {
+    const description = form.description.trim();
+    const priceValue = Number.parseFloat(form.price);
+    if (!name || !description || !form.category) {
       toast({
         title: "Missing details",
-        description: "Provide a product name and category.",
+        description: "Provide a product name, description, price, and category.",
+        variant: "destructive",
+      });
+      return;
+    }
+    if (!Number.isFinite(priceValue) || priceValue < 0) {
+      toast({
+        title: "Invalid price",
+        description: "Enter a valid price.",
+        variant: "destructive",
+      });
+      return;
+    }
+    if (createFiles.length > MAX_PRODUCT_IMAGES) {
+      toast({
+        title: "Too many images",
+        description: `You can upload up to ${MAX_PRODUCT_IMAGES} images per product.`,
         variant: "destructive",
       });
       return;
     }
     setIsCreating(true);
-    const { error } = await supabase.from("products").insert({
-      name,
-      category: form.category,
-    });
-    if (error) {
+    const { data: createdProduct, error } = await supabase
+      .from("products")
+      .insert({
+        name,
+        description,
+        price: priceValue,
+        category: form.category,
+      })
+      .select("id")
+      .single();
+    if (error || !createdProduct) {
       toast({
         title: "Unable to create product",
-        description: error.message,
+        description: error?.message ?? "Please try again.",
         variant: "destructive",
       });
       setIsCreating(false);
       return;
     }
+
+    if (createFiles.length) {
+      for (let index = 0; index < createFiles.length; index += 1) {
+        const file = createFiles[index];
+        const path = `products/${createdProduct.id}/${crypto.randomUUID()}-${file.name}`;
+        const { error: uploadError } = await supabase.storage.from(GALLERY_BUCKET).upload(path, file, {
+          contentType: file.type,
+          upsert: false,
+        });
+        if (uploadError) {
+          toast({
+            title: "Upload failed",
+            description: uploadError.message,
+            variant: "destructive",
+          });
+          setIsCreating(false);
+          return;
+        }
+        const { error: insertError } = await supabase.from("product_images").insert({
+          product_id: createdProduct.id,
+          storage_path: path,
+          sort_order: index,
+        });
+        if (insertError) {
+          await supabase.storage.from(GALLERY_BUCKET).remove([path]);
+          toast({
+            title: "Image save failed",
+            description: insertError.message,
+            variant: "destructive",
+          });
+          setIsCreating(false);
+          return;
+        }
+      }
+    }
     toast({
       title: "Product created",
-      description: "Add images to complete the gallery entry.",
+      description: createFiles.length
+        ? "Product and images added to the gallery."
+        : "Product created without images.",
     });
     setForm(emptyForm);
+    setCreateFiles([]);
+    if (createFileInputRef.current) {
+      createFileInputRef.current.value = "";
+    }
     setIsCreating(false);
     await loadProducts();
   };
 
-  const handleUpdate = async (productId: string, name: string, category: ProductCategory) => {
+  const handleUpdate = async (
+    productId: string,
+    name: string,
+    description: string,
+    price: number,
+    category: ProductCategory,
+  ) => {
     const trimmedName = name.trim();
-    if (!trimmedName) {
+    const trimmedDescription = description.trim();
+    if (!trimmedName || !trimmedDescription) {
       toast({
         title: "Name required",
-        description: "Product name cannot be empty.",
+        description: "Product name and description cannot be empty.",
+        variant: "destructive",
+      });
+      return;
+    }
+    if (!Number.isFinite(price) || price < 0) {
+      toast({
+        title: "Invalid price",
+        description: "Enter a valid price.",
         variant: "destructive",
       });
       return;
     }
     const { error } = await supabase
       .from("products")
-      .update({ name: trimmedName, category })
+      .update({ name: trimmedName, description: trimmedDescription, price, category })
       .eq("id", productId);
 
     if (error) {
@@ -249,7 +338,7 @@ export default function Admin() {
               <CardTitle className="font-serif text-2xl text-charcoal">New product</CardTitle>
             </CardHeader>
             <CardContent className="space-y-6">
-              <div className="grid gap-6 md:grid-cols-[1.5fr_1fr_auto]">
+              <div className="grid gap-6 md:grid-cols-2">
                 <div className="space-y-2">
                   <Label htmlFor="product-name">Product name</Label>
                   <Input
@@ -257,6 +346,18 @@ export default function Admin() {
                     value={form.name}
                     onChange={(event) => setForm((prev) => ({ ...prev, name: event.target.value }))}
                     placeholder="Enter product name"
+                  />
+                </div>
+                <div className="space-y-2">
+                  <Label htmlFor="product-price">Price</Label>
+                  <Input
+                    id="product-price"
+                    type="number"
+                    min="0"
+                    step="0.01"
+                    value={form.price}
+                    onChange={(event) => setForm((prev) => ({ ...prev, price: event.target.value }))}
+                    placeholder="Enter price"
                   />
                 </div>
                 <div className="space-y-2">
@@ -279,7 +380,45 @@ export default function Admin() {
                     </SelectContent>
                   </Select>
                 </div>
-                <div className="flex items-end">
+                <div className="space-y-2 md:col-span-2">
+                  <Label htmlFor="product-description">Description</Label>
+                  <Textarea
+                    id="product-description"
+                    value={form.description}
+                    onChange={(event) =>
+                      setForm((prev) => ({ ...prev, description: event.target.value }))
+                    }
+                    placeholder="Describe the product"
+                    rows={3}
+                  />
+                </div>
+                <div className="space-y-2 md:col-span-2">
+                  <Label htmlFor="product-images">Images</Label>
+                  <Input
+                    ref={createFileInputRef}
+                    id="product-images"
+                    type="file"
+                    accept="image/*"
+                    multiple
+                    onChange={(event) => {
+                      const selected = Array.from(event.target.files ?? []);
+                      if (selected.length > MAX_PRODUCT_IMAGES) {
+                        toast({
+                          title: "Too many images",
+                          description: `You can upload up to ${MAX_PRODUCT_IMAGES} images per product.`,
+                          variant: "destructive",
+                        });
+                        event.target.value = "";
+                        return;
+                      }
+                      setCreateFiles(selected);
+                    }}
+                  />
+                  <p className="text-xs text-charcoal/60">
+                    Selected files: {createFiles.length}
+                  </p>
+                </div>
+                <div className="flex items-end md:col-span-2">
                   <Button onClick={handleCreate} disabled={isCreating}>
                     {isCreating ? "Creating..." : "Create product"}
                   </Button>
@@ -317,13 +456,20 @@ export default function Admin() {
           )}
         </div>
       </section>
+
     </Layout>
   );
 }
 
 type AdminProductCardProps = {
   product: ProductRow;
-  onUpdate: (productId: string, name: string, category: ProductCategory) => Promise<void> | void;
+  onUpdate: (
+    productId: string,
+    name: string,
+    description: string,
+    price: number,
+    category: ProductCategory,
+  ) => Promise<void> | void;
   onDelete: (product: ProductRow) => Promise<void> | void;
   onUpload: (product: ProductRow, files: File[]) => Promise<void> | void;
   onDeleteImage: (product: ProductRow, image: ProductImageRow) => Promise<void> | void;
@@ -337,15 +483,23 @@ function AdminProductCard({
   onDeleteImage,
 }: AdminProductCardProps) {
   const { toast } = useToast();
+  const currencyFormatter = useMemo(
+    () => new Intl.NumberFormat("en-IN", { style: "currency", currency: "INR" }),
+    [],
+  );
   const [name, setName] = useState(product.name);
+  const [description, setDescription] = useState(product.description ?? "");
+  const [price, setPrice] = useState(product.price.toString());
   const [category, setCategory] = useState<ProductCategory>(product.category);
   const [files, setFiles] = useState<File[]>([]);
   const [isSaving, setIsSaving] = useState(false);
 
   useEffect(() => {
     setName(product.name);
+    setDescription(product.description ?? "");
+    setPrice(product.price.toString());
     setCategory(product.category);
-  }, [product.category, product.name]);
+  }, [product.category, product.description, product.name, product.price]);
 
   const imageUrls = useMemo(() => {
     const ordered = [...(product.product_images ?? [])].sort(
@@ -382,8 +536,9 @@ function AdminProductCard({
   };
 
   const handleUpdateClick = async () => {
+    const priceValue = Number.parseFloat(price);
     setIsSaving(true);
-    await onUpdate(product.id, name, category);
+    await onUpdate(product.id, name, description, priceValue, category);
     setIsSaving(false);
   };
 
@@ -394,6 +549,9 @@ function AdminProductCard({
           <div>
             <CardTitle className="font-serif text-xl text-charcoal">{product.name}</CardTitle>
             <p className="text-xs uppercase tracking-[0.3em] text-charcoal/50">{product.category}</p>
+            <p className="mt-2 text-sm text-charcoal/70">
+              Price: {currencyFormatter.format(product.price)}
+            </p>
           </div>
           <Button variant="outline" onClick={() => onDelete(product)}>
             Delete
@@ -420,6 +578,26 @@ function AdminProductCard({
                 ))}
               </SelectContent>
             </Select>
+          </div>
+        </div>
+        <div className="grid gap-4 md:grid-cols-2">
+          <div className="space-y-2">
+            <Label>Price</Label>
+            <Input
+              type="number"
+              min="0"
+              step="0.01"
+              value={price}
+              onChange={(event) => setPrice(event.target.value)}
+            />
+          </div>
+          <div className="space-y-2 md:col-span-2">
+            <Label>Description</Label>
+            <Textarea
+              value={description}
+              onChange={(event) => setDescription(event.target.value)}
+              rows={3}
+            />
           </div>
         </div>
         <Button onClick={handleUpdateClick} disabled={isSaving}>

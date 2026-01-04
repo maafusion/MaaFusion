@@ -139,7 +139,12 @@ export function Navbar() {
                       <>
                         <DropdownMenuItem asChild>
                           <Link to="/admin" className="text-charcoal/80">
-                            Admin dashboard
+                            Gallery
+                          </Link>
+                        </DropdownMenuItem>
+                        <DropdownMenuItem asChild>
+                          <Link to="/admin/inquiries" className="text-charcoal/80">
+                            Gallery inquiries
                           </Link>
                         </DropdownMenuItem>
                         <DropdownMenuSeparator />
@@ -212,7 +217,16 @@ export function Navbar() {
                     onClick={() => setIsOpen(false)}
                     className="text-sm uppercase tracking-[0.3em] text-charcoal/70 hover:text-charcoal transition-colors"
                   >
-                    Admin dashboard
+                    Gallery
+                  </Link>
+                )}
+                {isAdmin && (
+                  <Link
+                    to="/admin/inquiries"
+                    onClick={() => setIsOpen(false)}
+                    className="text-sm uppercase tracking-[0.3em] text-charcoal/70 hover:text-charcoal transition-colors"
+                  >
+                    Gallery inquiries
                   </Link>
                 )}
                 <button
