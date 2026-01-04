@@ -27,6 +27,7 @@ export default function Auth() {
   const { user } = useAuth();
 
   const paramMode = searchParams.get("mode") === "sign-up" ? "sign-up" : "sign-in";
+  const reason = searchParams.get("reason");
   const [mode, setMode] = useState<AuthMode>(paramMode);
   const [form, setForm] = useState(DEFAULT_FORM);
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -190,6 +191,11 @@ export default function Auth() {
               <p className="text-sm uppercase tracking-[0.3em] text-charcoal/60">
                 {mode === "sign-in" ? "Sign in" : "Sign up"}
               </p>
+              {reason === "gallery" && (
+                <p className="text-sm font-medium text-charcoal/80">
+                  Please log in to view the gallery content.
+                </p>
+              )}
             </div>
 
             <form className="mt-8 space-y-5 text-center" onSubmit={handleSubmit}>

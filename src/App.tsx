@@ -15,6 +15,7 @@ import ComingSoon from "./pages/ComingSoon";
 
 import ScrollToTop from "./components/ScrollToTop";
 import { AuthProvider } from "./hooks/use-auth";
+import ProtectedRoute from "./components/ProtectedRoute";
 
 const queryClient = new QueryClient();
 
@@ -32,7 +33,14 @@ const App = () => (
             <Route path="/contact" element={<Contact />} />
             <Route path="/terms" element={<Terms />} />
             <Route path="/privacy" element={<Privacy />} />
-          <Route path="/gallery" element={<ComingSoon />} />
+            <Route
+              path="/gallery"
+              element={
+                <ProtectedRoute reason="gallery">
+                  <ComingSoon />
+                </ProtectedRoute>
+              }
+            />
             <Route path="/auth" element={<Auth />} />
             <Route path="*" element={<NotFound />} />
           </Routes>
