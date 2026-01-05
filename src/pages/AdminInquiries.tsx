@@ -133,7 +133,7 @@ export default function AdminInquiries() {
             <Badge className="w-fit rounded-full border border-charcoal/20 bg-white/70 px-4 py-1 text-[10px] uppercase tracking-[0.35em] text-charcoal/70">
               Admin dashboard
             </Badge>
-            <h1 className="font-serif text-4xl text-charcoal md:text-6xl">Gallery inquiries</h1>
+            <h1 className="font-serif text-4xl text-charcoal md:text-6xl">Inquiries</h1>
             <p className="max-w-2xl text-base text-charcoal/60 md:text-lg">
               Review customer submissions tied to gallery products.
             </p>

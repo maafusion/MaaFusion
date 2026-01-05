@@ -138,13 +138,18 @@ export function Navbar() {
                     {isAdmin && (
                       <>
                         <DropdownMenuItem asChild>
-                          <Link to="/admin" className="text-charcoal/80">
-                            Gallery
+                          <Link to="/admin/products/add" className="text-charcoal/80">
+                            Add
                           </Link>
                         </DropdownMenuItem>
                         <DropdownMenuItem asChild>
-                          <Link to="/admin/inquiries" className="text-charcoal/80">
-                            Gallery inquiries
+                          <Link to="/admin/products/manage" className="text-charcoal/80">
+                            Manage
+                          </Link>
+                        </DropdownMenuItem>
+                        <DropdownMenuItem asChild>
+                          <Link to="/admin/products/inquiries" className="text-charcoal/80">
+                            Inquiries
                           </Link>
                         </DropdownMenuItem>
                         <DropdownMenuSeparator />
@@ -213,20 +218,29 @@ export function Navbar() {
                 </div>
                 {isAdmin && (
                   <Link
-                    to="/admin"
+                    to="/admin/products/add"
                     onClick={() => setIsOpen(false)}
                     className="text-sm uppercase tracking-[0.3em] text-charcoal/70 hover:text-charcoal transition-colors"
                   >
-                    Gallery
+                    Add
                   </Link>
                 )}
                 {isAdmin && (
                   <Link
-                    to="/admin/inquiries"
+                    to="/admin/products/manage"
                     onClick={() => setIsOpen(false)}
                     className="text-sm uppercase tracking-[0.3em] text-charcoal/70 hover:text-charcoal transition-colors"
                   >
-                    Gallery inquiries
+                    Manage
+                  </Link>
+                )}
+                {isAdmin && (
+                  <Link
+                    to="/admin/products/inquiries"
+                    onClick={() => setIsOpen(false)}
+                    className="text-sm uppercase tracking-[0.3em] text-charcoal/70 hover:text-charcoal transition-colors"
+                  >
+                    Inquiries
                   </Link>
                 )}
                 <button
