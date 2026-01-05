@@ -12,7 +12,8 @@ import NotFound from "./pages/NotFound";
 import Auth from "./pages/Auth";
 
 import Gallery from "./pages/Gallery";
-import Admin from "./pages/Admin";
+import AdminAddProducts from "./pages/AdminAddProducts";
+import AdminManageProducts from "./pages/AdminManageProducts";
 import AdminInquiries from "./pages/AdminInquiries";
 
 import ScrollToTop from "./components/ScrollToTop";
@@ -45,15 +46,23 @@ const App = () => (
               }
             />
             <Route
-              path="/admin"
+              path="/admin/products/add"
               element={
                 <AdminRoute>
-                  <Admin />
+                  <AdminAddProducts />
                 </AdminRoute>
               }
             />
             <Route
-              path="/admin/inquiries"
+              path="/admin/products/manage"
+              element={
+                <AdminRoute>
+                  <AdminManageProducts />
+                </AdminRoute>
+              }
+            />
+            <Route
+              path="/admin/products/inquiries"
               element={
                 <AdminRoute>
                   <AdminInquiries />
