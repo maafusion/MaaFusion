@@ -1,5 +1,5 @@
 import { useRef, useState } from "react";
-import { Plus } from "lucide-react";
+import { Plus, X } from "lucide-react";
 import { Link } from "react-router-dom";
 import { Layout } from "@/components/layout/Layout";
 import { Badge } from "@/components/ui/badge";
@@ -47,13 +47,15 @@ export default function AdminAddProducts() {
   const [isCreating, setIsCreating] = useState(false);
   const [isUploading, setIsUploading] = useState(false);
   const [isDiscarding, setIsDiscarding] = useState(false);
+  const [removingImage, setRemovingImage] = useState<string | null>(null);
   const [createFiles, setCreateFiles] = useState<File[]>([]);
   const [uploadProgress, setUploadProgress] = useState<UploadProgress | null>(null);
   const [previewUrls, setPreviewUrls] = useState<string[]>([]);
   const [uploadedImages, setUploadedImages] = useState<UploadedImage[]>([]);
   const createFileInputRef = useRef<HTMLInputElement | null>(null);
   const totalBytes = createFiles.reduce((sum, file) => sum + (file.size || 0), 0);
-  const remainingSlots = MAX_PRODUCT_IMAGES - createFiles.length;
+  const selectedCount = createFiles.length + uploadedImages.length;
+  const remainingSlots = MAX_PRODUCT_IMAGES - selectedCount;
   const hasPendingUpload = createFiles.length > 0 && uploadedImages.length === 0;
 
   const formatBytes = (value: number) => {
@@ -269,6 +271,7 @@ export default function AdminAddProducts() {
     previewUrls.forEach((url) => URL.revokeObjectURL(url));
     setPreviewUrls([]);
     setUploadedImages(uploaded);
+    setCreateFiles([]);
     setIsUploading(false);
     setUploadProgress(null);
     toast({
@@ -303,6 +306,35 @@ export default function AdminAddProducts() {
       createFileInputRef.current.value = "";
     }
     setIsDiscarding(false);
+  };
+
+  const handleRemoveSelectedImage = (index: number) => {
+    setCreateFiles((prev) => prev.filter((_, itemIndex) => itemIndex !== index));
+    setPreviewUrls((prev) => {
+      const next = [...prev];
+      const [removed] = next.splice(index, 1);
+      if (removed) {
+        URL.revokeObjectURL(removed);
+      }
+      return next;
+    });
+  };
+
+  const handleRemoveUploadedImage = async (image: UploadedImage) => {
+    if (removingImage || isUploading || isDiscarding) return;
+    setRemovingImage(image.storage_path);
+    const { error } = await supabase.storage.from(GALLERY_BUCKET).remove([image.storage_path]);
+    if (error) {
+      toast({
+        title: "Remove failed",
+        description: error.message,
+        variant: "destructive",
+      });
+      setRemovingImage(null);
+      return;
+    }
+    setUploadedImages((prev) => prev.filter((item) => item.storage_path !== image.storage_path));
+    setRemovingImage(null);
   };
 
   return (
@@ -413,7 +445,7 @@ export default function AdminAddProducts() {
                     className="hidden"
                   />
                   <div className="flex flex-col gap-2 text-xs text-charcoal/60">
-                    <span>Selected files: {createFiles.length}</span>
+                    <span>Selected files: {selectedCount}</span>
                     <span>Remaining slots: {remainingSlots}</span>
                   </div>
                   {createFiles.length > 0 && (
@@ -467,30 +499,46 @@ export default function AdminAddProducts() {
                     </div>
                   )}
                   {(previewUrls.length > 0 || uploadedImages.length > 0) && (
-                    <div className="grid grid-cols-4 gap-3 sm:grid-cols-6">
+                    <div className="grid grid-cols-3 gap-3 sm:grid-cols-4">
                       {uploadedImages.length > 0
                         ? uploadedImages.map((image) => (
-                            <div
-                              key={image.storage_path}
-                              className="h-16 w-16 overflow-hidden rounded-lg bg-cream"
-                            >
-                              <img
-                                src={getPublicImageUrl(image.storage_path)}
-                                alt="Uploaded product"
-                                className="h-full w-full object-cover"
-                              />
+                            <div key={image.storage_path} className="group relative">
+                              <div className="h-24 w-24 overflow-hidden rounded-lg bg-cream">
+                                <img
+                                  src={getPublicImageUrl(image.storage_path)}
+                                  alt="Uploaded product"
+                                  className="h-full w-full object-cover"
+                                />
+                              </div>
+                              <button
+                                type="button"
+                                className="absolute right-1 top-1 flex h-7 w-7 items-center justify-center rounded-full bg-white/90 text-charcoal shadow-sm transition hover:bg-white"
+                                onClick={() => {
+                                  void handleRemoveUploadedImage(image);
+                                }}
+                                disabled={!!removingImage || isUploading || isDiscarding}
+                              >
+                                <X className="h-4 w-4" />
+                              </button>
                             </div>
                           ))
                         : previewUrls.map((url, index) => (
-                            <div
-                              key={`${url}-${index}`}
-                              className="h-16 w-16 overflow-hidden rounded-lg bg-cream"
-                            >
-                              <img
-                                src={url}
-                                alt={`Selected product ${index + 1}`}
-                                className="h-full w-full object-cover"
-                              />
+                            <div key={`${url}-${index}`} className="group relative">
+                              <div className="h-24 w-24 overflow-hidden rounded-lg bg-cream">
+                                <img
+                                  src={url}
+                                  alt={`Selected product ${index + 1}`}
+                                  className="h-full w-full object-cover"
+                                />
+                              </div>
+                              <button
+                                type="button"
+                                className="absolute right-1 top-1 flex h-7 w-7 items-center justify-center rounded-full bg-white/90 text-charcoal shadow-sm transition hover:bg-white"
+                                onClick={() => handleRemoveSelectedImage(index)}
+                                disabled={isUploading || isDiscarding}
+                              >
+                                <X className="h-4 w-4" />
+                              </button>
                             </div>
                           ))}
                     </div>
