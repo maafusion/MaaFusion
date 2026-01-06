@@ -60,7 +60,6 @@ export default function AdminManageProducts() {
   const { toast } = useToast();
   const [products, setProducts] = useState<ProductRow[]>([]);
   const [loading, setLoading] = useState(true);
-  const [showLoadingBar, setShowLoadingBar] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
   const [categoryFilter, setCategoryFilter] = useState<ProductCategory | "all">("all");
   const [page, setPage] = useState(1);
@@ -92,15 +91,6 @@ export default function AdminManageProducts() {
   useEffect(() => {
     loadProducts();
   }, []);
-
-  useEffect(() => {
-    if (!loading) {
-      setShowLoadingBar(false);
-      return;
-    }
-    const timer = window.setTimeout(() => setShowLoadingBar(true), 300);
-    return () => window.clearTimeout(timer);
-  }, [loading]);
 
   const totalProducts = useMemo(() => products.length, [products.length]);
   const normalizedQuery = searchQuery.trim().toLowerCase();
@@ -418,12 +408,6 @@ export default function AdminManageProducts() {
               Showing {filteredProducts.length} of {totalProducts}
             </span>
           </div>
-
-          {showLoadingBar && (
-            <div className="rounded-2xl border border-charcoal/10 bg-cream/40 px-4 py-3">
-              <Progress value={100} className="h-2 w-full animate-pulse bg-cream/60" />
-            </div>
-          )}
 
           <div className="grid gap-4 md:grid-cols-[220px_220px_1fr]">
             <div className="space-y-2">
