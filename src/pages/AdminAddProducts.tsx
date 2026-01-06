@@ -5,6 +5,15 @@ import { Layout } from "@/components/layout/Layout";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import {
+  AlertDialog,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from "@/components/ui/alert-dialog";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Progress } from "@/components/ui/progress";
@@ -35,6 +44,12 @@ type UploadProgress = {
   totalBytes: number;
 };
 
+type ProductImageRow = {
+  id: string;
+  storage_path: string;
+  sort_order: number | null;
+};
+
 export default function AdminAddProducts() {
   const { toast } = useToast();
   const [form, setForm] = useState(emptyForm);
@@ -42,6 +57,10 @@ export default function AdminAddProducts() {
   const [isUploading, setIsUploading] = useState(false);
   const [createFiles, setCreateFiles] = useState<File[]>([]);
   const [uploadProgress, setUploadProgress] = useState<UploadProgress | null>(null);
+  const [uploadReview, setUploadReview] = useState<ProductImageRow[] | null>(null);
+  const [isReviewOpen, setIsReviewOpen] = useState(false);
+  const [isDiscarding, setIsDiscarding] = useState(false);
+  const [createdProductId, setCreatedProductId] = useState<string | null>(null);
   const createFileInputRef = useRef<HTMLInputElement | null>(null);
   const totalBytes = createFiles.reduce((sum, file) => sum + (file.size || 0), 0);
   const remainingSlots = MAX_PRODUCT_IMAGES - createFiles.length;
@@ -122,6 +141,7 @@ export default function AdminAddProducts() {
       return;
     }
 
+    let insertedImages: ProductImageRow[] = [];
     if (createFiles.length) {
       const totalFiles = createFiles.length;
       let uploadedBytes = 0;
@@ -204,11 +224,15 @@ export default function AdminAddProducts() {
           uploadedBytes,
           totalBytes,
         });
-        const { error: insertError } = await supabase.from("product_images").insert({
-          product_id: createdProduct.id,
-          storage_path: path,
-          sort_order: index,
-        });
+        const { data: insertedImage, error: insertError } = await supabase
+          .from("product_images")
+          .insert({
+            product_id: createdProduct.id,
+            storage_path: path,
+            sort_order: index,
+          })
+          .select("id, storage_path, sort_order")
+          .single();
         if (insertError) {
           await supabase.storage.from(GALLERY_BUCKET).remove([path]);
           toast({
@@ -221,6 +245,9 @@ export default function AdminAddProducts() {
           setUploadProgress(null);
           return;
         }
+        if (insertedImage) {
+          insertedImages.push(insertedImage as ProductImageRow);
+        }
       }
       setIsUploading(false);
       setUploadProgress(null);
@@ -228,9 +255,14 @@ export default function AdminAddProducts() {
     toast({
       title: "Product created",
       description: createFiles.length
-        ? "Product and images added to the gallery."
+        ? "Product created. Review uploaded images."
         : "Product created without images.",
     });
+    if (insertedImages.length) {
+      setUploadReview(insertedImages);
+      setCreatedProductId(createdProduct.id);
+      setIsReviewOpen(true);
+    }
     setForm(emptyForm);
     setCreateFiles([]);
     if (createFileInputRef.current) {
@@ -390,6 +422,76 @@ export default function AdminAddProducts() {
           </Card>
         </div>
       </section>
+      <AlertDialog
+        open={isReviewOpen}
+        onOpenChange={(open) => {
+          if (!open) {
+            setUploadReview(null);
+            setCreatedProductId(null);
+            setIsDiscarding(false);
+          }
+          setIsReviewOpen(open);
+        }}
+      >
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>Upload complete</AlertDialogTitle>
+            <AlertDialogDescription>Save these images or discard the upload.</AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <Button
+              type="button"
+              variant="outline"
+              disabled={isDiscarding}
+              onClick={async () => {
+                if (!uploadReview || !createdProductId) return;
+                setIsDiscarding(true);
+                const paths = uploadReview.map((image) => image.storage_path);
+                const { error: storageError } = await supabase.storage.from(GALLERY_BUCKET).remove(paths);
+                if (storageError) {
+                  toast({
+                    title: "Storage delete failed",
+                    description: storageError.message,
+                    variant: "destructive",
+                  });
+                }
+                const { error: deleteError } = await supabase
+                  .from("product_images")
+                  .delete()
+                  .in(
+                    "id",
+                    uploadReview.map((image) => image.id),
+                  );
+                if (deleteError) {
+                  toast({
+                    title: "Discard failed",
+                    description: deleteError.message,
+                    variant: "destructive",
+                  });
+                  setIsDiscarding(false);
+                  return;
+                }
+                toast({ title: "Images discarded" });
+                setIsDiscarding(false);
+                setUploadReview(null);
+                setCreatedProductId(null);
+                setIsReviewOpen(false);
+              }}
+            >
+              {isDiscarding ? "Discarding..." : "Discard"}
+            </Button>
+            <AlertDialogCancel
+              onClick={() => {
+                setUploadReview(null);
+                setCreatedProductId(null);
+                setIsReviewOpen(false);
+              }}
+            >
+              Save
+            </AlertDialogCancel>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
     </Layout>
   );
 }
