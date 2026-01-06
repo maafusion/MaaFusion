@@ -5,15 +5,7 @@ import { Layout } from "@/components/layout/Layout";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import {
-  AlertDialog,
-  AlertDialogCancel,
-  AlertDialogContent,
-  AlertDialogDescription,
-  AlertDialogFooter,
-  AlertDialogHeader,
-  AlertDialogTitle,
-} from "@/components/ui/alert-dialog";
+import { getPublicImageUrl } from "@/lib/gallery";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Progress } from "@/components/ui/progress";
@@ -44,8 +36,7 @@ type UploadProgress = {
   totalBytes: number;
 };
 
-type ProductImageRow = {
-  id: string;
+type UploadedImage = {
   storage_path: string;
   sort_order: number | null;
 };
@@ -55,15 +46,15 @@ export default function AdminAddProducts() {
   const [form, setForm] = useState(emptyForm);
   const [isCreating, setIsCreating] = useState(false);
   const [isUploading, setIsUploading] = useState(false);
+  const [isDiscarding, setIsDiscarding] = useState(false);
   const [createFiles, setCreateFiles] = useState<File[]>([]);
   const [uploadProgress, setUploadProgress] = useState<UploadProgress | null>(null);
-  const [uploadReview, setUploadReview] = useState<ProductImageRow[] | null>(null);
-  const [isReviewOpen, setIsReviewOpen] = useState(false);
-  const [isDiscarding, setIsDiscarding] = useState(false);
-  const [createdProductId, setCreatedProductId] = useState<string | null>(null);
+  const [previewUrls, setPreviewUrls] = useState<string[]>([]);
+  const [uploadedImages, setUploadedImages] = useState<UploadedImage[]>([]);
   const createFileInputRef = useRef<HTMLInputElement | null>(null);
   const totalBytes = createFiles.reduce((sum, file) => sum + (file.size || 0), 0);
   const remainingSlots = MAX_PRODUCT_IMAGES - createFiles.length;
+  const hasPendingUpload = createFiles.length > 0 && uploadedImages.length === 0;
 
   const formatBytes = (value: number) => {
     if (!Number.isFinite(value)) return "0 B";
@@ -88,11 +79,22 @@ export default function AdminAddProducts() {
       event.target.value = "";
       return;
     }
+    previewUrls.forEach((url) => URL.revokeObjectURL(url));
+    setUploadedImages([]);
     setCreateFiles(selected);
+    setPreviewUrls(selected.map((file) => URL.createObjectURL(file)));
   };
 
   const handleCreate = async () => {
     if (isCreating) return;
+    if (hasPendingUpload) {
+      toast({
+        title: "Upload images first",
+        description: "Click Upload to finish adding selected images.",
+        variant: "destructive",
+      });
+      return;
+    }
     const name = form.name.trim();
     const description = form.description.trim();
     const priceValue = Number.parseFloat(form.price);
@@ -141,135 +143,166 @@ export default function AdminAddProducts() {
       return;
     }
 
-    let insertedImages: ProductImageRow[] = [];
-    if (createFiles.length) {
-      const totalFiles = createFiles.length;
-      let uploadedBytes = 0;
-      setIsUploading(true);
-      setUploadProgress({
-        filePercent: 0,
-        bytesPercent: 0,
-        fileIndex: 0,
-        totalFiles,
-        uploadedBytes: 0,
-        totalBytes,
-      });
-      for (let index = 0; index < createFiles.length; index += 1) {
-        const file = createFiles[index];
-        const path = `products/${createdProduct.id}/${crypto.randomUUID()}-${file.name}`;
-        const { data, error: uploadError } = await supabase
-          .storage
-          .from(GALLERY_BUCKET)
-          .createSignedUploadUrl(path, 60);
-        if (uploadError || !data?.signedUrl) {
-          toast({
-            title: "Upload failed",
-            description: uploadError?.message ?? "Unable to create upload link.",
-            variant: "destructive",
-          });
-          setIsCreating(false);
-          setIsUploading(false);
-          setUploadProgress(null);
-          return;
-        }
-        try {
-          await new Promise<void>((resolve, reject) => {
-            const xhr = new XMLHttpRequest();
-            xhr.open("PUT", data.signedUrl);
-            xhr.setRequestHeader("Content-Type", file.type || "application/octet-stream");
-            xhr.upload.onprogress = (event) => {
-              if (!event.lengthComputable) return;
-              const loaded = Math.min(event.loaded, file.size);
-              const currentBytes = uploadedBytes + loaded;
-              const bytesPercent = totalBytes ? Math.round((currentBytes / totalBytes) * 100) : 0;
-              const filePercent = file.size
-                ? Math.round(((index + loaded / file.size) / totalFiles) * 100)
-                : Math.round(((index + 1) / totalFiles) * 100);
-              setUploadProgress({
-                filePercent,
-                bytesPercent,
-                fileIndex: index + 1,
-                totalFiles,
-                uploadedBytes: currentBytes,
-                totalBytes,
-              });
-            };
-            xhr.onload = () => {
-              if (xhr.status >= 200 && xhr.status < 300) {
-                resolve();
-                return;
-              }
-              reject(new Error("Upload failed."));
-            };
-            xhr.onerror = () => reject(new Error("Upload failed."));
-            xhr.send(file);
-          });
-        } catch (error) {
-          toast({
-            title: "Upload failed",
-            description: error instanceof Error ? error.message : "Unable to upload image.",
-            variant: "destructive",
-          });
-          setIsCreating(false);
-          setIsUploading(false);
-          setUploadProgress(null);
-          return;
-        }
-        uploadedBytes += file.size || 0;
-        setUploadProgress({
-          filePercent: Math.round(((index + 1) / totalFiles) * 100),
-          bytesPercent: totalBytes ? Math.round((uploadedBytes / totalBytes) * 100) : 100,
-          fileIndex: index + 1,
-          totalFiles,
-          uploadedBytes,
-          totalBytes,
+    if (uploadedImages.length) {
+      const { error: insertError } = await supabase.from("product_images").insert(
+        uploadedImages.map((image, index) => ({
+          product_id: createdProduct.id,
+          storage_path: image.storage_path,
+          sort_order: index,
+        })),
+      );
+      if (insertError) {
+        toast({
+          title: "Image save failed",
+          description: insertError.message,
+          variant: "destructive",
         });
-        const { data: insertedImage, error: insertError } = await supabase
-          .from("product_images")
-          .insert({
-            product_id: createdProduct.id,
-            storage_path: path,
-            sort_order: index,
-          })
-          .select("id, storage_path, sort_order")
-          .single();
-        if (insertError) {
-          await supabase.storage.from(GALLERY_BUCKET).remove([path]);
-          toast({
-            title: "Image save failed",
-            description: insertError.message,
-            variant: "destructive",
-          });
-          setIsCreating(false);
-          setIsUploading(false);
-          setUploadProgress(null);
-          return;
-        }
-        if (insertedImage) {
-          insertedImages.push(insertedImage as ProductImageRow);
-        }
+        setIsCreating(false);
+        return;
       }
-      setIsUploading(false);
-      setUploadProgress(null);
     }
     toast({
       title: "Product created",
-      description: createFiles.length
-        ? "Product created. Review uploaded images."
+      description: uploadedImages.length
+        ? "Product and images added to the gallery."
         : "Product created without images.",
     });
-    if (insertedImages.length) {
-      setUploadReview(insertedImages);
-      setCreatedProductId(createdProduct.id);
-      setIsReviewOpen(true);
-    }
     setForm(emptyForm);
+    previewUrls.forEach((url) => URL.revokeObjectURL(url));
+    setPreviewUrls([]);
     setCreateFiles([]);
+    setUploadedImages([]);
     if (createFileInputRef.current) {
       createFileInputRef.current.value = "";
     }
     setUploadProgress(null);
     setIsCreating(false);
+  };
+
+  const handleUploadImages = async () => {
+    if (!createFiles.length || isUploading) return;
+    const totalFiles = createFiles.length;
+    let uploadedBytes = 0;
+    setIsUploading(true);
+    setUploadProgress({
+      filePercent: 0,
+      bytesPercent: 0,
+      fileIndex: 0,
+      totalFiles,
+      uploadedBytes: 0,
+      totalBytes,
+    });
+    const draftId = crypto.randomUUID();
+    const uploaded: UploadedImage[] = [];
+
+    for (let index = 0; index < createFiles.length; index += 1) {
+      const file = createFiles[index];
+      const path = `products/drafts/${draftId}/${crypto.randomUUID()}-${file.name}`;
+      const { data, error: uploadError } = await supabase
+        .storage
+        .from(GALLERY_BUCKET)
+        .createSignedUploadUrl(path, 60);
+      if (uploadError || !data?.signedUrl) {
+        toast({
+          title: "Upload failed",
+          description: uploadError?.message ?? "Unable to create upload link.",
+          variant: "destructive",
+        });
+        setIsUploading(false);
+        setUploadProgress(null);
+        return;
+      }
+      try {
+        await new Promise<void>((resolve, reject) => {
+          const xhr = new XMLHttpRequest();
+          xhr.open("PUT", data.signedUrl);
+          xhr.setRequestHeader("Content-Type", file.type || "application/octet-stream");
+          xhr.upload.onprogress = (event) => {
+            if (!event.lengthComputable) return;
+            const loaded = Math.min(event.loaded, file.size);
+            const currentBytes = uploadedBytes + loaded;
+            const bytesPercent = totalBytes ? Math.round((currentBytes / totalBytes) * 100) : 0;
+            const filePercent = file.size
+              ? Math.round(((index + loaded / file.size) / totalFiles) * 100)
+              : Math.round(((index + 1) / totalFiles) * 100);
+            setUploadProgress({
+              filePercent,
+              bytesPercent,
+              fileIndex: index + 1,
+              totalFiles,
+              uploadedBytes: currentBytes,
+              totalBytes,
+            });
+          };
+          xhr.onload = () => {
+            if (xhr.status >= 200 && xhr.status < 300) {
+              resolve();
+              return;
+            }
+            reject(new Error("Upload failed."));
+          };
+          xhr.onerror = () => reject(new Error("Upload failed."));
+          xhr.send(file);
+        });
+      } catch (error) {
+        toast({
+          title: "Upload failed",
+          description: error instanceof Error ? error.message : "Unable to upload image.",
+          variant: "destructive",
+        });
+        setIsUploading(false);
+        setUploadProgress(null);
+        return;
+      }
+      uploadedBytes += file.size || 0;
+      setUploadProgress({
+        filePercent: Math.round(((index + 1) / totalFiles) * 100),
+        bytesPercent: totalBytes ? Math.round((uploadedBytes / totalBytes) * 100) : 100,
+        fileIndex: index + 1,
+        totalFiles,
+        uploadedBytes,
+        totalBytes,
+      });
+      uploaded.push({ storage_path: path, sort_order: index });
+    }
+
+    previewUrls.forEach((url) => URL.revokeObjectURL(url));
+    setPreviewUrls([]);
+    setUploadedImages(uploaded);
+    setIsUploading(false);
+    setUploadProgress(null);
+    toast({
+      title: "Images uploaded",
+      description: "Click Create product to finish.",
+    });
+  };
+
+  const handleDiscardSelection = async () => {
+    if (isDiscarding) return;
+    setIsDiscarding(true);
+    if (uploadedImages.length) {
+      const paths = uploadedImages.map((image) => image.storage_path);
+      const { error: storageError } = await supabase.storage.from(GALLERY_BUCKET).remove(paths);
+      if (storageError) {
+        toast({
+          title: "Discard failed",
+          description: storageError.message,
+          variant: "destructive",
+        });
+        setIsDiscarding(false);
+        return;
+      }
+      toast({ title: "Images discarded" });
+    }
+    previewUrls.forEach((url) => URL.revokeObjectURL(url));
+    setPreviewUrls([]);
+    setCreateFiles([]);
+    setUploadedImages([]);
+    setUploadProgress(null);
+    if (createFileInputRef.current) {
+      createFileInputRef.current.value = "";
+    }
+    setIsDiscarding(false);
   };
 
   return (
@@ -360,7 +393,7 @@ export default function AdminAddProducts() {
                     <button
                       type="button"
                       onClick={() => createFileInputRef.current?.click()}
-                      disabled={isCreating || isUploading || remainingSlots <= 0}
+                      disabled={isCreating || isUploading || remainingSlots <= 0 || uploadedImages.length > 0}
                       className="flex min-h-[96px] flex-col items-center justify-center gap-2 rounded-2xl border border-dashed border-charcoal/20 bg-cream/40 text-xs font-medium text-charcoal/60 transition hover:border-charcoal/40 hover:text-charcoal disabled:cursor-not-allowed disabled:opacity-50"
                     >
                       <span className="flex h-10 w-10 items-center justify-center rounded-full border border-charcoal/20 bg-white/80 text-charcoal">
@@ -376,13 +409,35 @@ export default function AdminAddProducts() {
                     accept="image/*"
                     multiple
                     onChange={handleFileChange}
-                    disabled={isCreating || isUploading || remainingSlots <= 0}
+                    disabled={isCreating || isUploading || remainingSlots <= 0 || uploadedImages.length > 0}
                     className="hidden"
                   />
                   <div className="flex flex-col gap-2 text-xs text-charcoal/60">
                     <span>Selected files: {createFiles.length}</span>
                     <span>Remaining slots: {remainingSlots}</span>
                   </div>
+                  {createFiles.length > 0 && (
+                    <div className="flex flex-wrap gap-2">
+                      <Button
+                        type="button"
+                        variant="outline"
+                        disabled={isUploading || uploadedImages.length > 0}
+                        onClick={handleUploadImages}
+                      >
+                        {isUploading ? "Uploading..." : "Upload"}
+                      </Button>
+                      <Button
+                        type="button"
+                        variant="ghost"
+                        disabled={isUploading || isDiscarding}
+                        onClick={() => {
+                          void handleDiscardSelection();
+                        }}
+                      >
+                        {isDiscarding ? "Discarding..." : "Discard"}
+                      </Button>
+                    </div>
+                  )}
                   {uploadProgress && (
                     <div className="space-y-3 rounded-2xl border border-charcoal/10 bg-cream/40 px-4 py-3">
                       <div className="flex items-center justify-between text-xs text-charcoal/60">
@@ -411,10 +466,45 @@ export default function AdminAddProducts() {
                       )}
                     </div>
                   )}
+                  {(previewUrls.length > 0 || uploadedImages.length > 0) && (
+                    <div className="grid gap-3 sm:grid-cols-3">
+                      {uploadedImages.length > 0
+                        ? uploadedImages.map((image) => (
+                            <div key={image.storage_path} className="overflow-hidden rounded-lg bg-cream">
+                              <div className="aspect-square">
+                                <img
+                                  src={getPublicImageUrl(image.storage_path)}
+                                  alt="Uploaded product"
+                                  className="h-full w-full object-cover"
+                                />
+                              </div>
+                            </div>
+                          ))
+                        : previewUrls.map((url, index) => (
+                            <div key={`${url}-${index}`} className="overflow-hidden rounded-lg bg-cream">
+                              <div className="aspect-square">
+                                <img
+                                  src={url}
+                                  alt={`Selected product ${index + 1}`}
+                                  className="h-full w-full object-cover"
+                                />
+                              </div>
+                            </div>
+                          ))}
+                    </div>
+                  )}
+                  {uploadedImages.length > 0 && (
+                    <p className="text-xs text-charcoal/60">
+                      Images uploaded. Click Create product to finish.
+                    </p>
+                  )}
                 </div>
                 <div className="flex items-end md:col-span-2">
-                  <Button onClick={handleCreate} disabled={isCreating || isUploading}>
-                    {isCreating || isUploading ? "Creating..." : "Create product"}
+                  <Button
+                    onClick={handleCreate}
+                    disabled={isCreating || isUploading || isDiscarding || hasPendingUpload}
+                  >
+                    {isCreating ? "Creating..." : "Create product"}
                   </Button>
                 </div>
               </div>
@@ -422,76 +512,6 @@ export default function AdminAddProducts() {
           </Card>
         </div>
       </section>
-      <AlertDialog
-        open={isReviewOpen}
-        onOpenChange={(open) => {
-          if (!open) {
-            setUploadReview(null);
-            setCreatedProductId(null);
-            setIsDiscarding(false);
-          }
-          setIsReviewOpen(open);
-        }}
-      >
-        <AlertDialogContent>
-          <AlertDialogHeader>
-            <AlertDialogTitle>Upload complete</AlertDialogTitle>
-            <AlertDialogDescription>Save these images or discard the upload.</AlertDialogDescription>
-          </AlertDialogHeader>
-          <AlertDialogFooter>
-            <Button
-              type="button"
-              variant="outline"
-              disabled={isDiscarding}
-              onClick={async () => {
-                if (!uploadReview || !createdProductId) return;
-                setIsDiscarding(true);
-                const paths = uploadReview.map((image) => image.storage_path);
-                const { error: storageError } = await supabase.storage.from(GALLERY_BUCKET).remove(paths);
-                if (storageError) {
-                  toast({
-                    title: "Storage delete failed",
-                    description: storageError.message,
-                    variant: "destructive",
-                  });
-                }
-                const { error: deleteError } = await supabase
-                  .from("product_images")
-                  .delete()
-                  .in(
-                    "id",
-                    uploadReview.map((image) => image.id),
-                  );
-                if (deleteError) {
-                  toast({
-                    title: "Discard failed",
-                    description: deleteError.message,
-                    variant: "destructive",
-                  });
-                  setIsDiscarding(false);
-                  return;
-                }
-                toast({ title: "Images discarded" });
-                setIsDiscarding(false);
-                setUploadReview(null);
-                setCreatedProductId(null);
-                setIsReviewOpen(false);
-              }}
-            >
-              {isDiscarding ? "Discarding..." : "Discard"}
-            </Button>
-            <AlertDialogCancel
-              onClick={() => {
-                setUploadReview(null);
-                setCreatedProductId(null);
-                setIsReviewOpen(false);
-              }}
-            >
-              Save
-            </AlertDialogCancel>
-          </AlertDialogFooter>
-        </AlertDialogContent>
-      </AlertDialog>
     </Layout>
   );
 }
