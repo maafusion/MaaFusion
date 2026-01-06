@@ -13,6 +13,7 @@ import {
 import { ImageHoverCarousel } from "@/components/ui/image-hover-carousel";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Textarea } from "@/components/ui/textarea";
 import { useAuth } from "@/hooks/use-auth";
 import { useToast } from "@/hooks/use-toast";
@@ -57,12 +58,17 @@ export default function Gallery() {
   const [products, setProducts] = useState<ProductRow[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [searchQuery, setSearchQuery] = useState("");
+  const [categoryFilter, setCategoryFilter] = useState<ProductCategory | "all">("all");
+  const [sortOption, setSortOption] = useState<"name" | "price-asc" | "price-desc">("name");
+  const [page, setPage] = useState(1);
   const [isEnquiryOpen, setIsEnquiryOpen] = useState(false);
   const [selectedProduct, setSelectedProduct] = useState<ProductRow | null>(null);
   const [isDetailsOpen, setIsDetailsOpen] = useState(false);
   const [detailsProduct, setDetailsProduct] = useState<ProductRow | null>(null);
   const [inquiryForm, setInquiryForm] = useState(emptyInquiryForm);
   const [isSending, setIsSending] = useState(false);
+  const pageSize = 12;
 
   useEffect(() => {
     let isMounted = true;
@@ -93,17 +99,42 @@ export default function Gallery() {
     };
   }, []);
 
-  const groupedProducts = useMemo(() => {
-    const grouped: Record<ProductCategory, ProductRow[]> = {
-      Murti: [],
-      Pendant: [],
-      Rings: [],
-    };
-    products.forEach((product) => {
-      grouped[product.category]?.push(product);
+  const normalizedQuery = searchQuery.trim().toLowerCase();
+  const filteredProducts = useMemo(() => {
+    return products.filter((product) => {
+      const matchesCategory = categoryFilter === "all" ? true : product.category === categoryFilter;
+      if (!normalizedQuery) return matchesCategory;
+      const haystack = `${product.name} ${product.description ?? ""}`.toLowerCase();
+      return matchesCategory && haystack.includes(normalizedQuery);
     });
-    return grouped;
-  }, [products]);
+  }, [categoryFilter, normalizedQuery, products]);
+
+  const sortedProducts = useMemo(() => {
+    const next = [...filteredProducts];
+    next.sort((a, b) => {
+      if (sortOption === "price-asc") return a.price - b.price;
+      if (sortOption === "price-desc") return b.price - a.price;
+      return a.name.localeCompare(b.name);
+    });
+    return next;
+  }, [filteredProducts, sortOption]);
+
+  const totalPages = Math.max(1, Math.ceil(sortedProducts.length / pageSize));
+  const currentPage = Math.min(page, totalPages);
+  const paginatedProducts = sortedProducts.slice(
+    (currentPage - 1) * pageSize,
+    currentPage * pageSize,
+  );
+
+  useEffect(() => {
+    setPage(1);
+  }, [categoryFilter, searchQuery, sortOption]);
+
+  useEffect(() => {
+    if (page > totalPages) {
+      setPage(totalPages);
+    }
+  }, [page, totalPages]);
 
   const detailsImages = useMemo(() => {
     if (!detailsProduct?.product_images?.length) return [];
@@ -209,10 +240,58 @@ export default function Gallery() {
       <section className="bg-cream py-14">
         <div className="container mx-auto px-6 lg:px-12">
           <div className="mb-10">
-            <p className="text-xs uppercase tracking-[0.35em] text-gold-dark">Admin uploads</p>
             <h2 className="mt-3 font-serif text-3xl text-charcoal md:text-4xl">
               Latest Additions
             </h2>
+          </div>
+
+          <div className="mb-10 grid gap-4 md:grid-cols-[220px_220px_1fr]">
+            <div className="space-y-2">
+              <Label>Category</Label>
+              <Select
+                value={categoryFilter}
+                onValueChange={(value) => setCategoryFilter(value as ProductCategory | "all")}
+              >
+                <SelectTrigger>
+                  <SelectValue placeholder="All categories" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="all">All categories</SelectItem>
+                  {PRODUCT_CATEGORIES.map((category) => (
+                    <SelectItem key={category} value={category}>
+                      {category}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            </div>
+            <div className="space-y-2">
+              <Label>Sort by</Label>
+              <Select
+                value={sortOption}
+                onValueChange={(value) =>
+                  setSortOption(value as "name" | "price-asc" | "price-desc")
+                }
+              >
+                <SelectTrigger>
+                  <SelectValue placeholder="Sort by" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="name">Name</SelectItem>
+                  <SelectItem value="price-asc">Price: low to high</SelectItem>
+                  <SelectItem value="price-desc">Price: high to low</SelectItem>
+                </SelectContent>
+              </Select>
+            </div>
+            <div className="space-y-2">
+              <Label htmlFor="gallery-search">Search</Label>
+              <Input
+                id="gallery-search"
+                value={searchQuery}
+                onChange={(event) => setSearchQuery(event.target.value)}
+                placeholder="Search by name or description"
+              />
+            </div>
           </div>
 
           {loading ? (
@@ -223,71 +302,78 @@ export default function Gallery() {
             <div className="rounded-3xl border border-red-200 bg-red-50 p-6 text-sm text-red-700">
               {error}
             </div>
-          ) : products.length === 0 ? (
+          ) : sortedProducts.length === 0 ? (
             <div className="rounded-3xl border border-charcoal/10 bg-white/80 p-8 text-center text-sm text-charcoal/60">
-              No admin uploads yet.
+              No products match your filters.
             </div>
           ) : (
             <div className="space-y-12">
-              {PRODUCT_CATEGORIES.map((category) => {
-                const items = groupedProducts[category];
-                if (!items.length) return null;
-                return (
-                  <div key={category}>
-                    <div className="mb-6 flex items-center gap-3">
-                      <Badge className="rounded-full border border-charcoal/20 bg-white/70 px-3 py-1 text-[10px] uppercase tracking-[0.35em] text-charcoal/70">
-                        {category}
-                      </Badge>
-                      <span className="text-sm text-charcoal/50">
-                        {items.length} product{items.length === 1 ? "" : "s"}
-                      </span>
-                    </div>
-                    <div className="grid grid-cols-1 gap-8 md:grid-cols-2 lg:grid-cols-3">
-                      {items.map((product) => {
-                        const orderedImages = [...(product.product_images ?? [])].sort(
-                          (a, b) => (a.sort_order ?? 0) - (b.sort_order ?? 0),
-                        );
-                        const imageUrls = orderedImages.map((image) =>
-                          getPublicImageUrl(image.storage_path),
-                        );
-                        return (
-                          <div key={product.id} className="space-y-4">
-                            <div className="relative aspect-[3/4] overflow-hidden bg-white shadow-soft">
-                              {imageUrls.length ? (
-                                <ImageHoverCarousel
-                                  images={imageUrls}
-                                  alt={product.name}
-                                  className="h-full w-full object-cover"
-                                />
-                              ) : (
-                                <div className="flex h-full w-full items-center justify-center bg-white text-xs uppercase tracking-[0.3em] text-charcoal/40">
-                                  No images
-                                </div>
-                              )}
-                            </div>
-                            <div>
-                              <h3 className="font-serif text-2xl text-charcoal">{product.name}</h3>
-                              <p className="mt-3 text-lg font-semibold text-gold-dark">
-                                {currencyFormatter.format(product.price)}
-                              </p>
-                              <p className="mt-2 text-sm text-charcoal/60">
-                                {imageUrls.length} image{imageUrls.length === 1 ? "" : "s"}
-                              </p>
-                              <Button
-                                variant="luxury"
-                                className="mt-4 w-full"
-                                onClick={() => handleOpenDetails(product)}
-                              >
-                                View more details
-                              </Button>
-                            </div>
+              <div className="grid grid-cols-1 gap-8 md:grid-cols-2 lg:grid-cols-3">
+                {paginatedProducts.map((product) => {
+                  const orderedImages = [...(product.product_images ?? [])].sort(
+                    (a, b) => (a.sort_order ?? 0) - (b.sort_order ?? 0),
+                  );
+                  const imageUrls = orderedImages.map((image) =>
+                    getPublicImageUrl(image.storage_path),
+                  );
+                  return (
+                    <div key={product.id} className="space-y-4">
+                      <div className="relative aspect-[3/4] overflow-hidden bg-white shadow-soft">
+                        {imageUrls.length ? (
+                          <ImageHoverCarousel
+                            images={imageUrls}
+                            alt={product.name}
+                            className="h-full w-full object-cover"
+                          />
+                        ) : (
+                          <div className="flex h-full w-full items-center justify-center bg-white text-xs uppercase tracking-[0.3em] text-charcoal/40">
+                            No images
                           </div>
-                        );
-                      })}
+                        )}
+                      </div>
+                      <div>
+                        <h3 className="font-serif text-2xl text-charcoal">{product.name}</h3>
+                        <p className="mt-3 text-lg font-semibold text-gold-dark">
+                          {currencyFormatter.format(product.price)}
+                        </p>
+                        <p className="mt-2 text-sm text-charcoal/60">
+                          {imageUrls.length} image{imageUrls.length === 1 ? "" : "s"}
+                        </p>
+                        <Button
+                          variant="luxury"
+                          className="mt-4 w-full"
+                          onClick={() => handleOpenDetails(product)}
+                        >
+                          View more details
+                        </Button>
+                      </div>
                     </div>
+                  );
+                })}
+              </div>
+              {sortedProducts.length > pageSize && (
+                <div className="flex items-center justify-between">
+                  <p className="text-xs text-charcoal/60">
+                    Page {currentPage} of {totalPages}
+                  </p>
+                  <div className="flex items-center gap-2">
+                    <Button
+                      variant="outline"
+                      onClick={() => setPage((prev) => Math.max(1, prev - 1))}
+                      disabled={currentPage === 1}
+                    >
+                      Prev
+                    </Button>
+                    <Button
+                      variant="outline"
+                      onClick={() => setPage((prev) => Math.min(totalPages, prev + 1))}
+                      disabled={currentPage === totalPages}
+                    >
+                      Next
+                    </Button>
                   </div>
-                );
-              })}
+                </div>
+              )}
             </div>
           )}
         </div>
