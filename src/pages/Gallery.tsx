@@ -308,7 +308,7 @@ export default function Gallery() {
             </div>
           ) : (
             <div className="space-y-12">
-              <div className="grid grid-cols-1 gap-8 md:grid-cols-2 lg:grid-cols-3">
+              <div className="grid grid-cols-1 gap-8 md:grid-cols-2 lg:grid-cols-4">
                 {paginatedProducts.map((product) => {
                   const orderedImages = [...(product.product_images ?? [])].sort(
                     (a, b) => (a.sort_order ?? 0) - (b.sort_order ?? 0),
