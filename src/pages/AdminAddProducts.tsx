@@ -499,11 +499,11 @@ export default function AdminAddProducts() {
                     </div>
                   )}
                   {(previewUrls.length > 0 || uploadedImages.length > 0) && (
-                    <div className="grid grid-cols-3 gap-3 sm:grid-cols-4">
+                    <div className="grid gap-3 sm:grid-cols-3">
                       {uploadedImages.length > 0
                         ? uploadedImages.map((image) => (
                             <div key={image.storage_path} className="group relative">
-                              <div className="h-24 w-24 overflow-hidden rounded-lg bg-cream">
+                              <div className="aspect-square overflow-hidden rounded-lg bg-cream">
                                 <img
                                   src={getPublicImageUrl(image.storage_path)}
                                   alt="Uploaded product"
@@ -524,7 +524,7 @@ export default function AdminAddProducts() {
                           ))
                         : previewUrls.map((url, index) => (
                             <div key={`${url}-${index}`} className="group relative">
-                              <div className="h-24 w-24 overflow-hidden rounded-lg bg-cream">
+                              <div className="aspect-square overflow-hidden rounded-lg bg-cream">
                                 <img
                                   src={url}
                                   alt={`Selected product ${index + 1}`}
