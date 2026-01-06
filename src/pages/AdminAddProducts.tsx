@@ -467,28 +467,30 @@ export default function AdminAddProducts() {
                     </div>
                   )}
                   {(previewUrls.length > 0 || uploadedImages.length > 0) && (
-                    <div className="grid gap-3 sm:grid-cols-3">
+                    <div className="grid grid-cols-4 gap-3 sm:grid-cols-6">
                       {uploadedImages.length > 0
                         ? uploadedImages.map((image) => (
-                            <div key={image.storage_path} className="overflow-hidden rounded-lg bg-cream">
-                              <div className="aspect-square">
-                                <img
-                                  src={getPublicImageUrl(image.storage_path)}
-                                  alt="Uploaded product"
-                                  className="h-full w-full object-cover"
-                                />
-                              </div>
+                            <div
+                              key={image.storage_path}
+                              className="h-16 w-16 overflow-hidden rounded-lg bg-cream"
+                            >
+                              <img
+                                src={getPublicImageUrl(image.storage_path)}
+                                alt="Uploaded product"
+                                className="h-full w-full object-cover"
+                              />
                             </div>
                           ))
                         : previewUrls.map((url, index) => (
-                            <div key={`${url}-${index}`} className="overflow-hidden rounded-lg bg-cream">
-                              <div className="aspect-square">
-                                <img
-                                  src={url}
-                                  alt={`Selected product ${index + 1}`}
-                                  className="h-full w-full object-cover"
-                                />
-                              </div>
+                            <div
+                              key={`${url}-${index}`}
+                              className="h-16 w-16 overflow-hidden rounded-lg bg-cream"
+                            >
+                              <img
+                                src={url}
+                                alt={`Selected product ${index + 1}`}
+                                className="h-full w-full object-cover"
+                              />
                             </div>
                           ))}
                     </div>
@@ -499,14 +501,13 @@ export default function AdminAddProducts() {
                     </p>
                   )}
                 </div>
-                <div className="flex items-end md:col-span-2">
-                  <Button
-                    onClick={handleCreate}
-                    disabled={isCreating || isUploading || isDiscarding || hasPendingUpload}
-                  >
-                    {isCreating ? "Creating..." : "Create product"}
-                  </Button>
-                </div>
+                {!hasPendingUpload && (
+                  <div className="flex items-end md:col-span-2">
+                    <Button onClick={handleCreate} disabled={isCreating || isUploading || isDiscarding}>
+                      {isCreating ? "Creating..." : "Create product"}
+                    </Button>
+                  </div>
+                )}
               </div>
             </CardContent>
           </Card>
