@@ -170,8 +170,8 @@ export function Navbar() {
                 <Link
                   to="/auth?mode=sign-in"
                   className={`rounded-full border border-charcoal/20 bg-cream/70 px-6 py-2 text-xs uppercase tracking-[0.3em] text-charcoal transition-all hover:border-gold/40 ${isAuthPage
-                      ? 'border-gold/50 bg-gold/20 text-charcoal shadow-sm'
-                      : ''
+                    ? 'border-gold/50 bg-gold/20 text-charcoal shadow-sm'
+                    : ''
                     }`}
                 >
                   Login
@@ -190,17 +190,17 @@ export function Navbar() {
         </div>
 
         {/* Mobile Navigation */}
-          <div className={`fixed inset-0 bg-cream/95 backdrop-blur-xl z-[60] flex items-center justify-center transition-all duration-500 ease-in-out md:hidden ${isOpen ? 'opacity-100 translate-y-0' : 'opacity-0 -translate-y-full pointer-events-none'
-            }`}>
+        <div className={`fixed inset-0 bg-cream/95 backdrop-blur-xl z-[60] flex items-center justify-center transition-all duration-500 ease-in-out md:hidden ${isOpen ? 'opacity-100 translate-y-0' : 'opacity-0 -translate-y-full pointer-events-none'
+          }`}>
           <div className="flex flex-col items-center gap-8">
             {publicLinks.map((link, idx) => (
               <Link
                 key={link.name}
                 to={link.href}
                 onClick={() => setIsOpen(false)}
-                className={`text-3xl font-serif text-charcoal hover:text-gold-dark transition-all duration-500 ${isOpen ? 'translate-y-0 opacity-100' : 'translate-y-10 opacity-0'
+                className={`text-3xl font-serif text-charcoal hover:text-gold-dark transition-all duration-700 ${isOpen ? 'translate-y-0 opacity-100 blur-0' : 'translate-y-8 opacity-0 blur-sm'
                   }`}
-                style={{ transitionDelay: `${idx * 100}ms` }}
+                style={{ transitionDelay: `${isOpen ? 100 + idx * 100 : 0}ms` }}
               >
                 {link.name}
               </Link>

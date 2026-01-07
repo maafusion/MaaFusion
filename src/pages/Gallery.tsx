@@ -317,22 +317,26 @@ export default function Gallery() {
                     getPublicImageUrl(image.storage_path),
                   );
                   return (
-                    <div key={product.id} className="space-y-4">
-                      <div className="relative aspect-[3/4] overflow-hidden bg-white shadow-soft">
-                        {imageUrls.length ? (
-                          <ImageHoverCarousel
-                            images={imageUrls}
-                            alt={product.name}
-                            className="h-full w-full object-cover"
-                          />
-                        ) : (
-                          <div className="flex h-full w-full items-center justify-center bg-white text-xs uppercase tracking-[0.3em] text-charcoal/40">
-                            No images
+                    <div key={product.id} className="group space-y-4">
+                      <div className="relative aspect-[3/4] overflow-hidden bg-white shadow-soft transition-all duration-700 hover:-translate-y-2 hover:shadow-gold/20">
+                        <div className="absolute inset-0">
+                          <div className="w-full h-full relative overflow-hidden bg-gray-50">
+                            {imageUrls.length ? (
+                              <ImageHoverCarousel
+                                images={imageUrls}
+                                alt={product.name}
+                                className="h-full w-full object-cover transition-transform duration-1000 group-hover:scale-105"
+                              />
+                            ) : (
+                              <div className="flex h-full w-full items-center justify-center bg-white text-xs uppercase tracking-[0.3em] text-charcoal/40">
+                                No images
+                              </div>
+                            )}
                           </div>
-                        )}
+                        </div>
                       </div>
                       <div>
-                        <h3 className="font-serif text-2xl text-charcoal">{product.name}</h3>
+                        <h3 className="font-serif text-2xl text-charcoal group-hover:text-gold-dark transition-colors duration-300">{product.name}</h3>
                         <p className="mt-3 text-lg font-semibold text-gold-dark">
                           {currencyFormatter.format(product.price)}
                         </p>
