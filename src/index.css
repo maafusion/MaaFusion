@@ -80,8 +80,19 @@
   }
 
   body {
-    @apply bg-background text-foreground antialiased selection:bg-gold/20 selection:text-charcoal;
+    @apply bg-background text-foreground antialiased;
     font-feature-settings: "ss01", "ss02", "cv01", "cv02";
+    text-rendering: optimizeLegibility;
+  }
+
+  html {
+     scroll-behavior: smooth;
+  }
+  
+  /* Custom Selection Color */
+  ::selection {
+    background-color: hsl(var(--gold) / 0.2);
+    color: hsl(var(--charcoal));
   }
 
   h1, h2, h3, h4, h5, h6 {
@@ -96,7 +107,7 @@
     @apply border border-transparent hover:border-gold/30 hover:bg-gold/5;
   }
   
-  /* Magnetic/Floating effects would be JS/React mostly, but basics here */
+  /* Magnetic/Floating effects */
   .hover-lift {
     @apply transition-transform duration-500 ease-out hover:-translate-y-1;
   }
@@ -104,6 +115,32 @@
   .text-balance {
     text-wrap: balance;
   }
+  
+  /* Glassmorphism Utilities */
+  .glass {
+    @apply bg-cream/70 backdrop-blur-md border border-white/20;
+  }
+  
+  .glass-dark {
+    @apply bg-black/5 backdrop-blur-md border border-black/5;
+  }
+}
+
+/* Animations Overrides */
+/* Smoother fade-ins */
+@keyframes fade-in-up {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.animate-fade-in-up {
+  animation: fade-in-up 0.8s cubic-bezier(0.2, 0.8, 0.2, 1) forwards;
 }
 
 /* Lenis / Smooth Scroll overrides if needed */

@@ -37,9 +37,9 @@ export function FeaturedSection() {
               className="group flex flex-col space-y-6"
             >
               <div
-                className="relative aspect-[3/4] overflow-hidden bg-white shadow-soft transition-transform duration-700 hover:-translate-y-2"
+                className="relative aspect-[3/4] overflow-hidden bg-white shadow-soft transition-all duration-700 hover:-translate-y-2 hover:shadow-gold/20"
               >
-                <div className="absolute inset-0 p-4">
+                <div className="absolute inset-0">
                   <div className="w-full h-full relative overflow-hidden bg-gray-50">
                     <ImageHoverCarousel
                       images={category.images}
@@ -51,11 +51,11 @@ export function FeaturedSection() {
               </div>
 
               <div className="flex flex-col items-start px-2">
-                <span className="font-sans text-[10px] tracking-widest uppercase text-gold-dark mb-2">0{index + 1} / Collection</span>
+                <span className="font-sans text-[10px] tracking-widest uppercase text-gold-dark mb-2 opacity-80 group-hover:opacity-100 transition-opacity">0{index + 1} / Collection</span>
                 <h3 className="font-serif text-3xl text-charcoal group-hover:text-gold-dark transition-colors duration-300 mb-2">
                   {category.title}
                 </h3>
-                <p className="text-charcoal/60 text-sm font-sans line-clamp-2 leading-relaxed">
+                <p className="text-charcoal/60 text-sm font-sans line-clamp-2 leading-relaxed tracking-wide">
                   {category.description}
                 </p>
                 <Link to="/contact" className="mt-4 text-sm font-serif italic border-b border-transparent group-hover:border-charcoal/30 transition-all">
