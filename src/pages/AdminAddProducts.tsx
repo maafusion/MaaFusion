@@ -369,13 +369,13 @@ export default function AdminAddProducts() {
 
   return (
     <Layout>
-      <section className="bg-cream py-12">
-        <div className="container mx-auto space-y-6 px-6 lg:px-12">
+      <section className="bg-cream py-10 md:py-12">
+        <div className="container mx-auto space-y-6 px-4 sm:px-6 lg:px-12">
           <div className="flex flex-col gap-3">
             <Badge className="w-fit rounded-full border border-charcoal/20 bg-white/70 px-4 py-1 text-[10px] uppercase tracking-[0.35em] text-charcoal/70">
               Admin dashboard
             </Badge>
-            <h1 className="font-serif text-4xl text-charcoal md:text-6xl">Add</h1>
+            <h1 className="font-serif text-3xl text-charcoal sm:text-4xl md:text-5xl">Add</h1>
             <p className="max-w-2xl text-base text-charcoal/60 md:text-lg">
               Add new items to the gallery. Each product supports up to {MAX_PRODUCT_IMAGES} images.
             </p>
@@ -388,11 +388,11 @@ export default function AdminAddProducts() {
         </div>
       </section>
 
-      <section className="bg-white py-12">
-        <div className="container mx-auto space-y-8 px-6 lg:px-12">
+      <section className="bg-white py-10 md:py-12">
+        <div className="container mx-auto space-y-8 px-4 sm:px-6 lg:px-12">
           <Card className="border-charcoal/10">
             <CardHeader>
-              <CardTitle className="font-serif text-2xl text-charcoal">Add product</CardTitle>
+              <CardTitle className="font-serif text-xl text-charcoal sm:text-2xl">Add product</CardTitle>
             </CardHeader>
             <CardContent className="space-y-6">
               <div className="grid gap-6 md:grid-cols-2">

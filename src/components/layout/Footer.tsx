@@ -4,9 +4,9 @@ export function Footer() {
   const currentYear = new Date().getFullYear();
 
   return (
-    <footer className="bg-cream border-t border-charcoal/10 pt-24 pb-12">
-      <div className="container mx-auto px-6 lg:px-12">
-        <div className="grid grid-cols-1 md:grid-cols-4 gap-12 mb-24">
+    <footer className="bg-cream border-t border-charcoal/10 pt-16 pb-10 md:pt-24 md:pb-12">
+      <div className="container mx-auto px-4 sm:px-6 lg:px-12">
+        <div className="grid grid-cols-1 gap-10 md:grid-cols-4 md:gap-12 mb-16 md:mb-24">
 
           {/* Brand Column */}
           <div className="md:col-span-2 space-y-6">
@@ -63,7 +63,7 @@ export function Footer() {
         </div>
 
         {/* Bottom Bar */}
-        <div className="flex flex-col md:flex-row items-center justify-between pt-8 border-t border-charcoal/10 gap-4">
+        <div className="flex flex-col md:flex-row items-center justify-between gap-4 border-t border-charcoal/10 pt-6 md:pt-8">
           <p className="font-sans text-xs text-charcoal/40 uppercase tracking-widest">
             Copyright {currentYear} Maa Fusion Creations
           </p>

@@ -181,13 +181,13 @@ export default function Auth() {
           <div className="absolute inset-0 bg-[radial-gradient(circle_at_top,_rgba(255,255,255,0.6),_transparent_55%)]" />
         </div>
 
-        <div className="relative container mx-auto flex justify-center px-6 py-24 lg:px-12 lg:py-28">
-          <div className="mx-auto w-full max-w-xl rounded-3xl border border-gold/20 bg-white/80 p-8 text-center shadow-[0_30px_80px_-60px_rgba(55,44,31,0.6)] backdrop-blur">
+        <div className="relative container mx-auto flex justify-center px-4 py-20 sm:px-6 lg:px-12 lg:py-24">
+          <div className="mx-auto w-full max-w-xl rounded-3xl border border-gold/20 bg-white/80 p-6 text-center shadow-[0_30px_80px_-60px_rgba(55,44,31,0.6)] backdrop-blur sm:p-8">
             <div className="space-y-3">
               <span className="inline-flex items-center justify-center gap-2 rounded-full border border-gold/30 bg-white/70 px-4 py-1 text-xs font-sans uppercase tracking-[0.3em] text-charcoal/70">
                 Client portal
               </span>
-              <h1 className="text-4xl font-serif text-charcoal sm:text-5xl">{headline}</h1>
+              <h1 className="text-3xl font-serif text-charcoal sm:text-4xl md:text-5xl">{headline}</h1>
               <p className="text-sm uppercase tracking-[0.3em] text-charcoal/60">
                 {mode === "sign-in" ? "Sign in" : "Sign up"}
               </p>
@@ -203,7 +203,7 @@ export default function Auth() {
               )}
             </div>
 
-            <form className="mt-8 space-y-5 text-center" onSubmit={handleSubmit}>
+            <form className="mt-6 space-y-5 text-center sm:mt-8" onSubmit={handleSubmit}>
               {mode === "sign-up" && (
                   <div className="grid gap-5 text-left sm:grid-cols-2">
                     <div className="space-y-2">
