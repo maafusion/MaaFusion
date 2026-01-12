@@ -39,7 +39,7 @@ export default function About() {
               About <span className="text-gold-dark">Maa Fusion</span>
             </h1>
             <p className="text-xl text-charcoal/70 animate-fade-up" style={{ animationDelay: '0.1s' }}>
-              For over 15 years, we've been at the forefront of jewelry and Murti design,
+              For over 15 years, we've been at the forefront of jewelry and sculptural art,
               blending traditional artistry with contemporary aesthetics to create pieces
               that transcend time.
             </p>
@@ -70,7 +70,8 @@ export default function About() {
                   commitment to excellence.
                 </p>
                 <p>
-                  From intricate pendant designs to majestic Murti creations, we bring dreams
+                  From intricate pendant designs to contemporary figurative sculptures and divine art,
+                  we bring dreams
                   to life through the art of digital rendering, allowing our clients to
                   visualize their perfect piece before it's brought into physical existence.
                 </p>

@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { MessageCircle } from "lucide-react";
 import { Layout } from "@/components/layout/Layout";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -21,6 +22,7 @@ type InquiryRow = {
   id: string;
   product_id: string | null;
   product_name: string;
+  product_price: number | null;
   user_id: string | null;
   first_name: string | null;
   last_name: string | null;
@@ -46,13 +48,14 @@ export default function AdminInquiries() {
   const [selectedInquiry, setSelectedInquiry] = useState<InquiryRow | null>(null);
   const [page, setPage] = useState(1);
   const pageSize = 9;
+  const currencyFormatter = new Intl.NumberFormat("en-IN", { style: "currency", currency: "INR" });
 
   const loadInquiries = async () => {
     setIsLoading(true);
     const { data, error } = await supabase
       .from("product_inquiries")
       .select(
-        "id, product_id, product_name, user_id, first_name, last_name, email, phone, requirements, status, created_at",
+        "id, product_id, product_name, product_price, user_id, first_name, last_name, email, phone, requirements, status, created_at",
       )
       .order("created_at", { ascending: false });
 
@@ -125,6 +128,41 @@ export default function AdminInquiries() {
   const statusLabel = (status: InquiryRow["status"]) =>
     statusOptions.find((option) => option.value === status)?.label ?? status;
 
+  const normalizePhone = (value: string | null) => {
+    const digits = (value ?? "").replace(/\D/g, "");
+    if (!digits) return "";
+    if (digits.length === 10) return `91${digits}`;
+    return digits;
+  };
+
+  const buildWhatsAppUrl = (inquiry: InquiryRow) => {
+    const fullName = `${inquiry.first_name ?? ""} ${inquiry.last_name ?? ""}`.trim();
+    const recipientName = inquiry.first_name?.trim() || fullName.split(" ")[0] || "there";
+    const productName = inquiry.product_name || "your selection";
+    const requirements = inquiry.requirements || "your requirements";
+    const email = inquiry.email || "your email";
+    const priceLabel = inquiry.product_price !== null
+      ? currencyFormatter.format(inquiry.product_price)
+      : "";
+    const messageLines = [
+      `Hi ${recipientName},`,
+      "",
+      `Thank you for your interest in *${productName}*. We've received your specific requirements:`,
+      `_${requirements}_`,
+      "",
+      priceLabel
+        ? `To finalize your order and receive your file, please complete the payment of *${priceLabel}*.`
+        : "To finalize your order and receive your file, please complete the payment.",
+      `We will send the high-resolution file directly to *${email}*.`,
+      "",
+      "Thank you for choosing us!",
+    ].filter(Boolean);
+    const message = messageLines.join("\n");
+    const phone = normalizePhone(inquiry.phone);
+    if (!phone) return "";
+    return `https://wa.me/${phone}?text=${encodeURIComponent(message)}`;
+  };
+
   return (
     <Layout>
       <section className="bg-cream py-12">
@@ -192,6 +230,9 @@ export default function AdminInquiries() {
                 {paginatedInquiries.map((inquiry) => {
                   const fullName = `${inquiry.first_name ?? ""} ${inquiry.last_name ?? ""}`.trim();
                   const createdAt = new Date(inquiry.created_at).toLocaleDateString();
+                  const priceLabel = inquiry.product_price
+                    ? currencyFormatter.format(inquiry.product_price)
+                    : null;
                   return (
                     <Card key={inquiry.id} className="border-charcoal/10">
                       <CardHeader className="space-y-2 pb-3">
@@ -209,6 +250,9 @@ export default function AdminInquiries() {
                         <CardTitle className="font-serif text-lg text-charcoal">
                           {inquiry.product_name}
                         </CardTitle>
+                        {priceLabel && (
+                          <p className="text-xs text-gold-dark">{priceLabel}</p>
+                        )}
                         <p className="text-xs text-charcoal/70">
                           {fullName || "Unknown"} | {inquiry.email}
                         </p>
@@ -299,9 +343,29 @@ export default function AdminInquiries() {
                   {selectedInquiry.requirements}
                 </p>
               </div>
+              {selectedInquiry.product_price !== null && (
+                <div>
+                  <p className="text-xs uppercase tracking-[0.3em] text-charcoal/50">Price</p>
+                  <p className="mt-2 text-sm text-charcoal/80">
+                    {currencyFormatter.format(selectedInquiry.product_price)}
+                  </p>
+                </div>
+              )}
             </div>
           )}
           <DialogFooter>
+            {selectedInquiry && (
+              <Button asChild variant="luxury" disabled={!selectedInquiry.phone}>
+                <a
+                  href={buildWhatsAppUrl(selectedInquiry)}
+                  target="_blank"
+                  rel="noreferrer"
+                >
+                  <MessageCircle className="mr-2 h-4 w-4" />
+                  WhatsApp customer
+                </a>
+              </Button>
+            )}
             <Button variant="outline" onClick={() => setSelectedInquiry(null)}>
               Close
             </Button>

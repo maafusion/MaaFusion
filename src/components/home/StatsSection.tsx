@@ -17,8 +17,8 @@ export function StatsSection() {
               ancient Indian aesthetics with cutting-edge digital rendering.
             </p>
             <p className="text-lg text-charcoal/70 leading-relaxed font-sans">
-              From intricate Murti designs to bespoke jewelry, we don't just create models;
-              we sculpture emotions and heritage into every pixel.
+              From contemporary figurative sculptures to divine art and bespoke jewelry,
+              we don't just create models; we sculpt emotion and heritage into every pixel.
             </p>
 
             <div className="grid grid-cols-2 gap-8 pt-8">
