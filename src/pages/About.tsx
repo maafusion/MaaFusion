@@ -28,17 +28,17 @@ export default function About() {
   return (
     <Layout>
       {/* Hero */}
-      <section className="py-24 relative overflow-hidden">
+      <section className="relative overflow-hidden py-16 md:py-24">
         <div className="absolute inset-0 bg-cream" />
         <div className="absolute top-0 right-0 w-[500px] h-[500px] bg-gold/5 rounded-full blur-[100px] opacity-60" />
         <div className="absolute bottom-0 left-0 w-[300px] h-[300px] bg-gold/10 rounded-full blur-[80px] opacity-40" />
 
-        <div className="container mx-auto px-4 relative z-10">
+        <div className="container mx-auto px-4 sm:px-6 relative z-10">
           <div className="max-w-3xl">
-            <h1 className="font-display text-5xl md:text-6xl font-bold text-charcoal mb-6 animate-fade-up">
+            <h1 className="font-display text-4xl font-bold text-charcoal mb-6 animate-fade-up sm:text-5xl md:text-6xl">
               About <span className="text-gold-dark">Maa Fusion</span>
             </h1>
-            <p className="text-xl text-charcoal/70 animate-fade-up" style={{ animationDelay: '0.1s' }}>
+            <p className="text-base text-charcoal/70 animate-fade-up sm:text-lg md:text-xl" style={{ animationDelay: '0.1s' }}>
               For over 15 years, we've been at the forefront of jewelry and sculptural art,
               blending traditional artistry with contemporary aesthetics to create pieces
               that transcend time.
@@ -48,11 +48,11 @@ export default function About() {
       </section>
 
       {/* Story */}
-      <section className="py-24 bg-card/50">
-        <div className="container mx-auto px-4">
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
+      <section className="bg-card/50 py-16 md:py-24">
+        <div className="container mx-auto px-4 sm:px-6">
+          <div className="grid grid-cols-1 items-center gap-10 lg:grid-cols-2 md:gap-16">
             <div>
-              <h2 className="font-display text-4xl font-bold text-foreground mb-6">
+              <h2 className="font-display text-3xl font-bold text-foreground mb-6 sm:text-4xl">
                 Our <span className="text-gold-gradient">Story</span>
               </h2>
               <div className="space-y-4 text-muted-foreground">
@@ -92,10 +92,10 @@ export default function About() {
       </section>
 
       {/* Values */}
-      <section className="py-24">
-        <div className="container mx-auto px-4">
+      <section className="py-16 md:py-24">
+        <div className="container mx-auto px-4 sm:px-6">
           <div className="text-center mb-16">
-            <h2 className="font-display text-4xl font-bold text-foreground mb-4">
+            <h2 className="font-display text-3xl font-bold text-foreground mb-4 sm:text-4xl">
               Our <span className="text-gold-gradient">Values</span>
             </h2>
             <p className="text-muted-foreground max-w-2xl mx-auto">
@@ -107,7 +107,7 @@ export default function About() {
             {values.map((value, index) => (
               <div
                 key={value.title}
-                className="card-luxury-hover p-8 text-center animate-fade-up"
+                className="card-luxury-hover p-6 text-center animate-fade-up sm:p-8"
                 style={{ animationDelay: `${index * 0.1}s` }}
               >
                 <div className="w-16 h-16 rounded-full bg-primary/10 flex items-center justify-center mx-auto mb-6">
@@ -126,10 +126,10 @@ export default function About() {
       </section>
 
       {/* Team */}
-      <section className="py-24 bg-card/50">
-        <div className="container mx-auto px-4">
+      <section className="bg-card/50 py-16 md:py-24">
+        <div className="container mx-auto px-4 sm:px-6">
           <div className="max-w-3xl mx-auto text-center">
-            <h2 className="font-display text-4xl font-bold text-foreground mb-6">
+            <h2 className="font-display text-3xl font-bold text-foreground mb-6 sm:text-4xl">
               Meet the <span className="text-gold-gradient">Artisans</span>
             </h2>
             <p className="text-muted-foreground mb-8">

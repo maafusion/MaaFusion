@@ -408,13 +408,13 @@ export default function AdminManageProducts() {
   };
   return (
     <Layout>
-      <section className="bg-cream py-12">
-        <div className="container mx-auto space-y-6 px-6 lg:px-12">
+      <section className="bg-cream py-10 md:py-12">
+        <div className="container mx-auto space-y-6 px-4 sm:px-6 lg:px-12">
           <div className="flex flex-col gap-3">
             <Badge className="w-fit rounded-full border border-charcoal/20 bg-white/70 px-4 py-1 text-[10px] uppercase tracking-[0.35em] text-charcoal/70">
               Admin dashboard
             </Badge>
-            <h1 className="font-serif text-4xl text-charcoal md:text-6xl">Manage</h1>
+            <h1 className="font-serif text-3xl text-charcoal sm:text-4xl md:text-5xl">Manage</h1>
             <p className="max-w-2xl text-base text-charcoal/60 md:text-lg">
               Edit details, upload images, or remove products from the gallery.
             </p>
@@ -422,10 +422,10 @@ export default function AdminManageProducts() {
         </div>
       </section>
 
-      <section className="bg-white py-12">
-        <div className="container mx-auto space-y-8 px-6 lg:px-12">
+      <section className="bg-white py-10 md:py-12">
+        <div className="container mx-auto space-y-8 px-4 sm:px-6 lg:px-12">
           <div className="flex flex-wrap items-center justify-between gap-4">
-            <h2 className="font-serif text-2xl text-charcoal">Products</h2>
+            <h2 className="font-serif text-xl text-charcoal sm:text-2xl">Products</h2>
             <span className="text-sm text-charcoal/60">
               Showing {filteredProducts.length} of {totalProducts}
             </span>

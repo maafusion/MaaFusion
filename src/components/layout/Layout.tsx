@@ -12,7 +12,7 @@ export function Layout({ children, showFooter = true, seamless = false }: Layout
   return (
     <div className="min-h-screen flex flex-col font-sans">
       <Navbar />
-      <main className={`flex-1 ${seamless ? '' : 'pt-24'}`}>
+      <main className={`flex-1 ${seamless ? '' : 'pt-20 sm:pt-24'}`}>
         {children}
       </main>
       {showFooter && <Footer />}

@@ -60,25 +60,28 @@ export function Navbar() {
   useEffect(() => {
     if (isOpen) {
       document.body.style.overflow = 'hidden';
+      document.documentElement.style.overflow = 'hidden';
       return () => {
         document.body.style.overflow = '';
+        document.documentElement.style.overflow = '';
       };
     }
     document.body.style.overflow = '';
+    document.documentElement.style.overflow = '';
   }, [isOpen]);
 
   return (
     <nav
-      className={`fixed top-0 left-0 right-0 z-50 transition-all duration-500 ${isScrolled ? 'bg-cream/80 backdrop-blur-md py-4 shadow-sm' : 'bg-transparent py-8'
+      className={`fixed top-0 left-0 right-0 z-[80] transition-all duration-500 ${isScrolled ? 'bg-cream/80 backdrop-blur-md py-3 shadow-sm sm:py-4' : 'bg-transparent py-5 sm:py-7'
         }`}
     >
-      <div className="container mx-auto px-6 lg:px-12">
+      <div className="container mx-auto px-4 sm:px-6 lg:px-12">
         <div className="flex items-center justify-between">
 
           {/* Logo */}
           <Link to="/" className="group relative z-50">
             <div className="flex flex-col leading-none">
-              <span className={`font-serif text-2xl tracking-tighter transition-colors duration-300 ${isScrolled ? 'text-charcoal' : 'text-charcoal'
+              <span className={`font-serif text-xl tracking-tighter transition-colors duration-300 sm:text-2xl ${isScrolled ? 'text-charcoal' : 'text-charcoal'
                 }`}>
                 MaaFusion
               </span>
@@ -190,81 +193,83 @@ export function Navbar() {
         </div>
 
         {/* Mobile Navigation */}
-        <div className={`fixed inset-0 bg-cream/95 backdrop-blur-xl z-[60] flex items-center justify-center transition-all duration-500 ease-in-out md:hidden ${isOpen ? 'opacity-100 translate-y-0' : 'opacity-0 -translate-y-full pointer-events-none'
-          }`}>
-          <div className="flex flex-col items-center gap-8">
-            {publicLinks.map((link, idx) => (
-              <Link
-                key={link.name}
-                to={link.href}
-                onClick={() => setIsOpen(false)}
-                className={`text-3xl font-serif text-charcoal hover:text-gold-dark transition-all duration-700 ${isOpen ? 'translate-y-0 opacity-100 blur-0' : 'translate-y-8 opacity-0 blur-sm'
-                  }`}
-                style={{ transitionDelay: `${isOpen ? 100 + idx * 100 : 0}ms` }}
-              >
-                {link.name}
-              </Link>
-            ))}
-            {user ? (
-              <div className="mt-6 flex flex-col items-center gap-4">
-                <div className="flex items-center gap-3 rounded-full border border-charcoal/10 bg-white/70 px-5 py-2">
-                  <div className="flex h-10 w-10 items-center justify-center rounded-full bg-charcoal text-cream">
-                    <span className="text-xs font-semibold tracking-widest">{initials}</span>
-                  </div>
-                  <div className="text-left">
-                    <p className="text-sm font-medium text-charcoal">{displayName}</p>
-                    {user?.email && <p className="text-xs text-charcoal/60">{user.email}</p>}
-                  </div>
-                </div>
-                {isAdmin && (
-                  <Link
-                    to="/admin/products/add"
-                    onClick={() => setIsOpen(false)}
-                    className="text-sm uppercase tracking-[0.3em] text-charcoal/70 hover:text-charcoal transition-colors"
-                  >
-                    Add
-                  </Link>
-                )}
-                {isAdmin && (
-                  <Link
-                    to="/admin/products/manage"
-                    onClick={() => setIsOpen(false)}
-                    className="text-sm uppercase tracking-[0.3em] text-charcoal/70 hover:text-charcoal transition-colors"
-                  >
-                    Manage
-                  </Link>
-                )}
-                {isAdmin && (
-                  <Link
-                    to="/admin/products/inquiries"
-                    onClick={() => setIsOpen(false)}
-                    className="text-sm uppercase tracking-[0.3em] text-charcoal/70 hover:text-charcoal transition-colors"
-                  >
-                    Inquiries
-                  </Link>
-                )}
-                <button
-                  type="button"
-                  onClick={async () => {
-                    await signOut();
-                    setIsOpen(false);
-                  }}
-                  className="text-sm uppercase tracking-[0.3em] text-charcoal/70 hover:text-charcoal transition-colors"
-                >
-                  Sign out
-                </button>
-              </div>
-            ) : (
-              <div className="mt-6 flex flex-col items-center gap-4">
+        <div className={`fixed inset-0 z-[60] flex flex-col bg-cream/95 px-6 pt-20 pb-12 backdrop-blur-xl transition-all duration-500 ease-in-out md:hidden ${isOpen ? 'opacity-100 translate-y-0' : 'opacity-0 -translate-y-full pointer-events-none'
+          } overflow-hidden`}>
+          <div className="flex-1 min-h-0 overflow-y-auto overscroll-contain">
+            <div className="mx-auto flex min-h-full w-full max-w-xs flex-col items-center justify-start gap-6 sm:max-w-sm sm:gap-8">
+              {publicLinks.map((link, idx) => (
                 <Link
-                  to="/auth?mode=sign-in"
+                  key={link.name}
+                  to={link.href}
                   onClick={() => setIsOpen(false)}
-                  className="rounded-full border border-charcoal/20 bg-white/80 px-6 py-3 text-xs uppercase tracking-[0.3em] text-charcoal transition-all hover:border-gold/40"
+                  className={`text-2xl font-serif text-charcoal transition-all duration-700 hover:text-gold-dark sm:text-3xl ${isOpen ? 'translate-y-0 opacity-100 blur-0' : 'translate-y-8 opacity-0 blur-sm'
+                    }`}
+                  style={{ transitionDelay: `${isOpen ? 100 + idx * 100 : 0}ms` }}
                 >
-                  Login
+                  {link.name}
                 </Link>
-              </div>
-            )}
+              ))}
+              {user ? (
+                <div className="mt-6 flex flex-col items-center gap-4">
+                  <div className="flex items-center gap-3 rounded-full border border-charcoal/10 bg-white/70 px-5 py-2">
+                    <div className="flex h-10 w-10 items-center justify-center rounded-full bg-charcoal text-cream">
+                      <span className="text-xs font-semibold tracking-widest">{initials}</span>
+                    </div>
+                    <div className="text-left">
+                      <p className="text-sm font-medium text-charcoal">{displayName}</p>
+                      {user?.email && <p className="text-xs text-charcoal/60">{user.email}</p>}
+                    </div>
+                  </div>
+                  {isAdmin && (
+                    <Link
+                      to="/admin/products/add"
+                      onClick={() => setIsOpen(false)}
+                      className="text-sm uppercase tracking-[0.3em] text-charcoal/70 hover:text-charcoal transition-colors"
+                    >
+                      Add
+                    </Link>
+                  )}
+                  {isAdmin && (
+                    <Link
+                      to="/admin/products/manage"
+                      onClick={() => setIsOpen(false)}
+                      className="text-sm uppercase tracking-[0.3em] text-charcoal/70 hover:text-charcoal transition-colors"
+                    >
+                      Manage
+                    </Link>
+                  )}
+                  {isAdmin && (
+                    <Link
+                      to="/admin/products/inquiries"
+                      onClick={() => setIsOpen(false)}
+                      className="text-sm uppercase tracking-[0.3em] text-charcoal/70 hover:text-charcoal transition-colors"
+                    >
+                      Inquiries
+                    </Link>
+                  )}
+                  <button
+                    type="button"
+                    onClick={async () => {
+                      await signOut();
+                      setIsOpen(false);
+                    }}
+                    className="text-sm uppercase tracking-[0.3em] text-charcoal/70 hover:text-charcoal transition-colors"
+                  >
+                    Sign out
+                  </button>
+                </div>
+              ) : (
+                <div className="mt-6 flex flex-col items-center gap-4">
+                  <Link
+                    to="/auth?mode=sign-in"
+                    onClick={() => setIsOpen(false)}
+                    className="rounded-full border border-charcoal/20 bg-white/80 px-6 py-3 text-xs uppercase tracking-[0.3em] text-charcoal transition-all hover:border-gold/40"
+                  >
+                    Login
+                  </Link>
+                </div>
+              )}
+            </div>
           </div>
         </div>
       </div>

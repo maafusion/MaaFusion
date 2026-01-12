@@ -221,13 +221,13 @@ export default function Gallery() {
 
   return (
     <Layout>
-      <section className="bg-cream pt-12 pb-10">
-        <div className="container mx-auto px-6 lg:px-12">
+      <section className="bg-cream pb-12 pt-16 md:pt-20">
+        <div className="container mx-auto px-4 sm:px-6 lg:px-12">
           <div className="flex flex-col gap-4">
             <Badge className="w-fit rounded-full border border-charcoal/20 bg-white/70 px-4 py-1 text-[10px] uppercase tracking-[0.4em] text-charcoal/70">
               Client gallery
             </Badge>
-            <h1 className="font-serif text-4xl text-charcoal md:text-6xl">
+            <h1 className="font-serif text-3xl text-charcoal sm:text-4xl md:text-5xl">
               Gallery of Collections
             </h1>
             <p className="max-w-2xl text-base text-charcoal/60 md:text-lg">
@@ -238,10 +238,10 @@ export default function Gallery() {
         </div>
       </section>
 
-      <section className="bg-cream py-14">
-        <div className="container mx-auto px-6 lg:px-12">
+      <section className="bg-cream py-12 md:py-16">
+        <div className="container mx-auto px-4 sm:px-6 lg:px-12">
           <div className="mb-10">
-            <h2 className="mt-3 font-serif text-3xl text-charcoal md:text-4xl">
+            <h2 className="mt-3 font-serif text-2xl text-charcoal sm:text-3xl md:text-4xl">
               Latest Additions
             </h2>
           </div>
@@ -319,7 +319,7 @@ export default function Gallery() {
                   );
                   return (
                     <div key={product.id} className="group space-y-4">
-                      <div className="relative aspect-[3/4] overflow-hidden rounded-3xl bg-white shadow-soft transition-all duration-700 hover:-translate-y-2 hover:shadow-gold/20">
+                      <div className="relative aspect-[4/5] overflow-hidden rounded-3xl bg-white shadow-soft transition-all duration-700 hover:-translate-y-2 hover:shadow-gold/20 sm:aspect-[3/4]">
                         <div className="absolute inset-0">
                           <div className="w-full h-full relative overflow-hidden bg-gray-50">
                             {imageUrls.length ? (
@@ -337,7 +337,7 @@ export default function Gallery() {
                         </div>
                       </div>
                       <div>
-                        <h3 className="font-serif text-2xl text-charcoal group-hover:text-gold-dark transition-colors duration-300">{product.name}</h3>
+                        <h3 className="font-serif text-xl text-charcoal transition-colors duration-300 group-hover:text-gold-dark sm:text-2xl">{product.name}</h3>
                         <p className="mt-3 text-lg font-semibold text-gold-dark">
                           {currencyFormatter.format(product.price)}
                         </p>
@@ -393,7 +393,7 @@ export default function Gallery() {
           }
         }}
       >
-        <DialogContent className="sm:max-w-[520px]">
+        <DialogContent className="sm:max-w-[520px] p-4 sm:p-6">
           <DialogHeader>
             <DialogTitle>Enquire about {selectedProduct?.name ?? "this product"}</DialogTitle>
             <DialogDescription>
@@ -486,7 +486,7 @@ export default function Gallery() {
           }
         }}
       >
-        <DialogContent className="sm:max-w-[760px]">
+        <DialogContent className="sm:max-w-[760px] p-4 sm:p-6">
           <DialogHeader>
             <DialogTitle>{detailsProduct?.name ?? "Product details"}</DialogTitle>
             <DialogDescription>
@@ -494,9 +494,9 @@ export default function Gallery() {
             </DialogDescription>
           </DialogHeader>
           {detailsProduct && (
-            <div className="grid gap-6 md:grid-cols-[1.1fr_0.9fr]">
+            <div className="grid gap-4 sm:gap-6 md:grid-cols-[1.1fr_0.9fr]">
               <div className="space-y-4">
-                <div className="relative aspect-[3/4] overflow-hidden rounded-3xl bg-white shadow-soft">
+                <div className="relative aspect-[4/5] overflow-hidden rounded-3xl bg-white shadow-soft sm:aspect-[3/4]">
                   {detailsImages.length ? (
                     <ImageHoverCarousel
                       images={detailsImages}

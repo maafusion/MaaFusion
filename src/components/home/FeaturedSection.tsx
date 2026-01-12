@@ -6,15 +6,15 @@ import { FEATURED_COLLECTIONS } from '@/data/collections';
 
 export function FeaturedSection() {
   return (
-    <section className="py-12 bg-cream text-charcoal overflow-hidden">
-      <div className="container mx-auto px-6 lg:px-12">
+    <section className="bg-cream py-14 text-charcoal overflow-hidden sm:py-16 md:py-20">
+      <div className="container mx-auto px-4 sm:px-6 lg:px-12">
         {/* Section Header */}
-        <div className="flex flex-col md:flex-row items-end justify-between mb-16 gap-8">
+        <div className="mb-10 flex flex-col items-end justify-between gap-8 md:mb-16 md:flex-row">
           <div className="max-w-2xl">
-            <h2 className="font-serif text-4xl md:text-5xl text-charcoal mb-6 leading-tight">
+            <h2 className="mb-6 font-serif text-3xl leading-tight text-charcoal sm:text-4xl md:text-5xl">
               Curated <span className="italic text-charcoal/50">Collections</span>
             </h2>
-            <p className="text-charcoal/60 text-lg font-sans max-w-md">
+            <p className="max-w-md font-sans text-base text-charcoal/60 sm:text-lg">
               A selection of our finest digital sculptures and jewelry designs,
               crafted with precision and artistic vision.
             </p>
@@ -105,7 +105,7 @@ export function FeaturedSection() {
         </div>
 
         {/* Mobile CTA */}
-        <div className="mt-16 md:hidden text-center">
+        <div className="mt-10 text-center md:hidden">
           <Button variant="ghost" asChild className="group hover:bg-transparent px-0 hover:text-gold-dark text-charcoal transition-colors">
             <Link to="/gallery" className="gap-2">
               <span className="font-serif italic tracking-wider text-sm border-b border-charcoal/30 group-hover:border-gold-dark pb-1">View Full Gallery</span>

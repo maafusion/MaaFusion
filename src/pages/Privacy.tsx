@@ -3,15 +3,15 @@ import { Layout } from '@/components/layout/Layout';
 export default function Privacy() {
   return (
     <Layout>
-      <section className="py-24 bg-cream">
-        <div className="container mx-auto px-4">
+      <section className="bg-cream py-16 md:py-24">
+        <div className="container mx-auto px-4 sm:px-6">
           <div className="max-w-3xl mx-auto">
-            <h1 className="font-serif text-5xl font-bold text-charcoal mb-8 animate-fade-up">
+            <h1 className="font-serif text-4xl font-bold text-charcoal mb-8 animate-fade-up sm:text-5xl">
               Privacy <span className="text-gold-dark">Policy</span>
             </h1>
 
             <div className="prose prose-stone max-w-none space-y-8 text-charcoal/70 animate-fade-up" style={{ animationDelay: '0.1s' }}>
-              <p className="text-lg font-sans">
+              <p className="text-base font-sans sm:text-lg">
                 Last updated: {new Date().toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' })}
               </p>
 

@@ -90,17 +90,17 @@ export default function Contact() {
   return (
     <Layout>
       {/* Hero */}
-      <section className="py-24 relative overflow-hidden">
+      <section className="relative overflow-hidden py-16 md:py-24">
         <div className="absolute inset-0 bg-cream" />
         <div className="absolute top-0 right-0 w-[500px] h-[500px] bg-gold/5 rounded-full blur-[100px] opacity-60" />
         <div className="absolute bottom-0 left-0 w-[300px] h-[300px] bg-gold/10 rounded-full blur-[80px] opacity-40" />
 
-        <div className="container mx-auto px-4 relative z-10">
+        <div className="container mx-auto px-4 sm:px-6 relative z-10">
           <div className="max-w-3xl mx-auto text-center">
-            <h1 className="font-display text-5xl md:text-6xl font-bold text-charcoal mb-6 animate-fade-up">
+            <h1 className="font-display text-4xl font-bold text-charcoal mb-6 animate-fade-up sm:text-5xl md:text-6xl">
               Get in <span className="text-gold-dark">Touch</span>
             </h1>
-            <p className="text-xl text-charcoal/70 animate-fade-up" style={{ animationDelay: '0.1s' }}>
+            <p className="text-base text-charcoal/70 animate-fade-up sm:text-lg md:text-xl" style={{ animationDelay: '0.1s' }}>
               Have a question or want to discuss a project? We'd love to hear from you.
             </p>
           </div>
@@ -108,12 +108,12 @@ export default function Contact() {
       </section>
 
       {/* Contact Section */}
-      <section className="py-24">
-        <div className="container mx-auto px-4">
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-16">
+      <section className="py-16 md:py-24">
+        <div className="container mx-auto px-4 sm:px-6">
+          <div className="grid grid-cols-1 gap-10 lg:grid-cols-2 md:gap-16">
             {/* Contact Info */}
             <div>
-              <h2 className="font-display text-3xl font-bold text-foreground mb-8">
+              <h2 className="font-display text-2xl font-bold text-foreground mb-8 sm:text-3xl">
                 Contact <span className="text-gold-gradient">Information</span>
               </h2>
 
@@ -135,7 +135,7 @@ export default function Contact() {
                 ))}
               </div>
 
-              <div className="card-luxury p-6">
+              <div className="card-luxury p-5 sm:p-6">
                 <h3 className="font-display text-lg font-semibold text-foreground mb-2">
                   Business Hours
                 </h3>
@@ -148,8 +148,8 @@ export default function Contact() {
             </div>
 
             {/* Contact Form */}
-            <div className="card-luxury p-8">
-              <h2 className="font-display text-2xl font-bold text-foreground mb-6">
+            <div className="card-luxury p-6 sm:p-8">
+              <h2 className="font-display text-xl font-bold text-foreground mb-6 sm:text-2xl">
                 Send a Message
               </h2>
 

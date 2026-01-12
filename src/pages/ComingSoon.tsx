@@ -6,11 +6,11 @@ export default function ComingSoon() {
     return (
         <Layout>
             <div className="min-h-[70vh] flex flex-col items-center justify-center bg-cream px-4 text-center">
-                <h1 className="font-serif text-5xl md:text-7xl text-charcoal mb-6 animate-fade-up">
+                <h1 className="font-serif text-4xl text-charcoal mb-6 animate-fade-up sm:text-5xl md:text-7xl">
                     Coming Soon
                 </h1>
                 <div className="h-px w-24 bg-gold/50 mb-8 animate-fade-up" style={{ animationDelay: '0.1s' }} />
-                <p className="font-sans text-charcoal/60 text-lg max-w-md mb-8 animate-fade-up" style={{ animationDelay: '0.2s' }}>
+                <p className="font-sans text-base text-charcoal/60 max-w-md mb-8 animate-fade-up sm:text-lg" style={{ animationDelay: '0.2s' }}>
                     We are currently crafting this experience. Please check back shortly for updates.
                 </p>
                 <div className="animate-fade-up" style={{ animationDelay: '0.3s' }}>
