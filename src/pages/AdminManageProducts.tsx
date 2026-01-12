@@ -25,6 +25,7 @@ import { useToast } from "@/hooks/use-toast";
 import { supabase } from "@/lib/supabaseClient";
 import {
   GALLERY_BUCKET,
+  MAX_IMAGE_SIZE_BYTES,
   MAX_PRODUCT_IMAGES,
   PRODUCT_CATEGORIES,
   type ProductCategory,
@@ -54,6 +55,18 @@ type UploadProgress = {
   totalFiles: number;
   uploadedBytes: number;
   totalBytes: number;
+};
+
+const formatBytes = (value: number) => {
+  if (!Number.isFinite(value)) return "0 B";
+  const units = ["B", "KB", "MB", "GB"];
+  let size = Math.max(0, value);
+  let unitIndex = 0;
+  while (size >= 1024 && unitIndex < units.length - 1) {
+    size /= 1024;
+    unitIndex += 1;
+  }
+  return `${size.toFixed(size >= 10 || unitIndex === 0 ? 0 : 1)} ${units[unitIndex]}`;
 };
 
 export default function AdminManageProducts() {
@@ -194,6 +207,15 @@ export default function AdminManageProducts() {
     onProgress?: (value: UploadProgress) => void,
   ): Promise<ProductImageRow[] | null> => {
     if (!files.length) return null;
+    const oversized = files.filter((file) => file.size > MAX_IMAGE_SIZE_BYTES);
+    if (oversized.length) {
+      toast({
+        title: "Images too large",
+        description: `Each image must be ${formatBytes(MAX_IMAGE_SIZE_BYTES)} or smaller.`,
+        variant: "destructive",
+      });
+      return null;
+    }
     const existingCount = product.product_images?.length ?? 0;
     if (existingCount + files.length > MAX_PRODUCT_IMAGES) {
       toast({
@@ -554,17 +576,7 @@ function AdminProductCard({
   const isBusy = isSaving || isUploading;
   const isUploadDialog = confirmState.intent === "upload";
   const shouldBlockDialogClose = blockDialogCloseRef.current || (isUploadDialog && !!uploadReview);
-  const formatBytes = (value: number) => {
-    if (!Number.isFinite(value)) return "0 B";
-    const units = ["B", "KB", "MB", "GB"];
-    let size = Math.max(0, value);
-    let unitIndex = 0;
-    while (size >= 1024 && unitIndex < units.length - 1) {
-      size /= 1024;
-      unitIndex += 1;
-    }
-    return `${size.toFixed(size >= 10 || unitIndex === 0 ? 0 : 1)} ${units[unitIndex]}`;
-  };
+  const maxImageSizeLabel = formatBytes(MAX_IMAGE_SIZE_BYTES);
 
   useEffect(() => {
     setName(product.name);
@@ -587,6 +599,16 @@ function AdminProductCard({
 
   const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const selected = Array.from(event.target.files ?? []);
+    const oversized = selected.filter((file) => file.size > MAX_IMAGE_SIZE_BYTES);
+    if (oversized.length) {
+      toast({
+        title: "Images too large",
+        description: `Each image must be ${maxImageSizeLabel} or smaller.`,
+        variant: "destructive",
+      });
+      event.target.value = "";
+      return;
+    }
     if (selected.length > remainingSlots) {
       toast({
         title: "Too many images",
@@ -643,6 +665,32 @@ function AdminProductCard({
 
   const handleUpdateClick = async () => {
     const priceValue = Number.parseFloat(price);
+    const trimmedName = name.trim();
+    const trimmedDescription = description.trim();
+    if (!trimmedName || !trimmedDescription || !category) {
+      toast({
+        title: "Missing details",
+        description: "Provide a product name, description, and category.",
+        variant: "destructive",
+      });
+      return;
+    }
+    if (!Number.isFinite(priceValue) || priceValue < 0) {
+      toast({
+        title: "Invalid price",
+        description: "Enter a valid price.",
+        variant: "destructive",
+      });
+      return;
+    }
+    if (!product.product_images?.length) {
+      toast({
+        title: "Images required",
+        description: "Upload at least one image before saving changes.",
+        variant: "destructive",
+      });
+      return;
+    }
     setConfirmState({
       open: true,
       title: "Save changes",
@@ -650,7 +698,7 @@ function AdminProductCard({
       actionLabel: "Save",
       onConfirm: async () => {
         setIsSaving(true);
-        await onUpdate(product.id, name, description, priceValue, category);
+        await onUpdate(product.id, trimmedName, trimmedDescription, priceValue, category);
         setIsSaving(false);
       },
     });
@@ -705,11 +753,15 @@ function AdminProductCard({
       <CardContent className="space-y-6">
         <div className="grid gap-4 md:grid-cols-2">
           <div className="space-y-2">
-            <Label>Product name</Label>
+            <Label>
+              Product name <span className="text-red-500">*</span>
+            </Label>
             <Input value={name} onChange={(event) => setName(event.target.value)} />
           </div>
           <div className="space-y-2">
-            <Label>Category</Label>
+            <Label>
+              Category <span className="text-red-500">*</span>
+            </Label>
             <Select value={category} onValueChange={(value) => setCategory(value as ProductCategory)}>
               <SelectTrigger>
                 <SelectValue />
@@ -726,7 +778,9 @@ function AdminProductCard({
         </div>
         <div className="grid gap-4 md:grid-cols-2">
           <div className="space-y-2">
-            <Label>Price</Label>
+            <Label>
+              Price <span className="text-red-500">*</span>
+            </Label>
             <Input
               type="number"
               min="0"
@@ -736,7 +790,9 @@ function AdminProductCard({
             />
           </div>
           <div className="space-y-2 md:col-span-2">
-            <Label>Description</Label>
+            <Label>
+              Description <span className="text-red-500">*</span>
+            </Label>
             <Textarea
               value={description}
               onChange={(event) => setDescription(event.target.value)}
@@ -800,7 +856,9 @@ function AdminProductCard({
             )}
 
             <div className="space-y-3">
-              <Label>Add images</Label>
+              <Label>
+                Add images <span className="text-red-500">*</span>
+              </Label>
               <div className="grid gap-3 sm:grid-cols-3">
                 <button
                   type="button"
@@ -825,6 +883,7 @@ function AdminProductCard({
               />
               <div className="flex flex-col gap-2 text-xs text-charcoal/60">
                 <span>Remaining slots: {remainingSlots}</span>
+                <span>Max size per image: {maxImageSizeLabel}</span>
               </div>
             </div>
           </div>

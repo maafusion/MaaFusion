@@ -15,6 +15,7 @@ import { useToast } from "@/hooks/use-toast";
 import { supabase } from "@/lib/supabaseClient";
 import {
   GALLERY_BUCKET,
+  MAX_IMAGE_SIZE_BYTES,
   MAX_PRODUCT_IMAGES,
   PRODUCT_CATEGORIES,
   type ProductCategory,
@@ -69,9 +70,20 @@ export default function AdminAddProducts() {
     }
     return `${size.toFixed(size >= 10 || unitIndex === 0 ? 0 : 1)} ${units[unitIndex]}`;
   };
+  const maxImageSizeLabel = formatBytes(MAX_IMAGE_SIZE_BYTES);
 
   const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const selected = Array.from(event.target.files ?? []);
+    const oversized = selected.filter((file) => file.size > MAX_IMAGE_SIZE_BYTES);
+    if (oversized.length) {
+      toast({
+        title: "Images too large",
+        description: `Each image must be ${maxImageSizeLabel} or smaller.`,
+        variant: "destructive",
+      });
+      event.target.value = "";
+      return;
+    }
     if (selected.length > MAX_PRODUCT_IMAGES) {
       toast({
         title: "Too many images",
@@ -112,6 +124,14 @@ export default function AdminAddProducts() {
       toast({
         title: "Invalid price",
         description: "Enter a valid price.",
+        variant: "destructive",
+      });
+      return;
+    }
+    if (!uploadedImages.length) {
+      toast({
+        title: "Images required",
+        description: "Upload at least one image before creating the product.",
         variant: "destructive",
       });
       return;
@@ -199,6 +219,16 @@ export default function AdminAddProducts() {
 
     for (let index = 0; index < createFiles.length; index += 1) {
       const file = createFiles[index];
+      if (file.size > MAX_IMAGE_SIZE_BYTES) {
+        toast({
+          title: "Image too large",
+          description: `Each image must be ${maxImageSizeLabel} or smaller.`,
+          variant: "destructive",
+        });
+        setIsUploading(false);
+        setUploadProgress(null);
+        return;
+      }
       const path = `products/drafts/${draftId}/${crypto.randomUUID()}-${file.name}`;
       const { data, error: uploadError } = await supabase
         .storage
@@ -367,7 +397,9 @@ export default function AdminAddProducts() {
             <CardContent className="space-y-6">
               <div className="grid gap-6 md:grid-cols-2">
                 <div className="space-y-2">
-                  <Label htmlFor="product-name">Product name</Label>
+                  <Label htmlFor="product-name">
+                    Product name <span className="text-red-500">*</span>
+                  </Label>
                   <Input
                     id="product-name"
                     value={form.name}
@@ -376,7 +408,9 @@ export default function AdminAddProducts() {
                   />
                 </div>
                 <div className="space-y-2">
-                  <Label htmlFor="product-price">Price</Label>
+                  <Label htmlFor="product-price">
+                    Price <span className="text-red-500">*</span>
+                  </Label>
                   <Input
                     id="product-price"
                     type="number"
@@ -388,7 +422,9 @@ export default function AdminAddProducts() {
                   />
                 </div>
                 <div className="space-y-2">
-                  <Label>Category</Label>
+                  <Label>
+                    Category <span className="text-red-500">*</span>
+                  </Label>
                   <Select
                     value={form.category}
                     onValueChange={(value) =>
@@ -408,7 +444,9 @@ export default function AdminAddProducts() {
                   </Select>
                 </div>
                 <div className="space-y-2 md:col-span-2">
-                  <Label htmlFor="product-description">Description</Label>
+                  <Label htmlFor="product-description">
+                    Description <span className="text-red-500">*</span>
+                  </Label>
                   <Textarea
                     id="product-description"
                     value={form.description}
@@ -420,7 +458,9 @@ export default function AdminAddProducts() {
                   />
                 </div>
                 <div className="space-y-2 md:col-span-2">
-                  <Label htmlFor="product-images">Images</Label>
+                  <Label htmlFor="product-images">
+                    Images <span className="text-red-500">*</span>
+                  </Label>
                   <div className="grid gap-3 sm:grid-cols-3">
                     <button
                       type="button"
@@ -447,6 +487,7 @@ export default function AdminAddProducts() {
                   <div className="flex flex-col gap-2 text-xs text-charcoal/60">
                     <span>Selected files: {selectedCount}</span>
                     <span>Remaining slots: {remainingSlots}</span>
+                    <span>Max size per image: {maxImageSizeLabel}</span>
                   </div>
                   {createFiles.length > 0 && (
                     <div className="flex flex-wrap gap-2">

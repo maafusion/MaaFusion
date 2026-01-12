@@ -15,7 +15,7 @@ export function Footer() {
             </Link>
             <p className="font-sans text-charcoal/60 text-sm max-w-sm leading-relaxed">
               We create digital masterpieces that bridge the gap between ancient tradition and modern luxury.
-              Elevating the art of jewelry and murti design.
+              Elevating the art of jewelry and divine forms.
             </p>
           </div>
 

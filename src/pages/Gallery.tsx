@@ -190,6 +190,7 @@ export default function Gallery() {
     const { error: insertError } = await supabase.from("product_inquiries").insert({
       product_id: selectedProduct.id,
       product_name: selectedProduct.name,
+      product_price: selectedProduct.price,
       user_id: user?.id ?? null,
       first_name: firstName || null,
       last_name: lastName || null,
@@ -318,7 +319,7 @@ export default function Gallery() {
                   );
                   return (
                     <div key={product.id} className="group space-y-4">
-                      <div className="relative aspect-[3/4] overflow-hidden bg-white shadow-soft transition-all duration-700 hover:-translate-y-2 hover:shadow-gold/20">
+                      <div className="relative aspect-[3/4] overflow-hidden rounded-3xl bg-white shadow-soft transition-all duration-700 hover:-translate-y-2 hover:shadow-gold/20">
                         <div className="absolute inset-0">
                           <div className="w-full h-full relative overflow-hidden bg-gray-50">
                             {imageUrls.length ? (
@@ -495,7 +496,7 @@ export default function Gallery() {
           {detailsProduct && (
             <div className="grid gap-6 md:grid-cols-[1.1fr_0.9fr]">
               <div className="space-y-4">
-                <div className="relative aspect-[3/4] overflow-hidden bg-white shadow-soft">
+                <div className="relative aspect-[3/4] overflow-hidden rounded-3xl bg-white shadow-soft">
                   {detailsImages.length ? (
                     <ImageHoverCarousel
                       images={detailsImages}

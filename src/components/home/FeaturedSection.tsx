@@ -29,41 +29,79 @@ export function FeaturedSection() {
           </div>
         </div>
 
-        {/* Categories Grid - Conceptual Asymmetry */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-8 lg:gap-12">
-          {FEATURED_COLLECTIONS.map((category, index) => (
-            <div
-              key={category.title}
-              className="group flex flex-col space-y-6"
-            >
+        {/* Categories Grid - Two Rows */}
+        <div className="space-y-10 lg:space-y-14">
+          <div className="grid grid-cols-1 gap-8 md:grid-cols-3 lg:gap-12">
+            {FEATURED_COLLECTIONS.slice(0, 3).map((category, index) => (
               <div
-                className="relative aspect-[3/4] overflow-hidden bg-white shadow-soft transition-all duration-700 hover:-translate-y-2 hover:shadow-gold/20"
+                key={category.title}
+                className="group flex flex-col space-y-6"
               >
-                <div className="absolute inset-0">
-                  <div className="w-full h-full relative overflow-hidden bg-gray-50">
-                    <ImageHoverCarousel
-                      images={category.images}
-                      alt={category.title}
-                      className="w-full h-full object-cover transition-transform duration-1000 group-hover:scale-105"
-                    />
+                <div
+                  className="relative aspect-[3/4] overflow-hidden rounded-3xl bg-white shadow-soft transition-all duration-700 hover:-translate-y-2 hover:shadow-gold/20"
+                >
+                  <div className="absolute inset-0">
+                    <div className="w-full h-full relative overflow-hidden bg-gray-50">
+                      <ImageHoverCarousel
+                        images={category.images}
+                        alt={category.title}
+                        className="w-full h-full object-cover transition-transform duration-1000 group-hover:scale-105"
+                      />
+                    </div>
                   </div>
                 </div>
-              </div>
 
-              <div className="flex flex-col items-start px-2">
-                <span className="font-sans text-[10px] tracking-widest uppercase text-gold-dark mb-2 opacity-80 group-hover:opacity-100 transition-opacity">0{index + 1} / Collection</span>
-                <h3 className="font-serif text-3xl text-charcoal group-hover:text-gold-dark transition-colors duration-300 mb-2">
-                  {category.title}
-                </h3>
-                <p className="text-charcoal/60 text-sm font-sans line-clamp-2 leading-relaxed tracking-wide">
-                  {category.description}
-                </p>
-                <Link to="/contact" className="mt-4 text-sm font-serif italic border-b border-transparent group-hover:border-charcoal/30 transition-all">
-                  Explore
-                </Link>
+                <div className="flex flex-col items-start px-2">
+                  <span className="font-sans text-[10px] tracking-widest uppercase text-gold-dark mb-2 opacity-80 group-hover:opacity-100 transition-opacity">0{index + 1} / Collection</span>
+                  <h3 className="font-serif text-3xl text-charcoal group-hover:text-gold-dark transition-colors duration-300 mb-2">
+                    {category.title}
+                  </h3>
+                  <p className="text-charcoal/60 text-sm font-sans line-clamp-2 leading-relaxed tracking-wide">
+                    {category.description}
+                  </p>
+                  <Link to="/gallery" className="mt-4 text-sm font-serif italic border-b border-transparent group-hover:border-charcoal/30 transition-all">
+                    Explore
+                  </Link>
+                </div>
               </div>
-            </div>
-          ))}
+            ))}
+          </div>
+
+          <div className="grid grid-cols-1 gap-8 sm:grid-cols-2 lg:grid-cols-4 lg:gap-10">
+            {FEATURED_COLLECTIONS.slice(3).map((category, index) => (
+              <div
+                key={category.title}
+                className="group flex flex-col space-y-5"
+              >
+                <div
+                  className="relative aspect-[4/5] overflow-hidden rounded-3xl bg-white shadow-soft transition-all duration-700 hover:-translate-y-2 hover:shadow-gold/20"
+                >
+                  <div className="absolute inset-0">
+                    <div className="w-full h-full relative overflow-hidden bg-gray-50">
+                      <ImageHoverCarousel
+                        images={category.images}
+                        alt={category.title}
+                        className="w-full h-full object-cover transition-transform duration-1000 group-hover:scale-105"
+                      />
+                    </div>
+                  </div>
+                </div>
+
+                <div className="flex flex-col items-start px-2">
+                  <span className="font-sans text-[10px] tracking-widest uppercase text-gold-dark mb-2 opacity-80 group-hover:opacity-100 transition-opacity">0{index + 4} / Collection</span>
+                  <h3 className="font-serif text-2xl text-charcoal group-hover:text-gold-dark transition-colors duration-300 mb-2">
+                    {category.title}
+                  </h3>
+                  <p className="text-charcoal/60 text-sm font-sans line-clamp-2 leading-relaxed tracking-wide">
+                    {category.description}
+                  </p>
+                  <Link to="/gallery" className="mt-3 text-sm font-serif italic border-b border-transparent group-hover:border-charcoal/30 transition-all">
+                    Explore
+                  </Link>
+                </div>
+              </div>
+            ))}
+          </div>
         </div>
 
         {/* Mobile CTA */}
