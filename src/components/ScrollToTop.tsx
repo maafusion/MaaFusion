@@ -5,7 +5,11 @@ const ScrollToTop = () => {
     const { pathname } = useLocation();
 
     useEffect(() => {
-        window.scrollTo(0, 0);
+        window.scrollTo({
+            top: 0,
+            left: 0,
+            behavior: "instant", // Force instant scroll to avoid smooth scroll lag
+        });
     }, [pathname]);
 
     return null;

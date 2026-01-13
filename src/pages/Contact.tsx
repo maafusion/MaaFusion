@@ -55,17 +55,17 @@ export default function Contact() {
             {contactInfo.map((item, index) => (
               <div
                 key={item.title}
-                className="group flex flex-col items-center text-center p-8 rounded-2xl bg-white border border-charcoal/5 shadow-soft hover:shadow-gold/20 transition-all duration-300 hover:-translate-y-1"
+                className="group flex flex-col items-center text-center p-8 rounded-2xl bg-white border border-charcoal/5 shadow-soft hover:shadow-gold/20 transition-all duration-300 hover:-translate-y-1 h-full"
                 style={{ animationDelay: `${index * 0.1}s` }}
               >
-                <div className="w-16 h-16 rounded-full bg-cream flex items-center justify-center mb-6 group-hover:bg-gold/10 transition-colors">
+                <div className="w-16 h-16 rounded-full bg-cream flex items-center justify-center mb-6 group-hover:bg-gold/10 transition-colors shrink-0">
                   <item.icon className="w-7 h-7 text-charcoal group-hover:text-gold-dark transition-colors" />
                 </div>
                 <h3 className="font-serif text-xl font-medium text-charcoal mb-3">{item.title}</h3>
-                <p className="text-charcoal/60 mb-6">{item.details}</p>
+                <p className="text-charcoal/60 mb-6 flex-grow">{item.details}</p>
                 <a 
                   href={item.href}
-                  className="text-xs uppercase tracking-widest text-gold-dark font-semibold border-b border-gold-dark/30 pb-1 hover:border-gold-dark transition-colors"
+                  className="text-xs uppercase tracking-widest text-gold-dark font-semibold border-b border-gold-dark/30 pb-1 hover:border-gold-dark transition-colors mt-auto"
                 >
                   {item.action}
                 </a>
