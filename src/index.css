@@ -98,6 +98,21 @@
   h1, h2, h3, h4, h5, h6 {
     @apply font-serif tracking-tight text-foreground;
   }
+  
+  /* Prevent image downloading and selection */
+  img {
+    -webkit-user-drag: none;
+    user-select: none;
+    -moz-user-select: none;
+    -webkit-user-select: none;
+    -ms-user-select: none;
+    pointer-events: none; /* Prevents context menu but also clicking. */
+  }
+  
+  /* Allow clicking on images inside links or buttons if needed */
+  a img, button img {
+    pointer-events: auto; /* Re-enable pointer events for interactive images */
+  }
 }
 
 @layer components {
