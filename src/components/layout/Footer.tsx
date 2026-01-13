@@ -14,8 +14,7 @@ export function Footer() {
               <img src="/logo.svg" alt="MaaFusion" className="h-14 w-auto" />
             </Link>
             <p className="font-sans text-charcoal/60 text-sm max-w-sm leading-relaxed">
-              We create digital masterpieces that bridge the gap between ancient tradition and modern luxury.
-              Elevating the art of jewelry and divine forms.
+              A digital homage to tradition. Blending culture and creativity under the guiding light of Geeta & Jashi.
             </p>
           </div>
 
@@ -66,9 +65,6 @@ export function Footer() {
         <div className="flex flex-col md:flex-row items-center justify-between gap-4 border-t border-charcoal/10 pt-6 md:pt-8">
           <p className="font-sans text-xs text-charcoal/40 uppercase tracking-widest">
             Copyright {currentYear} Maa Fusion Creations
-          </p>
-          <p className="font-sans text-xs text-charcoal/40 uppercase tracking-widest">
-            Designed with Intention
           </p>
         </div>
       </div>

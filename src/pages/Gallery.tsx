@@ -231,8 +231,7 @@ export default function Gallery() {
               Gallery of Collections
             </h1>
             <p className="max-w-2xl text-base text-charcoal/60 md:text-lg">
-              Browse the curated collections and the latest admin releases, organized by
-              category.
+              Explore our curated collections where timeless heritage meets digital innovation.
             </p>
           </div>
         </div>

@@ -7,7 +7,7 @@ export interface Collection {
 export const FEATURED_COLLECTIONS: Collection[] = [
     {
         title: 'Assorted Designs',
-        description: 'A refined medley of standout pieces that captures the studio’s full creative range.',
+        description: 'Where experimental forms meet established traditions.',
         images: [
             'https://p7fzjac0b1.ufs.sh/f/XMtknvqcEipyqyMCExuxbGnVptuhSZv1l5wJPH4AksO9KydN', // Pendant-P1.png
             'https://p7fzjac0b1.ufs.sh/f/XMtknvqcEipyd6eqcy0hMy1IRTNZstHdALVwcJU0uz5EQjvp', // Ring-P1.png
@@ -16,7 +16,7 @@ export const FEATURED_COLLECTIONS: Collection[] = [
     },
     {
         title: 'Ring Designs',
-        description: 'Sculpted bands and signatures that balance timeless elegance with modern edge.',
+        description: 'Modern precision meets the warmth of old-world charm.',
         images: [
             'https://p7fzjac0b1.ufs.sh/f/XMtknvqcEipyd6eqcy0hMy1IRTNZstHdALVwcJU0uz5EQjvp', // Ring-P1.png
             'https://p7fzjac0b1.ufs.sh/f/XMtknvqcEipynCDCDFWPkSw93VID0a4E7JAt8WHYc5O1rZBm', // Ring-P2.png
@@ -25,7 +25,7 @@ export const FEATURED_COLLECTIONS: Collection[] = [
     },
     {
         title: 'Pendant Designs',
-        description: 'Statement pendants defined by intricate detail, poised lines, and graceful presence.',
+        description: 'Wearable heritage. Digital sculptures designed to rest close to the heart.',
         images: [
             'https://p7fzjac0b1.ufs.sh/f/XMtknvqcEipy6vz7d3tFfCgmnEwdvaYW73xKjqeDt4h81BuM', // Pendant-P2.png
             'https://p7fzjac0b1.ufs.sh/f/XMtknvqcEipysVlAL6rdjByQufPwvGkR2r4lM0JLgI9FmTX7', // Pendant-P3.png
@@ -34,7 +34,7 @@ export const FEATURED_COLLECTIONS: Collection[] = [
     },
     {
         title: 'Artistic Figures',
-        description: 'Contemporary figurative sculptures that celebrate movement, poise, and human form.',
+        description: 'The human form, reimagined. Classical sculpting meets digital perfection.',
         images: [
             'https://p7fzjac0b1.ufs.sh/f/XMtknvqcEipy8uxnez5XCBrH7fo5ScA90Pi2DydakjmzqV1R', // Murti-P1.png
             'https://p7fzjac0b1.ufs.sh/f/XMtknvqcEipyhKKLQubW1TOFNvn4RPy9q6zMJjKcslpIbeax', // Murti-P2.png
@@ -42,7 +42,7 @@ export const FEATURED_COLLECTIONS: Collection[] = [
     },
     {
         title: 'Divine Art',
-        description: 'Deities and sacred murtis shaped with reverence, detail, and timeless presence.',
+        description: 'Sacred forms born from devotion. Ancient iconography in digital reality.',
         images: [
             'https://p7fzjac0b1.ufs.sh/f/XMtknvqcEipyhKKLQubW1TOFNvn4RPy9q6zMJjKcslpIbeax', // Murti-P2.png
             'https://p7fzjac0b1.ufs.sh/f/XMtknvqcEipy6vz7d3tFfCgmnEwdvaYW73xKjqeDt4h81BuM', // Pendant-P2.png
@@ -50,7 +50,7 @@ export const FEATURED_COLLECTIONS: Collection[] = [
     },
     {
         title: 'Earring Designs',
-        description: 'Elevated ear adornments with ornate detail, lightness, and refined symmetry.',
+        description: 'Ornate detail and delicate balance, framing the face with grace.',
         images: [
             'https://p7fzjac0b1.ufs.sh/f/XMtknvqcEipyqyMCExuxbGnVptuhSZv1l5wJPH4AksO9KydN', // Pendant-P1.png
             'https://p7fzjac0b1.ufs.sh/f/XMtknvqcEipyXJhQPTxqcEipyl1PR24aYnFzJGjfBbLSIuv3', // Ring-P3.png
@@ -58,7 +58,7 @@ export const FEATURED_COLLECTIONS: Collection[] = [
     },
     {
         title: 'Temple Jewellery',
-        description: 'Rare ethnic sets with deity motifs, richly engraved and gem-studded.',
+        description: 'Richly engraved deity motifs honoring the grandeur of India\'s temples.',
         images: [
             'https://p7fzjac0b1.ufs.sh/f/XMtknvqcEipyl6GCqNnB9rt54VLndWaO7PqKgm2JwoUj1cDQ', // Pendant-P4.png
             'https://p7fzjac0b1.ufs.sh/f/XMtknvqcEipyd6eqcy0hMy1IRTNZstHdALVwcJU0uz5EQjvp', // Ring-P1.png
