@@ -224,10 +224,10 @@ export default function Gallery() {
       <section className="bg-cream pb-6 pt-16 md:pt-20">
         <div className="container mx-auto px-4 sm:px-6 lg:px-12">
           <div className="flex flex-col gap-4">
-            <h1 className="font-serif text-3xl text-charcoal sm:text-4xl md:text-5xl">
+            <h1 className="font-serif text-3xl text-charcoal sm:text-4xl md:text-5xl text-balance">
               Gallery of Collections
             </h1>
-            <p className="max-w-2xl text-base text-charcoal/60 md:text-lg">
+            <p className="max-w-2xl text-base text-charcoal/60 md:text-lg text-pretty">
               Explore our curated collections where timeless heritage meets digital innovation.
             </p>
           </div>

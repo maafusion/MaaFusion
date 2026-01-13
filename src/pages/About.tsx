@@ -35,10 +35,10 @@ export default function About() {
 
         <div className="container mx-auto px-4 sm:px-6 relative z-10">
           <div className="max-w-3xl">
-            <h1 className="font-display text-4xl font-bold text-charcoal mb-6 animate-fade-up sm:text-5xl md:text-6xl">
+            <h1 className="font-display text-4xl font-bold text-charcoal mb-6 animate-fade-up sm:text-5xl md:text-6xl text-balance">
               About <span className="text-gold-dark">MaaFusion</span>
             </h1>
-            <p className="text-base text-charcoal/70 animate-fade-up sm:text-lg md:text-xl font-serif leading-relaxed" style={{ animationDelay: '0.1s' }}>
+            <p className="text-base text-charcoal/70 animate-fade-up sm:text-lg md:text-xl font-serif leading-relaxed text-pretty" style={{ animationDelay: '0.1s' }}>
               Guided by the legacy of <strong>Geeta & Jashi</strong>, we bridge the gap between ancient tradition and modern innovation. We don't just design; we translate heritage into the digital age.
             </p>
           </div>
