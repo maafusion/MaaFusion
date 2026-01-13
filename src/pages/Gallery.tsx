@@ -221,12 +221,9 @@ export default function Gallery() {
 
   return (
     <Layout>
-      <section className="bg-cream pb-12 pt-16 md:pt-20">
+      <section className="bg-cream pb-6 pt-16 md:pt-20">
         <div className="container mx-auto px-4 sm:px-6 lg:px-12">
           <div className="flex flex-col gap-4">
-            <Badge className="w-fit rounded-full border border-charcoal/20 bg-white/70 px-4 py-1 text-[10px] uppercase tracking-[0.4em] text-charcoal/70">
-              Client gallery
-            </Badge>
             <h1 className="font-serif text-3xl text-charcoal sm:text-4xl md:text-5xl">
               Gallery of Collections
             </h1>
@@ -237,7 +234,7 @@ export default function Gallery() {
         </div>
       </section>
 
-      <section className="bg-cream py-12 md:py-16">
+      <section className="bg-cream pb-12 pt-6 md:pb-16 md:pt-8">
         <div className="container mx-auto px-4 sm:px-6 lg:px-12">
           <div className="mb-10">
             <h2 className="mt-3 font-serif text-2xl text-charcoal sm:text-3xl md:text-4xl">
