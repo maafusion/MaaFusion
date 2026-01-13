@@ -77,15 +77,11 @@ export function Navbar() {
 
           {/* Logo */}
           <Link to="/" className="group relative z-50">
-            <div className="flex flex-col leading-none">
-              <span className={`font-serif text-2xl tracking-tighter transition-colors duration-300 ${isScrolled ? 'text-charcoal' : 'text-charcoal'
-                }`}>
-                MaaFusion
-              </span>
-              <span className="font-sans text-[10px] tracking-[0.3em] uppercase text-charcoal/60 group-hover:text-gold-dark transition-colors duration-300">
-                Studio
-              </span>
-            </div>
+            <img 
+              src="/logo.svg" 
+              alt="MaaFusion Studio" 
+              className="h-16 w-auto transition-transform duration-300 group-hover:scale-105"
+            />
           </Link>
 
           {/* Desktop Navigation */}

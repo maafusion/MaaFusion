@@ -13,11 +13,8 @@ export function HeroSection() {
 
       <div className="container mx-auto px-4 sm:px-6 lg:px-12 relative z-10">
         <div className="max-w-3xl mx-auto text-center">
-          <div className="space-y-6 animate-fade-up" style={{ animationDelay: '0.2s' }}>
-            <span className="font-sans text-xs uppercase tracking-[0.3em] text-gold-dark">
-              Exquisite Craftsmanship
-            </span>
-            <h1 className="font-serif text-4xl leading-[1.1] text-charcoal tracking-tight sm:text-5xl md:text-6xl lg:text-7xl">
+          <div className="space-y-6 animate-fade-up mt-12 sm:mt-0" style={{ animationDelay: '0.2s' }}>
+            <h1 className="font-serif text-5xl leading-[1.1] text-charcoal tracking-tight sm:text-5xl md:text-6xl lg:text-7xl">
               <span className="italic">Crafting</span> Divine <br />
               <span className="italic">Excellence</span>
             </h1>

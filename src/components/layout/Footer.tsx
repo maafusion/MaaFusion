@@ -11,7 +11,7 @@ export function Footer() {
           {/* Brand Column */}
           <div className="md:col-span-2 space-y-6">
             <Link to="/" className="inline-block">
-              <span className="font-serif text-3xl text-charcoal tracking-tight">MaaFusion</span>
+              <img src="/logo.svg" alt="MaaFusion" className="h-14 w-auto" />
             </Link>
             <p className="font-sans text-charcoal/60 text-sm max-w-sm leading-relaxed">
               We create digital masterpieces that bridge the gap between ancient tradition and modern luxury.
