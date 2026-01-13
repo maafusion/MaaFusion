@@ -53,17 +53,17 @@ export default {
         },
         // Custom Ethereal Colors
         gold: {
-          DEFAULT: "hsl(var(--gold))",
-          light: "hsl(var(--gold-light))",
-          dark: "hsl(var(--gold-dark))",
+          DEFAULT: "hsl(var(--gold) / <alpha-value>)",
+          light: "hsl(var(--gold-light) / <alpha-value>)",
+          dark: "hsl(var(--gold-dark) / <alpha-value>)",
         },
         cream: {
-          DEFAULT: "hsl(var(--cream))",
-          soft: "hsl(var(--cream-soft))",
+          DEFAULT: "hsl(var(--cream) / <alpha-value>)",
+          soft: "hsl(var(--cream-soft) / <alpha-value>)",
         },
         charcoal: {
-          DEFAULT: "hsl(var(--charcoal))",
-          muted: "hsl(var(--charcoal-muted))",
+          DEFAULT: "hsl(var(--charcoal) / <alpha-value>)",
+          muted: "hsl(var(--charcoal-muted) / <alpha-value>)",
         },
       },
       borderRadius: {
