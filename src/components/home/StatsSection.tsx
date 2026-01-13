@@ -7,28 +7,32 @@ export function StatsSection() {
           {/* Editorial / Statement */}
           <div className="md:w-1/2 space-y-6 animate-fade-up sm:space-y-8">
             <h2 className="font-serif text-3xl leading-tight text-charcoal sm:text-4xl md:text-5xl">
-              Cultivating art <br />
-              <span className="italic text-charcoal/50">since 2010.</span>
+              Guided by Grace, <br />
+              <span className="italic text-charcoal/50">Crafted in Digital.</span>
             </h2>
             <div className="h-px w-16 bg-gold-dark" />
-            <p className="font-sans text-base text-charcoal/70 leading-relaxed sm:text-lg">
-              For over 15 years, our studio has been a sanctuary for artisans and visionaries.
-              We are a team of 10+ dedicated craftsmen, united by a passion for blending
-              ancient Indian aesthetics with cutting-edge digital rendering.
+            <p className="font-sans text-lg italic text-gold-dark/80 leading-relaxed font-serif">
+              "Taking the blessings of a mother and the wisdom of the past, we mold them into the style of a new era."
             </p>
             <p className="font-sans text-base text-charcoal/70 leading-relaxed sm:text-lg">
-              From contemporary figurative sculptures to divine art and bespoke jewelry,
-              we don't just create models; we sculpt emotion and heritage into every pixel.
+              <span className="font-serif italic text-charcoal">'Maa'</span> is the beginning—a symbol of love, tradition, and the blessings of <strong className="text-charcoal">Geeta & Jashi</strong>, the mothers who inspire our journey.
+            </p>
+            <p className="font-sans text-base text-charcoal/70 leading-relaxed sm:text-lg">
+              <span className="font-serif italic text-charcoal">'Fusion'</span> is our craft—blending these timeless values with contemporary 3D artistry. We don't just design; we carry a legacy forward.
             </p>
 
-            <div className="grid grid-cols-2 gap-6 pt-6 sm:gap-8 sm:pt-8">
+            <div className="grid grid-cols-3 gap-6 pt-6 sm:gap-8 sm:pt-8">
               <div>
-                <span className="block font-serif text-4xl text-charcoal">15+</span>
-                <span className="text-xs uppercase tracking-widest text-charcoal/50 mt-2 block">Years Experience</span>
+                <span className="block font-serif text-4xl text-charcoal">3+</span>
+                <span className="text-[10px] uppercase tracking-widest text-charcoal/50 mt-2 block">Years Business</span>
               </div>
               <div>
                 <span className="block font-serif text-4xl text-charcoal">10+</span>
-                <span className="text-xs uppercase tracking-widest text-charcoal/50 mt-2 block">Master Artisans</span>
+                <span className="text-[10px] uppercase tracking-widest text-charcoal/50 mt-2 block">Years Exp.</span>
+              </div>
+              <div>
+                <span className="block font-serif text-4xl text-charcoal">4+</span>
+                <span className="text-[10px] uppercase tracking-widest text-charcoal/50 mt-2 block">Creative Minds</span>
               </div>
             </div>
           </div>

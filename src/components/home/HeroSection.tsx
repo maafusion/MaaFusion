@@ -15,21 +15,21 @@ export function HeroSection() {
         <div className="max-w-3xl mx-auto text-center">
           <div className="space-y-6 animate-fade-up mt-12 sm:mt-0" style={{ animationDelay: '0.2s' }}>
             <h1 className="font-serif text-5xl leading-[1.1] text-charcoal tracking-tight sm:text-5xl md:text-6xl lg:text-7xl">
-              <span className="italic">Crafting</span> Divine <br />
-              <span className="italic">Excellence</span>
+              Timeless <span className="italic">Heritage</span>. <br />
+              Digital <span className="italic">Fusion</span>.
             </h1>
           </div>
 
           <div className="h-px w-24 bg-gold/30 animate-reveal mt-10 mx-auto" style={{ animationDelay: '0.5s' }} />
 
           <p className="font-sans text-base text-charcoal-muted max-w-md leading-relaxed animate-fade-up mt-10 mx-auto sm:text-lg" style={{ animationDelay: '0.6s' }}>
-            Where sacred traditions meet digital artistry. We craft exquisite sculptures and jewelry designs that breathe life into your vision.
+            Where the warmth of a mother’s blessing meets the precision of modern design. Inspired by the legacy of Geeta & Jashi, we craft new worlds from ancient roots.
           </p>
 
           <div className="flex flex-wrap gap-4 pt-4 animate-fade-up mt-6 justify-center sm:gap-6" style={{ animationDelay: '0.8s' }}>
             <Button variant="ghost" asChild className="group hover:bg-transparent px-0 hover:text-gold-dark text-charcoal transition-colors">
               <Link to="/about" className="gap-2">
-                <span className="font-serif italic tracking-wider text-sm border-b border-charcoal/30 group-hover:border-gold-dark pb-1">Our Story</span>
+                <span className="font-serif italic tracking-wider text-sm border-b border-charcoal/30 group-hover:border-gold-dark pb-1">Discover Our Story</span>
                 <ArrowRight className="w-4 h-4 transition-transform duration-300 group-hover:translate-x-1" />
               </Link>
             </Button>

@@ -4,23 +4,23 @@ import { Award, Users, Gem, Heart } from 'lucide-react';
 const values = [
   {
     icon: Gem,
-    title: 'Craftsmanship',
-    description: 'Every design reflects our commitment to precision and artistic excellence.',
+    title: 'Heritage',
+    description: 'Rooted in the wisdom of the past, every design honors our cultural legacy.',
   },
   {
     icon: Heart,
-    title: 'Passion',
-    description: 'We pour our heart into each creation, ensuring every piece tells a story.',
+    title: 'Devotion',
+    description: 'We approach every project with care and dedication, treating your vision as our own.',
   },
   {
     icon: Users,
-    title: 'Client Focus',
-    description: 'Your vision is our priority. We work closely to bring your ideas to life.',
+    title: 'Fusion',
+    description: 'Blending ancient aesthetics with modern technology to create something truly unique.',
   },
   {
     icon: Award,
     title: 'Excellence',
-    description: 'We strive for perfection in every detail, from concept to final render.',
+    description: 'We strive for perfection in every detail, from concept to final digital creation.',
   },
 ];
 
@@ -36,45 +36,42 @@ export default function About() {
         <div className="container mx-auto px-4 sm:px-6 relative z-10">
           <div className="max-w-3xl">
             <h1 className="font-display text-4xl font-bold text-charcoal mb-6 animate-fade-up sm:text-5xl md:text-6xl">
-              About <span className="text-gold-dark">Maa Fusion</span>
+              About <span className="text-gold-dark">MaaFusion</span>
             </h1>
-            <p className="text-base text-charcoal/70 animate-fade-up sm:text-lg md:text-xl" style={{ animationDelay: '0.1s' }}>
-              For over 15 years, we've been at the forefront of jewelry and sculptural art,
-              blending traditional artistry with contemporary aesthetics to create pieces
-              that transcend time.
+            <p className="text-base text-charcoal/70 animate-fade-up sm:text-lg md:text-xl font-serif leading-relaxed" style={{ animationDelay: '0.1s' }}>
+              Guided by the legacy of <strong>Geeta & Jashi</strong>, we bridge the gap between ancient tradition and modern innovation. We don't just design; we translate heritage into the digital age.
             </p>
           </div>
         </div>
       </section>
 
-      {/* Story */}
+      {/* Story / Philosophy */}
       <section className="bg-card/50 py-16 md:py-24">
         <div className="container mx-auto px-4 sm:px-6">
           <div className="grid grid-cols-1 items-center gap-10 lg:grid-cols-2 md:gap-16">
             <div>
               <h2 className="font-display text-3xl font-bold text-foreground mb-6 sm:text-4xl">
-                Our <span className="text-gold-gradient">Story</span>
+                The <span className="text-gold-gradient">Philosophy</span>
               </h2>
-              <div className="space-y-4 text-muted-foreground">
-                <p>
-                  Maa Fusion Creations was born from a deep reverence for traditional Indian
-                  craftsmanship and a vision to bring it into the modern era. Our journey
-                  began with a simple belief: that true beauty lies in the perfect harmony
-                  of tradition and innovation.
-                </p>
-                <p>
-                  Today, we stand as a testament to that belief. Our team of skilled designers
-                  and artisans work tirelessly to create designs that honor our rich heritage
-                  while embracing contemporary sensibilities. Each piece in our gallery
-                  represents countless hours of dedication, creativity, and an unwavering
-                  commitment to excellence.
-                </p>
-                <p>
-                  From intricate pendant designs to contemporary figurative sculptures and divine art,
-                  we bring dreams
-                  to life through the art of digital rendering, allowing our clients to
-                  visualize their perfect piece before it's brought into physical existence.
-                </p>
+              <div className="space-y-6 text-muted-foreground">
+                <div className="space-y-2">
+                  <h3 className="text-xl font-serif text-charcoal">Maa (The Roots)</h3>
+                  <p>
+                    A symbol of love, tradition, and new beginnings. It is a tribute to <strong>Geeta & Jashi</strong>, the mothers whose blessings inspire our every step.
+                  </p>
+                </div>
+                <div className="space-y-2">
+                  <h3 className="text-xl font-serif text-charcoal">Fusion (The Craft)</h3>
+                  <p>
+                    The art of blending different worlds—ancient Indian aesthetics with 3D precision, culture with technology.
+                  </p>
+                </div>
+                <div className="space-y-2">
+                  <h3 className="text-xl font-serif text-charcoal">Creation (The Outcome)</h3>
+                  <p>
+                    Bringing something entirely new into existence. We mold the wisdom of the past into the style of a new era.
+                  </p>
+                </div>
               </div>
             </div>
             <div className="relative">
@@ -134,12 +131,12 @@ export default function About() {
             </h2>
             <p className="text-muted-foreground mb-8">
               Behind every stunning design is a team of passionate artists, designers,
-              and craftspeople who bring decades of combined experience to every project.
+              and craftspeople who bring years of combined experience to every project.
               Our team blends traditional techniques with cutting-edge technology to
               create renders that capture the true essence of each piece.
             </p>
             <div className="inline-flex items-center gap-4 px-6 py-3 rounded-full border border-primary/30 bg-primary/5">
-              <span className="text-primary font-medium">Expert Team of 10+ Designers</span>
+              <span className="text-primary font-medium">Expert Team of 4+ Designers</span>
             </div>
           </div>
         </div>
