@@ -1,5 +1,6 @@
 import { MapPin, Phone, Mail, Clock } from 'lucide-react';
 import { Layout } from '@/components/layout/Layout';
+import { SEO } from '@/components/SEO';
 
 const contactInfo = [
   {
@@ -28,6 +29,10 @@ const contactInfo = [
 export default function Contact() {
   return (
     <Layout>
+      <SEO 
+        title="Contact Us" 
+        description="Get in touch with MaaFusion. Visit our studio in Mumbai, or contact us via phone or email." 
+      />
       {/* Hero */}
       <section className="relative overflow-hidden py-16 md:py-24">
         <div className="absolute inset-0 bg-cream" />

@@ -60,6 +60,8 @@ export function ImageHoverCarousel({ images, alt, className }: ImageHoverCarouse
                     key={image}
                     src={image}
                     alt={`${alt} ${index + 1}`}
+                    loading="lazy"
+                    decoding="async"
                     className={cn(
                         "w-full h-full object-cover transition-opacity duration-300",
                         index === currentIndex ? "opacity-100" : "opacity-0 absolute inset-0"

@@ -1,5 +1,6 @@
 import { Layout } from '@/components/layout/Layout';
 import { Award, Users, Gem, Heart } from 'lucide-react';
+import { SEO } from '@/components/SEO';
 
 const values = [
   {
@@ -27,6 +28,10 @@ const values = [
 export default function About() {
   return (
     <Layout>
+      <SEO 
+        title="About Us" 
+        description="Learn about the legacy of Geeta & Jashi and our mission to bridge ancient tradition with modern design." 
+      />
       {/* Hero */}
       <section className="relative overflow-hidden py-16 md:py-24">
         <div className="absolute inset-0 bg-cream" />
