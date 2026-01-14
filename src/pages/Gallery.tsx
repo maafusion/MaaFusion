@@ -1,7 +1,9 @@
+import { Link } from "react-router-dom";
 import { useEffect, useMemo, useState } from "react";
 import { Layout } from "@/components/layout/Layout";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
+import { Checkbox } from "@/components/ui/checkbox";
 import {
   Dialog,
   DialogContent,
@@ -68,6 +70,7 @@ export default function Gallery() {
   const [detailsProduct, setDetailsProduct] = useState<ProductRow | null>(null);
   const [inquiryForm, setInquiryForm] = useState(emptyInquiryForm);
   const [isSending, setIsSending] = useState(false);
+  const [termsAccepted, setTermsAccepted] = useState(false);
   const pageSize = 12;
 
   useEffect(() => {
@@ -162,6 +165,7 @@ export default function Gallery() {
       phone,
       requirements: "",
     });
+    setTermsAccepted(false);
   }, [isEnquiryOpen, selectedProduct, user]);
 
   const handleOpenInquiry = (product: ProductRow) => {
@@ -177,10 +181,10 @@ export default function Gallery() {
     const phone = inquiryForm.phone.trim();
     const requirements = inquiryForm.requirements.trim();
 
-    if (!email || !requirements) {
+    if (!firstName || !lastName || !email || !phone || !requirements) {
       toast({
         title: "Missing details",
-        description: "Email and requirements are required to send an inquiry.",
+        description: "All fields are required to send an inquiry.",
         variant: "destructive",
       });
       return;
@@ -217,6 +221,7 @@ export default function Gallery() {
     setIsEnquiryOpen(false);
     setSelectedProduct(null);
     setInquiryForm(emptyInquiryForm);
+    setTermsAccepted(false);
   };
 
   return (
@@ -338,7 +343,7 @@ export default function Gallery() {
                           {currencyFormatter.format(product.price)}
                         </p>
                         <p className="mt-2 text-sm text-charcoal/60">
-                          {imageUrls.length} image{imageUrls.length === 1 ? "" : "s"}
+                          {product.category}
                         </p>
                         <Button
                           variant="luxury"
@@ -405,7 +410,7 @@ export default function Gallery() {
           >
             <div className="grid gap-4 sm:grid-cols-2">
               <div className="space-y-2">
-                <Label htmlFor="inquiry-first-name">First name</Label>
+                <Label htmlFor="inquiry-first-name">First name *</Label>
                 <Input
                   id="inquiry-first-name"
                   value={inquiryForm.firstName}
@@ -413,10 +418,11 @@ export default function Gallery() {
                     setInquiryForm((prev) => ({ ...prev, firstName: event.target.value }))
                   }
                   placeholder="First name"
+                  required
                 />
               </div>
               <div className="space-y-2">
-                <Label htmlFor="inquiry-last-name">Last name</Label>
+                <Label htmlFor="inquiry-last-name">Last name *</Label>
                 <Input
                   id="inquiry-last-name"
                   value={inquiryForm.lastName}
@@ -424,6 +430,7 @@ export default function Gallery() {
                     setInquiryForm((prev) => ({ ...prev, lastName: event.target.value }))
                   }
                   placeholder="Last name"
+                  required
                 />
               </div>
             </div>
@@ -441,7 +448,7 @@ export default function Gallery() {
               />
             </div>
             <div className="space-y-2">
-              <Label htmlFor="inquiry-phone">Phone</Label>
+              <Label htmlFor="inquiry-phone">Phone *</Label>
               <Input
                 id="inquiry-phone"
                 value={inquiryForm.phone}
@@ -449,26 +456,49 @@ export default function Gallery() {
                   setInquiryForm((prev) => ({ ...prev, phone: event.target.value }))
                 }
                 placeholder="Phone number"
-              />
-            </div>
-            <div className="space-y-2">
-              <Label htmlFor="inquiry-requirements">Requirements *</Label>
-              <Textarea
-                id="inquiry-requirements"
-                value={inquiryForm.requirements}
-                onChange={(event) =>
-                  setInquiryForm((prev) => ({ ...prev, requirements: event.target.value }))
-                }
-                placeholder="Share sizing, materials, timeline, or any personalization."
-                rows={4}
                 required
               />
             </div>
-            <DialogFooter>
-              <Button type="submit" variant="luxury" disabled={isSending}>
-                {isSending ? "Sending..." : "Send"}
-              </Button>
-            </DialogFooter>
+              <div className="space-y-2">
+                <Label htmlFor="inquiry-requirements">Requirements *</Label>
+                <Textarea
+                  id="inquiry-requirements"
+                  value={inquiryForm.requirements}
+                  onChange={(event) =>
+                    setInquiryForm((prev) => ({ ...prev, requirements: event.target.value }))
+                  }
+                  placeholder="Share sizing, materials, timeline, or any personalization."
+                  rows={4}
+                  required
+                />
+              </div>
+
+              <div className="flex items-center space-x-2">
+                <Checkbox
+                  id="terms"
+                  checked={termsAccepted}
+                  onCheckedChange={(checked) => setTermsAccepted(checked as boolean)}
+                />
+                <label
+                  htmlFor="terms"
+                  className="text-sm text-charcoal/70 leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
+                >
+                  I have read the{" "}
+                  <Link
+                    to="/terms"
+                    target="_blank"
+                    className="text-gold-dark hover:underline underline-offset-4"
+                  >
+                    terms and conditions
+                  </Link>
+                </label>
+              </div>
+
+              <DialogFooter>
+                <Button type="submit" variant="luxury" disabled={isSending || !termsAccepted}>
+                  {isSending ? "Sending..." : "Send"}
+                </Button>
+              </DialogFooter>
           </form>
         </DialogContent>
       </Dialog>

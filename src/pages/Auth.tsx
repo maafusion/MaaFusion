@@ -259,7 +259,7 @@ export default function Auth() {
                         required
                         value={form.phone}
                         onChange={handlePhoneChange}
-                        placeholder="+91 98765 43210"
+                        placeholder="+91 93227 45718"
                       />
                     </div>
                     <div className="space-y-2">
@@ -272,7 +272,7 @@ export default function Auth() {
                         value={form.whatsapp}
                         onChange={updateField("whatsapp")}
                         disabled={isWhatsappSame}
-                        placeholder="+91 98765 43210"
+                        placeholder="+91 93227 45718"
                       />
                       <label className="flex items-center gap-2 text-xs text-charcoal/70">
                         <input

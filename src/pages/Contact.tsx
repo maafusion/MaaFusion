@@ -12,16 +12,16 @@ const contactInfo = [
   {
     icon: Phone,
     title: 'Call Us',
-    details: '+91 98765 43210',
+    details: '+91 93227 45718',
     action: 'Call Now',
-    href: 'tel:+919876543210'
+    href: 'tel:+919322745718'
   },
   {
     icon: Mail,
     title: 'Email Us',
-    details: 'hello@maafusion.com',
+    details: 'maafusioncreation76@gmail.com',
     action: 'Send Email',
-    href: 'mailto:hello@maafusion.com'
+    href: 'mailto:maafusioncreation76@gmail.com'
   },
 ];
 
