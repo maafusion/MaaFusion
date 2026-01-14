@@ -8,7 +8,7 @@ const contactInfo = [
     title: 'Visit Us',
     details: 'Mumbai, Maharashtra, India',
     action: 'Get Directions',
-    href: 'https://maps.google.com'
+    href: 'https://www.google.com/maps/search/?api=1&query=Mumbai,Maharashtra,India'
   },
   {
     icon: Phone,
