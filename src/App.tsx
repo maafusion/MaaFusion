@@ -11,15 +11,17 @@ import { AuthProvider } from "./hooks/use-auth";
 import ProtectedRoute from "./components/ProtectedRoute";
 import AdminRoute from "./components/AdminRoute";
 
-// Lazy load pages
-const Index = lazy(() => import("./pages/Index"));
-const About = lazy(() => import("./pages/About"));
-const Contact = lazy(() => import("./pages/Contact"));
+// Eager load critical public pages for better UX (no spinner on nav)
+import Index from "./pages/Index";
+import About from "./pages/About";
+import Contact from "./pages/Contact";
+import Gallery from "./pages/Gallery";
+
+// Lazy load secondary and admin pages
 const Terms = lazy(() => import("./pages/Terms"));
 const Privacy = lazy(() => import("./pages/Privacy"));
 const NotFound = lazy(() => import("./pages/NotFound"));
 const Auth = lazy(() => import("./pages/Auth"));
-const Gallery = lazy(() => import("./pages/Gallery"));
 const AdminAddProducts = lazy(() => import("./pages/AdminAddProducts"));
 const AdminManageProducts = lazy(() => import("./pages/AdminManageProducts"));
 const AdminInquiries = lazy(() => import("./pages/AdminInquiries"));
@@ -39,16 +41,16 @@ const App = () => (
               <Route path="/" element={<Index />} />
               <Route path="/about" element={<About />} />
               <Route path="/contact" element={<Contact />} />
+              <Route path="/gallery" element={
+                <ProtectedRoute reason="gallery">
+                  <Gallery />
+                </ProtectedRoute>
+              } />
+              
               <Route path="/terms" element={<Terms />} />
               <Route path="/privacy" element={<Privacy />} />
-              <Route
-                path="/gallery"
-                element={
-                  <ProtectedRoute reason="gallery">
-                    <Gallery />
-                  </ProtectedRoute>
-                }
-              />
+              <Route path="/auth" element={<Auth />} />
+              
               <Route
                 path="/admin/products/add"
                 element={
@@ -73,7 +75,6 @@ const App = () => (
                   </AdminRoute>
                 }
               />
-              <Route path="/auth" element={<Auth />} />
               <Route path="*" element={<NotFound />} />
             </Routes>
           </Suspense>
