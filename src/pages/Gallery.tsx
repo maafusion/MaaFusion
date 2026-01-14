@@ -1,6 +1,7 @@
 import { Link } from "react-router-dom";
 import { useEffect, useMemo, useState } from "react";
 import { Layout } from "@/components/layout/Layout";
+import { SEO } from "@/components/SEO";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
@@ -226,6 +227,10 @@ export default function Gallery() {
 
   return (
     <Layout>
+      <SEO 
+        title="Gallery" 
+        description="Explore our curated collections of digital sculptures and jewelry designs." 
+      />
       <section className="bg-cream pb-6 pt-16 md:pt-20">
         <div className="container mx-auto px-4 sm:px-6 lg:px-12">
           <div className="flex flex-col gap-4">

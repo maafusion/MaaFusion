@@ -234,7 +234,7 @@ export default function AdminManageProducts() {
       const { data, error } = await supabase
         .storage
         .from(GALLERY_BUCKET)
-        .createSignedUploadUrl(path, 60);
+        .createSignedUploadUrl(path);
       if (error || !data?.signedUrl) {
         throw new Error(error?.message ?? "Unable to create upload link.");
       }
