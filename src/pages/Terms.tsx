@@ -57,7 +57,33 @@ export default function Terms() {
               </section>
 
               <section className="space-y-4">
-                <h2 className="font-serif text-2xl font-semibold text-charcoal">5. Limitation of Liability</h2>
+                <h2 className="font-serif text-2xl font-semibold text-charcoal">5. Service & Payment Terms</h2>
+                
+                <h3 className="font-semibold text-charcoal text-lg mt-6">Design Revisions Policy</h3>
+                <p>
+                  We are committed to perfecting your vision. Your project includes <strong>two (2) complimentary design iterations</strong> or revisions after the initial concept.
+                </p>
+                <p className="italic text-charcoal/70">
+                  Note: Any subsequent changes or additional iterations beyond these two will incur standard service charges.
+                </p>
+
+                <h3 className="font-semibold text-charcoal text-lg mt-6">Turnaround Time</h3>
+                <p>
+                  We strive for efficiency without compromising quality. Deliverables are typically provided within <strong>3 business days</strong> following payment confirmation.
+                </p>
+                <ul className="list-disc pl-6 space-y-2 marker:text-gold-dark">
+                  <li>Business Hours: Monday to Friday, 10:00 AM – 7:00 PM</li>
+                  <li>We are closed on Sundays and Public Holidays.</li>
+                </ul>
+
+                <h3 className="font-semibold text-charcoal text-lg mt-6">File Delivery</h3>
+                <p>
+                  Final high-resolution files and project assets will be released exclusively upon <strong>confirmation of full payment</strong>.
+                </p>
+              </section>
+
+              <section className="space-y-4">
+                <h2 className="font-serif text-2xl font-semibold text-charcoal">6. Limitation of Liability</h2>
                 <p>
                   Maa Fusion Creations shall not be liable for any indirect, incidental, special, or
                   consequential damages arising from your use of the website or services. Our total
@@ -66,7 +92,7 @@ export default function Terms() {
               </section>
 
               <section className="space-y-4">
-                <h2 className="font-serif text-2xl font-semibold text-charcoal">6. Modifications</h2>
+                <h2 className="font-serif text-2xl font-semibold text-charcoal">7. Modifications</h2>
                 <p>
                   We reserve the right to modify these Terms of Use at any time. Changes will be
                   effective immediately upon posting. Your continued use of the website constitutes
@@ -75,9 +101,9 @@ export default function Terms() {
               </section>
 
               <section className="space-y-4">
-                <h2 className="font-serif text-2xl font-semibold text-charcoal">7. Contact</h2>
+                <h2 className="font-serif text-2xl font-semibold text-charcoal">8. Contact</h2>
                 <p>
-                  For questions regarding these Terms of Use, please contact us at legal@maafusion.com.
+                  For questions regarding these Terms of Use, please contact us at maafusioncreation76@gmail.com.
                 </p>
               </section>
             </div>

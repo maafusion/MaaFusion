@@ -89,7 +89,7 @@ export default function Privacy() {
                 <h2 className="font-serif text-2xl font-semibold text-charcoal">7. Contact Us</h2>
                 <p>
                   If you have questions about this Privacy Policy or wish to exercise your rights,
-                  please contact us at privacy@maafusion.com.
+                  please contact us at maafusioncreation76@gmail.com.
                 </p>
               </section>
             </div>
