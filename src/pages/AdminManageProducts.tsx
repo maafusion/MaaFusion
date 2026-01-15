@@ -411,11 +411,11 @@ export default function AdminManageProducts() {
       <section className="bg-cream py-10 md:py-12">
         <div className="container mx-auto space-y-6 px-4 sm:px-6 lg:px-12">
           <div className="flex flex-col gap-3">
-            <Badge className="w-fit rounded-full border border-charcoal/20 bg-white/70 px-4 py-1 text-[10px] uppercase tracking-[0.35em] text-charcoal/70">
+            <Badge className="w-fit rounded-full border border-charcoal/20 bg-white/70 px-4 py-1 text-[10px] uppercase tracking-[0.35em] text-charcoal/80">
               Admin dashboard
             </Badge>
             <h1 className="font-serif text-3xl text-charcoal sm:text-4xl md:text-5xl">Manage</h1>
-            <p className="max-w-2xl text-base text-charcoal/60 md:text-lg">
+            <p className="max-w-2xl text-base text-charcoal/80 md:text-lg font-sans leading-relaxed text-pretty">
               Edit details, upload images, or remove products from the gallery.
             </p>
           </div>
@@ -426,7 +426,7 @@ export default function AdminManageProducts() {
         <div className="container mx-auto space-y-8 px-4 sm:px-6 lg:px-12">
           <div className="flex flex-wrap items-center justify-between gap-4">
             <h2 className="font-serif text-xl text-charcoal sm:text-2xl">Products</h2>
-            <span className="text-sm text-charcoal/60">
+            <span className="text-sm text-charcoal/80">
               Showing {filteredProducts.length} of {totalProducts}
             </span>
           </div>
@@ -463,11 +463,11 @@ export default function AdminManageProducts() {
           </div>
 
           {loading ? (
-            <div className="rounded-2xl border border-charcoal/10 bg-cream/50 p-8 text-center text-sm text-charcoal/60">
+            <div className="rounded-2xl border border-charcoal/10 bg-cream/50 p-8 text-center text-sm text-charcoal/80">
               Loading products...
             </div>
           ) : filteredProducts.length === 0 ? (
-            <div className="rounded-2xl border border-charcoal/10 bg-cream/50 p-8 text-center text-sm text-charcoal/60">
+            <div className="rounded-2xl border border-charcoal/10 bg-cream/50 p-8 text-center text-sm text-charcoal/80">
               No products match your filters.
             </div>
           ) : (
@@ -487,7 +487,7 @@ export default function AdminManageProducts() {
           )}
           {filteredProducts.length > pageSize && (
             <div className="flex items-center justify-between">
-              <p className="text-xs text-charcoal/60">
+              <p className="text-xs text-charcoal/80">
                 Page {currentPage} of {totalPages}
               </p>
               <div className="flex items-center gap-2">
@@ -741,7 +741,7 @@ function AdminProductCard({
           <div>
             <CardTitle className="font-serif text-xl text-charcoal">{product.name}</CardTitle>
             <p className="text-xs uppercase tracking-[0.3em] text-charcoal/50">{product.category}</p>
-            <p className="mt-2 text-sm text-charcoal/70">
+            <p className="mt-2 text-sm text-charcoal/80">
               Price: {currencyFormatter.format(product.price)}
             </p>
           </div>
@@ -850,7 +850,7 @@ function AdminProductCard({
                 ))}
               </div>
             ) : (
-              <div className="rounded-2xl border border-dashed border-charcoal/20 bg-cream/40 p-6 text-center text-sm text-charcoal/60">
+              <div className="rounded-2xl border border-dashed border-charcoal/20 bg-cream/40 p-6 text-center text-sm text-charcoal/80">
                 No images uploaded yet.
               </div>
             )}
@@ -864,7 +864,7 @@ function AdminProductCard({
                   type="button"
                   onClick={() => fileInputRef.current?.click()}
                   disabled={remainingSlots <= 0 || isBusy}
-                  className="flex min-h-[96px] flex-col items-center justify-center gap-2 rounded-2xl border border-dashed border-charcoal/20 bg-cream/40 text-xs font-medium text-charcoal/60 transition hover:border-charcoal/40 hover:text-charcoal disabled:cursor-not-allowed disabled:opacity-50"
+                  className="flex min-h-[96px] flex-col items-center justify-center gap-2 rounded-2xl border border-dashed border-charcoal/20 bg-cream/40 text-xs font-medium text-charcoal/80 transition hover:border-charcoal/40 hover:text-charcoal disabled:cursor-not-allowed disabled:opacity-50"
                 >
                   <span className="flex h-10 w-10 items-center justify-center rounded-full border border-charcoal/20 bg-white/80 text-charcoal">
                     <Plus className="h-4 w-4" />
@@ -881,7 +881,7 @@ function AdminProductCard({
                 onChange={handleFileChange}
                 className="hidden"
               />
-              <div className="flex flex-col gap-2 text-xs text-charcoal/60">
+              <div className="flex flex-col gap-2 text-xs text-charcoal/80">
                 <span>Remaining slots: {remainingSlots}</span>
                 <span>Max size per image: {maxImageSizeLabel}</span>
               </div>
@@ -920,7 +920,7 @@ function AdminProductCard({
           </AlertDialogHeader>
           {isUploadDialog && uploadProgress && (
             <div className="space-y-3">
-              <div className="flex items-center justify-between text-xs text-charcoal/60">
+              <div className="flex items-center justify-between text-xs text-charcoal/80">
                 <span>Files</span>
                 <span>
                   {Math.max(uploadProgress.fileIndex, 0)} / {uploadProgress.totalFiles}
@@ -930,7 +930,7 @@ function AdminProductCard({
                 value={Math.max(uploadProgress.filePercent, isUploading ? 5 : 0)}
                 className="h-2 w-full bg-cream/60"
               />
-              <div className="flex items-center justify-between text-xs text-charcoal/60">
+              <div className="flex items-center justify-between text-xs text-charcoal/80">
                 <span>Bytes</span>
                 <span>
                   {formatBytes(uploadProgress.uploadedBytes)} / {formatBytes(uploadProgress.totalBytes)}

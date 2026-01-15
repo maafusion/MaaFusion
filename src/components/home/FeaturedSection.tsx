@@ -12,9 +12,9 @@ export function FeaturedSection() {
         <div className="mb-10 flex flex-col items-end justify-between gap-8 md:mb-16 md:flex-row">
           <div className="max-w-2xl">
             <h2 className="mb-6 font-serif text-3xl leading-tight text-charcoal sm:text-4xl md:text-5xl">
-              Curated <span className="italic text-charcoal/50">Collections</span>
+              Curated <span className="italic text-charcoal/80">Collections</span>
             </h2>
-            <p className="max-w-md font-sans text-base text-charcoal/60 sm:text-lg">
+            <p className="max-w-md font-sans text-base text-charcoal/80 sm:text-lg">
               A selection of our finest digital sculptures and jewelry designs,
               crafted with precision and artistic vision.
             </p>
@@ -56,11 +56,9 @@ export function FeaturedSection() {
                   <h3 className="font-serif text-3xl text-charcoal group-hover:text-gold-dark transition-colors duration-300 mb-2">
                     {category.title}
                   </h3>
-                  <p className="text-charcoal/60 text-sm font-sans line-clamp-2 leading-relaxed tracking-wide">
-                    {category.description}
-                  </p>
-                  <Link to="/gallery" className="mt-4 text-sm font-serif italic border-b border-transparent group-hover:border-charcoal/30 transition-all">
+                  <Link to="/gallery" className="mt-1 inline-flex items-center gap-2 text-sm font-serif italic border-b border-transparent group-hover:border-charcoal/30 hover:text-gold-dark hover:border-gold-dark transition-all">
                     Explore
+                    <ArrowRight className="w-4 h-4 transition-transform duration-300 group-hover:translate-x-1" />
                   </Link>
                 </div>
               </div>
@@ -92,11 +90,9 @@ export function FeaturedSection() {
                   <h3 className="font-serif text-2xl text-charcoal group-hover:text-gold-dark transition-colors duration-300 mb-2">
                     {category.title}
                   </h3>
-                  <p className="text-charcoal/60 text-sm font-sans line-clamp-2 leading-relaxed tracking-wide">
-                    {category.description}
-                  </p>
-                  <Link to="/gallery" className="mt-3 text-sm font-serif italic border-b border-transparent group-hover:border-charcoal/30 transition-all">
+                  <Link to="/gallery" className="mt-1 inline-flex items-center gap-2 text-sm font-serif italic border-b border-transparent group-hover:border-charcoal/30 hover:text-gold-dark hover:border-gold-dark transition-all">
                     Explore
+                    <ArrowRight className="w-4 h-4 transition-transform duration-300 group-hover:translate-x-1" />
                   </Link>
                 </div>
               </div>

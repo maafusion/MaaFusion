@@ -168,11 +168,11 @@ export default function AdminInquiries() {
       <section className="bg-cream py-10 md:py-12">
         <div className="container mx-auto space-y-6 px-4 sm:px-6 lg:px-12">
           <div className="flex flex-col gap-3">
-            <Badge className="w-fit rounded-full border border-charcoal/20 bg-white/70 px-4 py-1 text-[10px] uppercase tracking-[0.35em] text-charcoal/70">
+            <Badge className="w-fit rounded-full border border-charcoal/20 bg-white/70 px-4 py-1 text-[10px] uppercase tracking-[0.35em] text-charcoal/80">
               Admin dashboard
             </Badge>
             <h1 className="font-serif text-3xl text-charcoal sm:text-4xl md:text-5xl">Inquiries</h1>
-            <p className="max-w-2xl text-base text-charcoal/60 md:text-lg">
+            <p className="max-w-2xl text-base text-charcoal/80 md:text-lg font-sans leading-relaxed text-pretty">
               Review customer submissions tied to gallery products.
             </p>
           </div>
@@ -217,11 +217,11 @@ export default function AdminInquiries() {
           </div>
 
           {isLoading ? (
-            <div className="rounded-2xl border border-charcoal/10 bg-cream/50 p-8 text-center text-sm text-charcoal/60">
+            <div className="rounded-2xl border border-charcoal/10 bg-cream/50 p-8 text-center text-sm text-charcoal/80">
               Loading inquiries...
             </div>
           ) : filteredInquiries.length === 0 ? (
-            <div className="rounded-2xl border border-charcoal/10 bg-cream/50 p-8 text-center text-sm text-charcoal/60">
+            <div className="rounded-2xl border border-charcoal/10 bg-cream/50 p-8 text-center text-sm text-charcoal/80">
               No inquiries match your filters.
             </div>
           ) : (
@@ -237,7 +237,7 @@ export default function AdminInquiries() {
                     <Card key={inquiry.id} className="border-charcoal/10">
                       <CardHeader className="space-y-2 pb-3">
                         <div className="flex flex-wrap items-center gap-2">
-                          <Badge className="rounded-full border border-charcoal/20 bg-white/70 px-2 py-1 text-[9px] uppercase tracking-[0.35em] text-charcoal/70">
+                          <Badge className="rounded-full border border-charcoal/20 bg-white/70 px-2 py-1 text-[9px] uppercase tracking-[0.35em] text-charcoal/80">
                             Inquiry
                           </Badge>
                           <Badge className="rounded-full border border-gold/30 bg-gold/10 px-2 py-1 text-[9px] uppercase tracking-[0.35em] text-gold-dark">
@@ -253,7 +253,7 @@ export default function AdminInquiries() {
                         {priceLabel && (
                           <p className="text-xs text-gold-dark">{priceLabel}</p>
                         )}
-                        <p className="text-xs text-charcoal/70">
+                        <p className="text-xs text-charcoal/80">
                           {fullName || "Unknown"} | {inquiry.email}
                         </p>
                       </CardHeader>
@@ -292,7 +292,7 @@ export default function AdminInquiries() {
               </div>
               {filteredInquiries.length > pageSize && (
                 <div className="flex items-center justify-between">
-                  <p className="text-xs text-charcoal/60">
+                  <p className="text-xs text-charcoal/80">
                     Page {currentPage} of {totalPages}
                   </p>
                   <div className="flex items-center gap-2">
@@ -322,31 +322,31 @@ export default function AdminInquiries() {
         <DialogContent className="sm:max-w-[560px]">
           <DialogHeader>
             <DialogTitle>{selectedInquiry?.product_name ?? "Inquiry details"}</DialogTitle>
-            <DialogDescription>Review full inquiry details and requirements.</DialogDescription>
+            <DialogDescription className="text-base sm:text-lg">Review full inquiry details and requirements.</DialogDescription>
           </DialogHeader>
           {selectedInquiry && (
             <div className="space-y-4 text-sm text-charcoal/80">
               <div>
-                <p className="text-xs uppercase tracking-[0.3em] text-charcoal/50">Contact</p>
-                <p className="mt-1 text-sm text-charcoal">
+                <p className="text-xs uppercase tracking-[0.3em] text-charcoal/80">Contact</p>
+                <p className="mt-1 text-base text-charcoal sm:text-lg">
                   {[selectedInquiry.first_name, selectedInquiry.last_name].filter(Boolean).join(" ") ||
                     "Unknown"}
                 </p>
-                <p className="text-xs text-charcoal/70">{selectedInquiry.email}</p>
+                <p className="text-sm text-charcoal/80 sm:text-base">{selectedInquiry.email}</p>
                 {selectedInquiry.phone && (
-                  <p className="text-xs text-charcoal/70">{selectedInquiry.phone}</p>
+                  <p className="text-sm text-charcoal/80 sm:text-base">{selectedInquiry.phone}</p>
                 )}
               </div>
               <div>
-                <p className="text-xs uppercase tracking-[0.3em] text-charcoal/50">Requirements</p>
-                <p className="mt-2 whitespace-pre-wrap text-sm text-charcoal/80">
+                <p className="text-xs uppercase tracking-[0.3em] text-charcoal/80">Requirements</p>
+                <p className="mt-2 whitespace-pre-wrap text-xs text-charcoal/80 font-sans sm:text-sm">
                   {selectedInquiry.requirements}
                 </p>
               </div>
               {selectedInquiry.product_price !== null && (
                 <div>
-                  <p className="text-xs uppercase tracking-[0.3em] text-charcoal/50">Price</p>
-                  <p className="mt-2 text-sm text-charcoal/80">
+                  <p className="text-xs uppercase tracking-[0.3em] text-charcoal/80">Price</p>
+                  <p className="mt-2 text-xl font-semibold text-charcoal sm:text-2xl">
                     {currencyFormatter.format(selectedInquiry.product_price)}
                   </p>
                 </div>

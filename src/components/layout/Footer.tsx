@@ -11,16 +11,16 @@ export function Footer() {
           {/* Brand Column */}
           <div className="md:col-span-2 space-y-6">
             <Link to="/" className="inline-block">
-              <img src="/logo.svg" alt="MaaFusion" className="h-14 w-auto" />
+              <img src="/logo.svg" alt="MaaFusion" className="h-20 w-auto" />
             </Link>
-            <p className="font-sans text-charcoal/60 text-sm max-w-sm leading-relaxed">
-              A digital homage to tradition. Blending culture and creativity under the guiding light of Geeta & Jashi.
+            <p className="font-sans text-charcoal/80 text-sm max-w-sm leading-relaxed mt-2">
+              A digital homage to tradition. Blending culture and creativity under the guiding light of motherly blessings.
             </p>
           </div>
 
           {/* Links Column */}
           <div>
-            <h4 className="font-serif text-lg text-charcoal mb-6">Studio</h4>
+            <h4 className="font-serif text-xl text-charcoal mb-6">Studio</h4>
             <ul className="space-y-4">
               {[
                 { label: 'Home', path: '/' },
@@ -31,7 +31,7 @@ export function Footer() {
                 <li key={item.label}>
                   <Link
                     to={item.path}
-                    className="font-sans text-sm text-charcoal/60 hover:text-gold-dark transition-colors uppercase tracking-widest"
+                    className="font-sans text-sm text-charcoal hover:text-gold-dark transition-colors uppercase tracking-widest"
                   >
                     {item.label}
                   </Link>
@@ -42,7 +42,7 @@ export function Footer() {
 
           {/* Legal Column */}
           <div>
-            <h4 className="font-serif text-lg text-charcoal mb-6">Legal</h4>
+            <h4 className="font-serif text-xl text-charcoal mb-6">Legal</h4>
             <ul className="space-y-4">
               {[
                 { label: 'Terms of Use', path: '/terms' },
@@ -51,7 +51,7 @@ export function Footer() {
                 <li key={item.label}>
                   <Link
                     to={item.path}
-                    className="font-sans text-sm text-charcoal/60 hover:text-gold-dark transition-colors uppercase tracking-widest"
+                    className="font-sans text-sm text-charcoal hover:text-gold-dark transition-colors uppercase tracking-widest"
                   >
                     {item.label}
                   </Link>
@@ -63,7 +63,7 @@ export function Footer() {
 
         {/* Bottom Bar */}
         <div className="flex flex-col md:flex-row items-center justify-between gap-4 border-t border-charcoal/10 pt-6 md:pt-8">
-          <p className="font-sans text-xs text-charcoal/40 uppercase tracking-widest">
+          <p className="font-sans text-xs text-charcoal/60 uppercase tracking-widest">
             Copyright {currentYear} Maa Fusion Creations
           </p>
         </div>

@@ -10,7 +10,7 @@ export default function Terms() {
               Terms of <span className="text-gold-dark">Use</span>
             </h1>
 
-            <div className="prose prose-stone max-w-none space-y-8 text-charcoal/70 animate-fade-up" style={{ animationDelay: '0.1s' }}>
+            <div className="prose prose-stone max-w-none space-y-8 text-charcoal/80 animate-fade-up text-base sm:text-lg" style={{ animationDelay: '0.1s' }}>
               <p className="text-base font-sans sm:text-lg">
                 Last updated: {new Date().toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' })}
               </p>
@@ -63,7 +63,7 @@ export default function Terms() {
                 <p>
                   We are committed to perfecting your vision. Your project includes <strong>two (2) complimentary design iterations</strong> or revisions after the initial concept.
                 </p>
-                <p className="italic text-charcoal/70">
+                <p className="italic text-charcoal/80">
                   Note: Any subsequent changes or additional iterations beyond these two will incur standard service charges.
                 </p>
 
