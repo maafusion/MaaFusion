@@ -145,17 +145,21 @@ export default function AdminInquiries() {
       ? currencyFormatter.format(inquiry.product_price)
       : "";
     const messageLines = [
-      `Hi ${recipientName},`,
+      `Hi ${recipientName} 👋`,
       "",
-      `Thank you for your interest in *${productName}*. We've received your specific requirements:`,
+      `Thank you for choosing *${productName}*. We’ve noted your specific requirements:`,
+      "",
       `_${requirements}_`,
       "",
-      priceLabel
-        ? `To finalize your order and receive your file, please complete the payment of *${priceLabel}*.`
-        : "To finalize your order and receive your file, please complete the payment.",
-      `We will send the high-resolution file directly to *${email}*.`,
+      "To finalize the order, please complete the payment details below:",
       "",
-      "Thank you for choosing us!",
+      priceLabel
+        ? `💰 Amount: *${priceLabel}* UPI ID: notkek@upi`
+        : "💰 Amount: (Pending) UPI ID: notkek@upi",
+      "",
+      `Once confirmed, we will email the high-resolution file to *${email}*.`,
+      "",
+      "Note: By proceeding with the payment, you confirm that you have read and agreed to our Terms & Conditions.",
     ].filter(Boolean);
     const message = messageLines.join("\n");
     const phone = normalizePhone(inquiry.phone);
