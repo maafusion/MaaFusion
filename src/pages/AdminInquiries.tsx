@@ -145,7 +145,7 @@ export default function AdminInquiries() {
       ? currencyFormatter.format(inquiry.product_price)
       : "";
     const messageLines = [
-      `Hi ${recipientName} 👋`,
+      `Hi ${recipientName},`,
       "",
       `Thank you for choosing *${productName}*. We’ve noted your specific requirements:`,
       "",
@@ -154,13 +154,13 @@ export default function AdminInquiries() {
       "To finalize the order, please complete the payment details below:",
       "",
       priceLabel
-        ? `💰 Amount: *${priceLabel}* UPI ID: notkek@upi`
-        : "💰 Amount: (Pending) UPI ID: notkek@upi",
+        ? `Amount: *${priceLabel}* UPI ID: notkek@upi`
+        : "Amount: (Pending) UPI ID: notkek@upi",
       "",
       `Once confirmed, we will email the high-resolution file to *${email}*.`,
       "",
       "Note: By proceeding with the payment, you confirm that you have read and agreed to our Terms & Conditions.",
-    ].filter(Boolean);
+    ];
     const message = messageLines.join("\n");
     const phone = normalizePhone(inquiry.phone);
     if (!phone) return "";
