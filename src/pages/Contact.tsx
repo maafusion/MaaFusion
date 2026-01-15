@@ -44,7 +44,7 @@ export default function Contact() {
             <h1 className="font-display text-4xl font-bold text-charcoal mb-6 animate-fade-up sm:text-5xl md:text-6xl">
               Get in <span className="text-gold-dark">Touch</span>
             </h1>
-            <p className="text-base text-charcoal/70 animate-fade-up sm:text-lg md:text-xl" style={{ animationDelay: '0.1s' }}>
+            <p className="text-base text-charcoal/80 animate-fade-up sm:text-lg md:text-xl font-sans leading-relaxed text-pretty" style={{ animationDelay: '0.1s' }}>
               Have a question or want to discuss a project? We'd love to hear from you.
             </p>
           </div>
@@ -67,7 +67,7 @@ export default function Contact() {
                   <item.icon className="w-7 h-7 text-charcoal group-hover:text-gold-dark transition-colors" />
                 </div>
                 <h3 className="font-serif text-xl font-medium text-charcoal mb-3">{item.title}</h3>
-                <p className="text-charcoal/60 mb-6 flex-grow">{item.details}</p>
+                <p className="text-charcoal/80 mb-6 flex-grow">{item.details}</p>
                 <a 
                   href={item.href}
                   className="text-xs uppercase tracking-widest text-gold-dark font-semibold border-b border-gold-dark/30 pb-1 hover:border-gold-dark transition-colors mt-auto"

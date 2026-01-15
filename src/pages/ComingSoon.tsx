@@ -10,7 +10,7 @@ export default function ComingSoon() {
                     Coming Soon
                 </h1>
                 <div className="h-px w-24 bg-gold/50 mb-8 animate-fade-up" style={{ animationDelay: '0.1s' }} />
-                <p className="font-sans text-base text-charcoal/60 max-w-md mb-8 animate-fade-up sm:text-lg" style={{ animationDelay: '0.2s' }}>
+                <p className="font-sans text-base text-charcoal/80 max-w-md mb-8 animate-fade-up sm:text-lg" style={{ animationDelay: '0.2s' }}>
                     We are currently crafting this experience. Please check back shortly for updates.
                 </p>
                 <div className="animate-fade-up" style={{ animationDelay: '0.3s' }}>

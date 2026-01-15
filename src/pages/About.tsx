@@ -1,29 +1,6 @@
 import { Layout } from '@/components/layout/Layout';
-import { Award, Users, Gem, Heart } from 'lucide-react';
 import { SEO } from '@/components/SEO';
 
-const values = [
-  {
-    icon: Gem,
-    title: 'Heritage',
-    description: 'Rooted in the wisdom of the past, every design honors our cultural legacy.',
-  },
-  {
-    icon: Heart,
-    title: 'Devotion',
-    description: 'We approach every project with care and dedication, treating your vision as our own.',
-  },
-  {
-    icon: Users,
-    title: 'Fusion',
-    description: 'Blending ancient aesthetics with modern technology to create something truly unique.',
-  },
-  {
-    icon: Award,
-    title: 'Excellence',
-    description: 'We strive for perfection in every detail, from concept to final digital creation.',
-  },
-];
 
 export default function About() {
   return (
@@ -43,8 +20,8 @@ export default function About() {
             <h1 className="font-display text-4xl font-bold text-charcoal mb-6 animate-fade-up sm:text-5xl md:text-6xl text-balance">
               About <span className="text-gold-dark">MaaFusion</span>
             </h1>
-            <p className="text-base text-charcoal/70 animate-fade-up sm:text-lg md:text-xl font-serif leading-relaxed text-pretty" style={{ animationDelay: '0.1s' }}>
-              Guided by the legacy of <strong>Geeta & Jashi</strong>, we bridge the gap between ancient tradition and modern innovation. We don't just design; we translate heritage into the digital age.
+            <p className="text-base text-charcoal/80 animate-fade-up sm:text-lg md:text-xl font-sans leading-relaxed text-pretty" style={{ animationDelay: '0.1s' }}>
+              With the care and dedication of a mother, our team transforms your vision, bridging ancient tradition with modern innovation. We don't just design; we nurture heritage into the digital age.
             </p>
           </div>
         </div>
@@ -58,22 +35,22 @@ export default function About() {
               <h2 className="font-display text-3xl font-bold text-foreground mb-6 sm:text-4xl">
                 The <span className="text-gold-gradient">Philosophy</span>
               </h2>
-              <div className="space-y-6 text-muted-foreground">
+              <div className="space-y-6 text-charcoal/80">
                 <div className="space-y-2">
                   <h3 className="text-xl font-serif text-charcoal">Maa (The Roots)</h3>
-                  <p>
-                    A symbol of love, tradition, and new beginnings. It is a tribute to <strong>Geeta & Jashi</strong>, the mothers whose blessings inspire our every step.
+                  <p className="text-base sm:text-lg font-sans">
+                    A symbol of love and tradition. Dedicated to <strong className="font-serif font-bold text-gold-dark whitespace-nowrap text-lg sm:text-xl">Geeta & Jashi</strong>, the mothers whose blessings inspire our every step.
                   </p>
                 </div>
                 <div className="space-y-2">
                   <h3 className="text-xl font-serif text-charcoal">Fusion (The Craft)</h3>
-                  <p>
-                    The art of blending different worlds—ancient Indian aesthetics with 3D precision, culture with technology.
+                  <p className="text-base sm:text-lg font-sans">
+                    It is the art of blending different worlds. We merge ancient Indian aesthetics with 3D precision, uniting culture with technology.
                   </p>
                 </div>
                 <div className="space-y-2">
                   <h3 className="text-xl font-serif text-charcoal">Creation (The Outcome)</h3>
-                  <p>
+                  <p className="text-base sm:text-lg font-sans">
                     Bringing something entirely new into existence. We mold the wisdom of the past into the style of a new era.
                   </p>
                 </div>
@@ -93,40 +70,6 @@ export default function About() {
         </div>
       </section>
 
-      {/* Values */}
-      <section className="py-16 md:py-24">
-        <div className="container mx-auto px-4 sm:px-6">
-          <div className="text-center mb-16">
-            <h2 className="font-display text-3xl font-bold text-foreground mb-4 sm:text-4xl">
-              Our <span className="text-gold-gradient">Values</span>
-            </h2>
-            <p className="text-muted-foreground max-w-2xl mx-auto">
-              The principles that guide every design we create and every relationship we build.
-            </p>
-          </div>
-
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
-            {values.map((value, index) => (
-              <div
-                key={value.title}
-                className="card-luxury-hover p-6 text-center animate-fade-up sm:p-8"
-                style={{ animationDelay: `${index * 0.1}s` }}
-              >
-                <div className="w-16 h-16 rounded-full bg-primary/10 flex items-center justify-center mx-auto mb-6">
-                  <value.icon className="w-8 h-8 text-primary" />
-                </div>
-                <h3 className="font-display text-xl font-semibold text-foreground mb-3">
-                  {value.title}
-                </h3>
-                <p className="text-muted-foreground text-sm">
-                  {value.description}
-                </p>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
-
       {/* Team */}
       <section className="bg-card/50 py-16 md:py-24">
         <div className="container mx-auto px-4 sm:px-6">
@@ -134,7 +77,7 @@ export default function About() {
             <h2 className="font-display text-3xl font-bold text-foreground mb-6 sm:text-4xl">
               Meet the <span className="text-gold-gradient">Artisans</span>
             </h2>
-            <p className="text-muted-foreground mb-8">
+            <p className="text-charcoal/80 mb-8 text-base sm:text-lg font-sans">
               Behind every stunning design is a team of passionate artists, designers,
               and craftspeople who bring years of combined experience to every project.
               Our team blends traditional techniques with cutting-edge technology to

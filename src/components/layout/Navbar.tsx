@@ -80,7 +80,7 @@ export function Navbar() {
             <img 
               src="/logo.svg" 
               alt="MaaFusion Studio" 
-              className="h-16 w-auto transition-transform duration-300 group-hover:scale-105"
+              className="h-20 w-auto transition-transform duration-300 group-hover:scale-105"
             />
           </Link>
 
@@ -90,9 +90,9 @@ export function Navbar() {
               <Link
                 key={link.name}
                 to={link.href}
-                className={`relative text-xs font-sans font-medium tracking-widest uppercase transition-all duration-300 hover:-translate-y-1 ${isActive(link.href)
+                className={`relative text-sm font-sans font-medium tracking-widest uppercase transition-all duration-300 hover:-translate-y-1 ${isActive(link.href)
                   ? 'text-gold-dark'
-                  : 'text-charcoal/70 hover:text-charcoal'
+                  : 'text-charcoal hover:text-charcoal'
                   }`}
               >
                 {link.name}
@@ -122,13 +122,13 @@ export function Navbar() {
                     </button>
                   </DropdownMenuTrigger>
                   <DropdownMenuContent align="end" className="w-64">
-                    <DropdownMenuLabel className="text-xs uppercase tracking-[0.2em] text-charcoal/60">
+                    <DropdownMenuLabel className="text-xs uppercase tracking-[0.2em] text-charcoal/80">
                       Account
                     </DropdownMenuLabel>
                     <div className="px-2 py-2 text-sm text-charcoal">
                       <p className="font-medium">{displayName}</p>
-                      {user?.email && <p className="text-xs text-charcoal/60">{user.email}</p>}
-                      {phone && <p className="text-xs text-charcoal/60">{phone}</p>}
+                      {user?.email && <p className="text-xs text-charcoal/80">{user.email}</p>}
+                      {phone && <p className="text-xs text-charcoal/80">{phone}</p>}
                     </div>
                     <DropdownMenuSeparator />
                     {isAdmin && (
@@ -210,14 +210,14 @@ export function Navbar() {
                     </div>
                     <div className="text-left">
                       <p className="text-sm font-medium text-charcoal">{displayName}</p>
-                      {user?.email && <p className="text-xs text-charcoal/60">{user.email}</p>}
+                      {user?.email && <p className="text-xs text-charcoal/80">{user.email}</p>}
                     </div>
                   </div>
                   {isAdmin && (
                     <Link
                       to="/admin/products/add"
                       onClick={() => setIsOpen(false)}
-                      className="text-sm uppercase tracking-[0.3em] text-charcoal/70 hover:text-charcoal transition-colors"
+                      className="text-sm uppercase tracking-[0.3em] text-charcoal hover:text-charcoal transition-colors"
                     >
                       Add
                     </Link>
@@ -226,7 +226,7 @@ export function Navbar() {
                     <Link
                       to="/admin/products/manage"
                       onClick={() => setIsOpen(false)}
-                      className="text-sm uppercase tracking-[0.3em] text-charcoal/70 hover:text-charcoal transition-colors"
+                      className="text-sm uppercase tracking-[0.3em] text-charcoal hover:text-charcoal transition-colors"
                     >
                       Manage
                     </Link>
@@ -235,7 +235,7 @@ export function Navbar() {
                     <Link
                       to="/admin/products/inquiries"
                       onClick={() => setIsOpen(false)}
-                      className="text-sm uppercase tracking-[0.3em] text-charcoal/70 hover:text-charcoal transition-colors"
+                      className="text-sm uppercase tracking-[0.3em] text-charcoal hover:text-charcoal transition-colors"
                     >
                       Inquiries
                     </Link>

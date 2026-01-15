@@ -237,7 +237,7 @@ export default function Gallery() {
             <h1 className="font-serif text-3xl text-charcoal sm:text-4xl md:text-5xl text-balance">
               Gallery of Collections
             </h1>
-            <p className="max-w-2xl text-base text-charcoal/60 md:text-lg text-pretty">
+            <p className="max-w-2xl text-base text-charcoal/80 md:text-lg text-pretty font-sans leading-relaxed sm:text-lg md:text-xl">
               Explore our curated collections where timeless heritage meets digital innovation.
             </p>
           </div>
@@ -302,7 +302,7 @@ export default function Gallery() {
           </div>
 
           {loading ? (
-            <div className="rounded-3xl border border-charcoal/10 bg-white/80 p-8 text-center text-sm text-charcoal/60">
+            <div className="rounded-3xl border border-charcoal/10 bg-white/80 p-8 text-center text-sm text-charcoal/80">
               Loading gallery updates...
             </div>
           ) : error ? (
@@ -310,7 +310,7 @@ export default function Gallery() {
               {error}
             </div>
           ) : sortedProducts.length === 0 ? (
-            <div className="rounded-3xl border border-charcoal/10 bg-white/80 p-8 text-center text-sm text-charcoal/60">
+            <div className="rounded-3xl border border-charcoal/10 bg-white/80 p-8 text-center text-sm text-charcoal/80">
               No products match your filters.
             </div>
           ) : (
@@ -335,7 +335,7 @@ export default function Gallery() {
                                 className="h-full w-full object-cover transition-transform duration-1000 group-hover:scale-105"
                               />
                             ) : (
-                              <div className="flex h-full w-full items-center justify-center bg-white text-xs uppercase tracking-[0.3em] text-charcoal/40">
+                              <div className="flex h-full w-full items-center justify-center bg-white text-xs uppercase tracking-[0.3em] text-charcoal/80">
                                 No images
                               </div>
                             )}
@@ -347,7 +347,7 @@ export default function Gallery() {
                         <p className="mt-3 text-lg font-semibold text-gold-dark">
                           {currencyFormatter.format(product.price)}
                         </p>
-                        <p className="mt-2 text-sm text-charcoal/60">
+                        <p className="mt-2 text-sm text-charcoal/80">
                           {product.category}
                         </p>
                         <Button
@@ -364,7 +364,7 @@ export default function Gallery() {
               </div>
               {sortedProducts.length > pageSize && (
                 <div className="flex items-center justify-between">
-                  <p className="text-xs text-charcoal/60">
+                  <p className="text-xs text-charcoal/80">
                     Page {currentPage} of {totalPages}
                   </p>
                   <div className="flex items-center gap-2">
@@ -486,7 +486,7 @@ export default function Gallery() {
                 />
                 <label
                   htmlFor="terms"
-                  className="text-sm text-charcoal/70 leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
+                  className="text-sm text-charcoal/80 leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
                 >
                   I have read the{" "}
                   <Link
@@ -520,7 +520,7 @@ export default function Gallery() {
         <DialogContent className="sm:max-w-[760px] p-4 sm:p-6">
           <DialogHeader>
             <DialogTitle>{detailsProduct?.name ?? "Product details"}</DialogTitle>
-            <DialogDescription>
+            <DialogDescription className="text-base sm:text-lg">
               Review images, description, and pricing before inquiring.
             </DialogDescription>
           </DialogHeader>
@@ -535,7 +535,7 @@ export default function Gallery() {
                       className="h-full w-full object-cover"
                     />
                   ) : (
-                    <div className="flex h-full w-full items-center justify-center bg-white text-xs uppercase tracking-[0.3em] text-charcoal/40">
+                    <div className="flex h-full w-full items-center justify-center bg-white text-xs uppercase tracking-[0.3em] text-charcoal/80">
                       No images
                     </div>
                   )}
@@ -543,14 +543,14 @@ export default function Gallery() {
               </div>
               <div className="space-y-4">
                 <div>
-                  <p className="text-xs uppercase tracking-[0.3em] text-charcoal/50">Description</p>
-                  <p className="mt-2 text-sm text-charcoal/80">
+                  <p className="text-xs uppercase tracking-[0.3em] text-charcoal/80">Description</p>
+                  <p className="mt-2 text-xs text-charcoal/80 font-sans sm:text-sm">
                     {detailsProduct.description}
                   </p>
                 </div>
                 <div>
-                  <p className="text-xs uppercase tracking-[0.3em] text-charcoal/50">Price</p>
-                  <p className="mt-2 text-lg font-semibold text-charcoal">
+                  <p className="text-xs uppercase tracking-[0.3em] text-charcoal/80">Price</p>
+                  <p className="mt-2 text-xl font-semibold text-charcoal sm:text-2xl">
                     {currencyFormatter.format(detailsProduct.price)}
                   </p>
                 </div>

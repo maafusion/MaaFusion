@@ -372,11 +372,11 @@ export default function AdminAddProducts() {
       <section className="bg-cream py-10 md:py-12">
         <div className="container mx-auto space-y-6 px-4 sm:px-6 lg:px-12">
           <div className="flex flex-col gap-3">
-            <Badge className="w-fit rounded-full border border-charcoal/20 bg-white/70 px-4 py-1 text-[10px] uppercase tracking-[0.35em] text-charcoal/70">
+            <Badge className="w-fit rounded-full border border-charcoal/20 bg-white/70 px-4 py-1 text-[10px] uppercase tracking-[0.35em] text-charcoal/80">
               Admin dashboard
             </Badge>
             <h1 className="font-serif text-3xl text-charcoal sm:text-4xl md:text-5xl">Add</h1>
-            <p className="max-w-2xl text-base text-charcoal/60 md:text-lg">
+            <p className="max-w-2xl text-base text-charcoal/80 md:text-lg font-sans leading-relaxed text-pretty">
               Add new items to the gallery. Each product supports up to {MAX_PRODUCT_IMAGES} images.
             </p>
             <div className="flex flex-wrap gap-3">
@@ -466,7 +466,7 @@ export default function AdminAddProducts() {
                       type="button"
                       onClick={() => createFileInputRef.current?.click()}
                       disabled={isCreating || isUploading || remainingSlots <= 0 || uploadedImages.length > 0}
-                      className="flex min-h-[96px] flex-col items-center justify-center gap-2 rounded-2xl border border-dashed border-charcoal/20 bg-cream/40 text-xs font-medium text-charcoal/60 transition hover:border-charcoal/40 hover:text-charcoal disabled:cursor-not-allowed disabled:opacity-50"
+                      className="flex min-h-[96px] flex-col items-center justify-center gap-2 rounded-2xl border border-dashed border-charcoal/20 bg-cream/40 text-xs font-medium text-charcoal/80 transition hover:border-charcoal/40 hover:text-charcoal disabled:cursor-not-allowed disabled:opacity-50"
                     >
                       <span className="flex h-10 w-10 items-center justify-center rounded-full border border-charcoal/20 bg-white/80 text-charcoal">
                         <Plus className="h-4 w-4" />
@@ -484,7 +484,7 @@ export default function AdminAddProducts() {
                     disabled={isCreating || isUploading || remainingSlots <= 0 || uploadedImages.length > 0}
                     className="hidden"
                   />
-                  <div className="flex flex-col gap-2 text-xs text-charcoal/60">
+                  <div className="flex flex-col gap-2 text-xs text-charcoal/80">
                     <span>Selected files: {selectedCount}</span>
                     <span>Remaining slots: {remainingSlots}</span>
                     <span>Max size per image: {maxImageSizeLabel}</span>
@@ -513,7 +513,7 @@ export default function AdminAddProducts() {
                   )}
                   {uploadProgress && (
                     <div className="space-y-3 rounded-2xl border border-charcoal/10 bg-cream/40 px-4 py-3">
-                      <div className="flex items-center justify-between text-xs text-charcoal/60">
+                      <div className="flex items-center justify-between text-xs text-charcoal/80">
                         <span>Files</span>
                         <span>
                           {Math.max(uploadProgress.fileIndex, 0)} / {uploadProgress.totalFiles}
@@ -523,7 +523,7 @@ export default function AdminAddProducts() {
                         value={Math.max(uploadProgress.filePercent, isUploading ? 5 : 0)}
                         className="h-2 w-full bg-cream/60"
                       />
-                      <div className="flex items-center justify-between text-xs text-charcoal/60">
+                      <div className="flex items-center justify-between text-xs text-charcoal/80">
                         <span>Bytes</span>
                         <span>
                           {formatBytes(uploadProgress.uploadedBytes)} /{" "}
@@ -585,7 +585,7 @@ export default function AdminAddProducts() {
                     </div>
                   )}
                   {uploadedImages.length > 0 && (
-                    <p className="text-xs text-charcoal/60">
+                    <p className="text-xs text-charcoal/80">
                       Images uploaded. Click Create product to finish.
                     </p>
                   )}

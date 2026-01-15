@@ -184,11 +184,11 @@ export default function Auth() {
         <div className="relative container mx-auto flex justify-center px-4 py-20 sm:px-6 lg:px-12 lg:py-24">
           <div className="mx-auto w-full max-w-xl rounded-3xl border border-gold/20 bg-white/80 p-6 text-center shadow-[0_30px_80px_-60px_rgba(55,44,31,0.6)] backdrop-blur sm:p-8">
             <div className="space-y-3">
-              <span className="inline-flex items-center justify-center gap-2 rounded-full border border-gold/30 bg-white/70 px-4 py-1 text-xs font-sans uppercase tracking-[0.3em] text-charcoal/70">
+              <span className="inline-flex items-center justify-center gap-2 rounded-full border border-gold/30 bg-white/70 px-4 py-1 text-xs font-sans uppercase tracking-[0.3em] text-charcoal/80">
                 Client portal
               </span>
               <h1 className="text-3xl font-serif text-charcoal sm:text-4xl md:text-5xl">{headline}</h1>
-              <p className="text-sm uppercase tracking-[0.3em] text-charcoal/60">
+              <p className="text-sm uppercase tracking-[0.3em] text-charcoal/80">
                 {mode === "sign-in" ? "Sign in" : "Sign up"}
               </p>
               {reason === "gallery" && (
@@ -274,7 +274,7 @@ export default function Auth() {
                         disabled={isWhatsappSame}
                         placeholder="+91 93227 45718"
                       />
-                      <label className="flex items-center gap-2 text-xs text-charcoal/70">
+                      <label className="flex items-center gap-2 text-xs text-charcoal/80">
                         <input
                           type="checkbox"
                           className="h-4 w-4 rounded border-charcoal/20 text-charcoal focus:ring-charcoal"
@@ -304,7 +304,7 @@ export default function Auth() {
                     <button
                       type="button"
                       onClick={() => setShowPassword((prev) => !prev)}
-                      className="absolute right-3 top-1/2 -translate-y-1/2 text-charcoal/60 transition hover:text-charcoal"
+                      className="absolute right-3 top-1/2 -translate-y-1/2 text-charcoal/80 transition hover:text-charcoal"
                       aria-label={showPassword ? "Hide password" : "Show password"}
                     >
                       {showPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
@@ -313,7 +313,7 @@ export default function Auth() {
                 </div>
 
                 {mode === "sign-in" && (
-                  <label className="flex items-center gap-2 text-left text-xs text-charcoal/70">
+                  <label className="flex items-center gap-2 text-left text-xs text-charcoal/80">
                     <input
                       type="checkbox"
                       className="h-4 w-4 rounded border-charcoal/20 text-charcoal focus:ring-charcoal"
@@ -333,7 +333,7 @@ export default function Auth() {
                 </Button>
 
                 {mode === "sign-in" ? (
-                  <p className="text-xs text-charcoal/60">
+                  <p className="text-xs text-charcoal/80">
                     Don&apos;t have an account?{" "}
                     <button
                       type="button"
@@ -344,7 +344,7 @@ export default function Auth() {
                     </button>
                   </p>
                 ) : (
-                  <p className="text-xs text-charcoal/60">
+                  <p className="text-xs text-charcoal/80">
                     Already have an account?{" "}
                     <button
                       type="button"
@@ -356,7 +356,7 @@ export default function Auth() {
                   </p>
                 )}
 
-                <p className="text-xs text-charcoal/60">
+                <p className="text-xs text-charcoal/80">
                   By continuing, you agree to MaaFusion&apos;s{" "}
                   <Link
                     to="/terms"
