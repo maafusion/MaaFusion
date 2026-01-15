@@ -9,9 +9,9 @@ export const FEATURED_COLLECTIONS: Collection[] = [
         title: 'Assorted Designs',
         description: 'Where experimental forms meet established traditions.',
         images: [
-            'https://p7fzjac0b1.ufs.sh/f/XMtknvqcEipyqyMCExuxbGnVptuhSZv1l5wJPH4AksO9KydN', // Pendant-P1.png
-            'https://p7fzjac0b1.ufs.sh/f/XMtknvqcEipyd6eqcy0hMy1IRTNZstHdALVwcJU0uz5EQjvp', // Ring-P1.png
-            'https://p7fzjac0b1.ufs.sh/f/XMtknvqcEipy8uxnez5XCBrH7fo5ScA90Pi2DydakjmzqV1R', // Murti-P1.png
+            'https://p7fzjac0b1.ufs.sh/f/XMtknvqcEipyPO5MQv2Zk3UXteIEm6zABjpGhfb718aLiwvr', // ASSORTED-P1.jpg
+            'https://p7fzjac0b1.ufs.sh/f/XMtknvqcEipyXJYnr1lqcEipyl1PR24aYnFzJGjfBbLSIuv3', // ASSORTED-P2.jpg
+            'https://p7fzjac0b1.ufs.sh/f/XMtknvqcEipyU3HoMVNtsA3OGeW7QVLFM8XZnSwmay20E1Br', // ASSORTED-P3.jpg
         ],
     },
     {
