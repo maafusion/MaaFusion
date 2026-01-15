@@ -23,7 +23,7 @@ export function HeroSection() {
           <div className="h-px w-24 bg-gold/30 animate-reveal mt-10 mx-auto" style={{ animationDelay: '0.5s' }} />
 
           <p className="font-sans text-lg text-charcoal/80 max-w-2xl leading-relaxed animate-fade-up mt-10 mx-auto sm:text-xl" style={{ animationDelay: '0.6s' }}>
-            Where the warmth of a mother’s blessing meets the precision of modern design. Inspired by the legacy of <span className="font-serif font-bold text-gold-dark text-lg sm:text-xl">Geeta & Jashi</span>, we craft new worlds from ancient roots.
+            Where the warmth of a mother’s blessing meets the precision of modern design. Inspired by the legacy of <span className="font-serif font-bold text-gold-dark text-lg sm:text-xl">GEETA & JASHI</span>, we craft new worlds from ancient roots.
           </p>
 
           <div className="flex flex-wrap gap-4 pt-4 animate-fade-up mt-6 justify-center sm:gap-6" style={{ animationDelay: '0.8s' }}>

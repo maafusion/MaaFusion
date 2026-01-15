@@ -7,7 +7,7 @@ export default function About() {
     <Layout>
       <SEO 
         title="About Us" 
-        description="Learn about the legacy of Geeta & Jashi and our mission to bridge ancient tradition with modern design." 
+        description="Learn about the legacy of GEETA & JASHI and our mission to bridge ancient tradition with modern design." 
       />
       {/* Hero */}
       <section className="relative overflow-hidden py-16 md:py-24">
@@ -21,7 +21,7 @@ export default function About() {
               About <span className="text-gold-dark">MaaFusion</span>
             </h1>
             <p className="text-base text-charcoal/80 animate-fade-up sm:text-lg md:text-xl font-sans leading-relaxed text-pretty" style={{ animationDelay: '0.1s' }}>
-              With the care and dedication of a mother, our team transforms your vision, bridging ancient tradition with modern innovation. We don't just design; we nurture heritage into the digital age.
+              Much like a mother’s touch transforms a house into a home, our team designs your dreams. We fuse classic values with modern style to create one-of-a-kind designs
             </p>
           </div>
         </div>
@@ -39,7 +39,7 @@ export default function About() {
                 <div className="space-y-2">
                   <h3 className="text-xl font-serif text-charcoal">Maa (The Roots)</h3>
                   <p className="text-base sm:text-lg font-sans">
-                    A symbol of love and tradition. Dedicated to <strong className="font-serif font-bold text-gold-dark whitespace-nowrap text-lg sm:text-xl">Geeta & Jashi</strong>, the mothers whose blessings inspire our every step.
+                    A symbol of love and tradition. Dedicated to <strong className="font-serif font-bold text-gold-dark whitespace-nowrap text-lg sm:text-xl">GEETA & JASHI</strong>, the mothers whose blessings inspire our every step.
                   </p>
                 </div>
                 <div className="space-y-2">
@@ -48,7 +48,7 @@ export default function About() {
                     It is the art of blending different worlds. We merge ancient Indian aesthetics with 3D precision, uniting culture with technology.
                   </p>
                 </div>
-                <div className="space-y-2">
+                  <div className="space-y-2">
                   <h3 className="text-xl font-serif text-charcoal">Creation (The Outcome)</h3>
                   <p className="text-base sm:text-lg font-sans">
                     Bringing something entirely new into existence. We mold the wisdom of the past into the style of a new era.
@@ -78,13 +78,13 @@ export default function About() {
               Meet the <span className="text-gold-gradient">Artisans</span>
             </h2>
             <p className="text-charcoal/80 mb-8 text-base sm:text-lg font-sans">
-              Behind every stunning design is a team of passionate artists, designers,
-              and craftspeople who bring years of combined experience to every project.
-              Our team blends traditional techniques with cutting-edge technology to
-              create renders that capture the true essence of each piece.
+              Behind every stunning design is a passionate team blending traditional artistry with cutting-edge technology. Committed to constant innovation, we invite you to join our journey and support our artisans as we strive to create the extraordinary.
             </p>
-            <div className="inline-flex items-center gap-4 px-6 py-3 rounded-full border border-primary/30 bg-primary/5">
-              <span className="text-primary font-medium">Expert Team of 4+ Designers</span>
+            <div className="grid grid-cols-1 gap-6 pt-2 justify-items-center">
+              <div className="text-center">
+                <span className="block font-serif text-4xl text-charcoal">4+</span>
+                <span className="text-xs sm:text-sm uppercase tracking-widest text-charcoal/80 mt-2 block">Designers</span>
+              </div>
             </div>
           </div>
         </div>
