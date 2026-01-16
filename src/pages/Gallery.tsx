@@ -176,6 +176,14 @@ export default function Gallery() {
 
   const handleSendInquiry = async () => {
     if (!selectedProduct || isSending) return;
+    if (!termsAccepted) {
+      toast({
+        title: "Accept terms",
+        description: "Please accept the terms and conditions before sending an inquiry.",
+        variant: "destructive",
+      });
+      return;
+    }
     const firstName = inquiryForm.firstName.trim();
     const lastName = inquiryForm.lastName.trim();
     const email = inquiryForm.email.trim();

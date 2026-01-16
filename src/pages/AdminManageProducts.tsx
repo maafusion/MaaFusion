@@ -23,8 +23,8 @@ import { Textarea } from "@/components/ui/textarea";
 import { ImageHoverCarousel } from "@/components/ui/image-hover-carousel";
 import { useToast } from "@/hooks/use-toast";
 import { supabase } from "@/lib/supabaseClient";
+import { createGallerySignedUploadUrl, delay, removeGalleryObjects } from "@/lib/storage";
 import {
-  GALLERY_BUCKET,
   MAX_IMAGE_SIZE_BYTES,
   MAX_PRODUCT_IMAGES,
   PRODUCT_CATEGORIES,
@@ -213,7 +213,16 @@ export default function AdminManageProducts() {
   const handleDelete = async (product: ProductRow) => {
     const paths = (product.product_images ?? []).map((image) => image.storage_path);
     if (paths.length) {
-      await supabase.storage.from(GALLERY_BUCKET).remove(paths);
+      try {
+        await removeGalleryObjects(paths);
+      } catch (error) {
+        toast({
+          title: "Storage delete failed",
+          description: error instanceof Error ? error.message : "Unable to remove product images.",
+          variant: "destructive",
+        });
+        return;
+      }
     }
     const { error } = await supabase.from("products").delete().eq("id", product.id);
     if (error) {
@@ -256,46 +265,71 @@ export default function AdminManageProducts() {
     const totalBytes = files.reduce((sum, file) => sum + (file.size || 0), 0);
     let uploadedBytes = 0;
     const insertedImages: ProductImageRow[] = [];
+    const uploadedPaths: string[] = [];
+    const rollbackUploads = async (paths: string[]) => {
+      try {
+        await removeGalleryObjects(paths);
+      } catch {
+        // Ignore cleanup failures during rollback.
+      }
+      const ids = insertedImages.map((image) => image.id);
+      if (ids.length) {
+        await supabase.from("product_images").delete().in("id", ids);
+      }
+    };
 
     const uploadFileWithProgress = async (file: File, path: string, index: number) => {
-      const { data, error } = await supabase
-        .storage
-        .from(GALLERY_BUCKET)
-        .createSignedUploadUrl(path);
-      if (error || !data?.signedUrl) {
-        throw new Error(error?.message ?? "Unable to create upload link.");
-      }
-      await new Promise<void>((resolve, reject) => {
-        const xhr = new XMLHttpRequest();
-        xhr.open("PUT", data.signedUrl);
-        xhr.setRequestHeader("Content-Type", file.type || "application/octet-stream");
-        xhr.upload.onprogress = (event) => {
-          if (!event.lengthComputable) return;
-          const loaded = Math.min(event.loaded, file.size);
-          const currentBytes = uploadedBytes + loaded;
-          const bytesPercent = totalBytes ? Math.round((currentBytes / totalBytes) * 100) : 0;
-          const filePercent = file.size
-            ? Math.round(((index + loaded / file.size) / files.length) * 100)
-            : Math.round(((index + 1) / files.length) * 100);
-          onProgress?.({
-            filePercent,
-            bytesPercent,
-            fileIndex: index + 1,
-            totalFiles: files.length,
-            uploadedBytes: currentBytes,
-            totalBytes,
-          });
-        };
-        xhr.onload = () => {
-          if (xhr.status >= 200 && xhr.status < 300) {
-            resolve();
-            return;
+      let uploadError: unknown = null;
+      const maxAttempts = 3;
+      for (let attempt = 0; attempt < maxAttempts; attempt += 1) {
+        try {
+          const { data } = await createGallerySignedUploadUrl(path);
+          if (!data?.signedUrl) {
+            throw new Error("Unable to create upload link.");
           }
-          reject(new Error("Upload failed."));
-        };
-        xhr.onerror = () => reject(new Error("Upload failed."));
-        xhr.send(file);
-      });
+          await new Promise<void>((resolve, reject) => {
+            const xhr = new XMLHttpRequest();
+            xhr.open("PUT", data.signedUrl);
+            xhr.setRequestHeader("Content-Type", file.type || "application/octet-stream");
+            xhr.upload.onprogress = (event) => {
+              if (!event.lengthComputable) return;
+              const loaded = Math.min(event.loaded, file.size);
+              const currentBytes = uploadedBytes + loaded;
+              const bytesPercent = totalBytes ? Math.round((currentBytes / totalBytes) * 100) : 0;
+              const filePercent = file.size
+                ? Math.round(((index + loaded / file.size) / files.length) * 100)
+                : Math.round(((index + 1) / files.length) * 100);
+              onProgress?.({
+                filePercent,
+                bytesPercent,
+                fileIndex: index + 1,
+                totalFiles: files.length,
+                uploadedBytes: currentBytes,
+                totalBytes,
+              });
+            };
+            xhr.onload = () => {
+              if (xhr.status >= 200 && xhr.status < 300) {
+                resolve();
+                return;
+              }
+              reject(new Error("Upload failed."));
+            };
+            xhr.onerror = () => reject(new Error("Upload failed."));
+            xhr.send(file);
+          });
+          uploadError = null;
+          break;
+        } catch (error) {
+          uploadError = error;
+          if (attempt < maxAttempts - 1) {
+            await delay(400 * 2 ** attempt);
+          }
+        }
+      }
+      if (uploadError) {
+        throw uploadError;
+      }
       uploadedBytes += file.size || 0;
       onProgress?.({
         filePercent: Math.round(((index + 1) / files.length) * 100),
@@ -318,8 +352,10 @@ export default function AdminManageProducts() {
           description: error instanceof Error ? error.message : "Unable to upload image.",
           variant: "destructive",
         });
+        await rollbackUploads([...uploadedPaths, path]);
         return null;
       }
+      uploadedPaths.push(path);
       const { data: insertedImage, error: insertError } = await supabase
         .from("product_images")
         .insert({
@@ -330,7 +366,7 @@ export default function AdminManageProducts() {
         .select("id, storage_path, sort_order")
         .single();
       if (insertError) {
-        await supabase.storage.from(GALLERY_BUCKET).remove([path]);
+        await rollbackUploads(uploadedPaths);
         toast({
           title: "Image save failed",
           description: insertError.message,
@@ -363,13 +399,15 @@ export default function AdminManageProducts() {
   };
 
   const handleDeleteImage = async (product: ProductRow, image: ProductImageRow) => {
-    const { error: storageError } = await supabase.storage.from(GALLERY_BUCKET).remove([image.storage_path]);
-    if (storageError) {
+    try {
+      await removeGalleryObjects([image.storage_path]);
+    } catch (error) {
       toast({
         title: "Storage delete failed",
-        description: storageError.message,
+        description: error instanceof Error ? error.message : "Unable to remove image.",
         variant: "destructive",
       });
+      return;
     }
     const { error } = await supabase.from("product_images").delete().eq("id", image.id);
     if (error) {
@@ -396,13 +434,15 @@ export default function AdminManageProducts() {
   const handleDiscardUpload = async (productId: string, images: ProductImageRow[]) => {
     if (!images.length) return true;
     const paths = images.map((image) => image.storage_path);
-    const { error: storageError } = await supabase.storage.from(GALLERY_BUCKET).remove(paths);
-    if (storageError) {
+    try {
+      await removeGalleryObjects(paths);
+    } catch (error) {
       toast({
         title: "Storage delete failed",
-        description: storageError.message,
+        description: error instanceof Error ? error.message : "Unable to remove uploaded images.",
         variant: "destructive",
       });
+      return false;
     }
     const { error: deleteError } = await supabase
       .from("product_images")
