@@ -128,6 +128,32 @@ export default function AdminAddProducts() {
       });
       return;
     }
+
+    // Check for existing product name
+    const { data: existingProducts, error: checkError } = await supabase
+      .from("products")
+      .select("id")
+      .eq("name", name)
+      .limit(1);
+
+    if (checkError) {
+      toast({
+        title: "Error checking name",
+        description: checkError.message,
+        variant: "destructive",
+      });
+      return;
+    }
+
+    if (existingProducts && existingProducts.length > 0) {
+      toast({
+        title: "Name exists",
+        description: "A product with this name already exists.",
+        variant: "destructive",
+      });
+      return;
+    }
+
     if (!uploadedImages.length) {
       toast({
         title: "Images required",
@@ -233,7 +259,7 @@ export default function AdminAddProducts() {
       const { data, error: uploadError } = await supabase
         .storage
         .from(GALLERY_BUCKET)
-        .createSignedUploadUrl(path, 60);
+        .createSignedUploadUrl(path);
       if (uploadError || !data?.signedUrl) {
         toast({
           title: "Upload failed",

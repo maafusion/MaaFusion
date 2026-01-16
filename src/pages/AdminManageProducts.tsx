@@ -158,6 +158,33 @@ export default function AdminManageProducts() {
       });
       return;
     }
+
+    // Check for other products with the same name
+    const { data: existingProducts, error: checkError } = await supabase
+      .from("products")
+      .select("id")
+      .eq("name", trimmedName)
+      .neq("id", productId)
+      .limit(1);
+
+    if (checkError) {
+      toast({
+        title: "Error checking name",
+        description: checkError.message,
+        variant: "destructive",
+      });
+      return;
+    }
+
+    if (existingProducts && existingProducts.length > 0) {
+      toast({
+        title: "Name exists",
+        description: "Another product with this name already exists.",
+        variant: "destructive",
+      });
+      return;
+    }
+
     const { error } = await supabase
       .from("products")
       .update({ name: trimmedName, description: trimmedDescription, price, category })

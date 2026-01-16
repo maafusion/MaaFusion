@@ -1,73 +1,129 @@
-# Welcome to your Lovable project
+# MaaFusion
 
-## Project info
+> **Timeless Heritage. Digital Fusion.**
+>
+> *Where the warmth of a mother’s blessing meets the precision of modern design. Inspired by the legacy of Geeta & Jashi.*
 
-**URL**: https://lovable.dev/projects/REPLACE_WITH_PROJECT_ID
+## Overview
 
-## How can I edit this code?
+**MaaFusion** is a modern, full-stack web application designed to showcase products and manage customer inquiries with a seamless user experience. Built with performance and scalability in mind, it leverages the power of **React**, **TypeScript**, and **Supabase** to deliver a responsive public-facing portfolio and a robust private admin dashboard.
 
-There are several ways of editing your application.
+## Key Features
 
-**Use Lovable**
+### Modern User Experience
+- **Responsive Design**: Fully responsive layout optimized for mobile, tablet, and desktop using **Tailwind CSS**.
+- **Component Library**: Utilizes **shadcn/ui** for accessible, customizable, and consistent UI components.
+- **Animations**: Smooth transitions and engaging animations powered by `tailwindcss-animate`.
 
-Simply visit the [Lovable Project](https://lovable.dev/projects/REPLACE_WITH_PROJECT_ID) and start prompting.
+### Authentication & Security
+- **Secure Login**: Robust authentication system integrated with **Supabase Auth**.
+- **Session Management**: Custom "Remember Me" functionality with secure storage handling (Local/Session Storage).
+- **Protected Routes**: Role-based access control ensuring the Admin Dashboard is accessible only to authorized users.
 
-Changes made via Lovable will be committed automatically to this repo.
+### Admin Dashboard
+- **Dashboard Overview**: Centralized hub for site management.
+- **Product Management**: 
+    - **Add Products**: Form-based product creation with validation.
+    - **Manage Products**: List view with capabilities to edit or delete existing inventory.
+- **Inquiry System**: View and manage customer inquiries submitted through the contact form.
 
-**Use your preferred IDE**
+### Core Functionality
+- **Contact Form**: Integrated inquiry form validated with **React Hook Form** and **Zod**.
+- **Gallery**: Visual showcase implemented with optimized image handling.
+- **Dynamic Content**: Data fetching and caching managed by **React Query (@tanstack/react-query)** for a snappy feel.
 
-If you want to work locally using your own IDE, you can clone this repo and push changes. Pushed changes will also be reflected in Lovable.
+## Tech Stack
 
-The only requirement is having Node.js & npm installed - [install with nvm](https://github.com/nvm-sh/nvm#installing-and-updating)
+### Frontend Core
+- **[React](https://react.dev/)**: 18.x - The library for web and native user interfaces.
+- **[Vite](https://vitejs.dev/)**: Next Generation Frontend Tooling.
+- **[TypeScript](https://www.typescriptlang.org/)**: Strongly typed JavaScript.
 
-Follow these steps:
+### Styling & UI
+- **[Tailwind CSS](https://tailwindcss.com/)**: A utility-first CSS framework.
+- **[shadcn/ui](https://ui.shadcn.com/)**: Beautifully designed components built with Radix UI and Tailwind CSS.
+- **[Lucide React](https://lucide.dev/)**: Beautiful & consistent icons.
+- **[Recharts](https://recharts.org/)**: Redefined chart library built with React and D3.
 
-```sh
-# Step 1: Clone the repository using the project's Git URL.
-git clone <YOUR_GIT_URL>
+### State & Data Management
+- **[TanStack Query](https://tanstack.com/query/latest)**: Powerful asynchronous state management.
+- **[Supabase](https://supabase.com/)**: The open source Firebase alternative (Database, Auth).
+- **[React Hook Form](https://react-hook-form.com/)**: Performant, flexible and extensible forms with **Zod** validation.
 
-# Step 2: Navigate to the project directory.
-cd <YOUR_PROJECT_NAME>
+### Routing
+- **[React Router](https://reactrouter.com/)**: Declarative routing for React web applications.
 
-# Step 3: Install the necessary dependencies.
-npm i
+## Project Structure
 
-# Step 4: Start the development server with auto-reloading and an instant preview.
-npm run dev
+```bash
+src/
+├── components/         # React components
+│   ├── home/           # Homepage specific sections (Hero, Features, etc.)
+│   ├── layout/         # Layout components (Navbar, Footer)
+│   └── ui/             # Reusable UI primitives (Buttons, Inputs, Modals)
+├── data/               # Static data files
+├── hooks/              # Custom React hooks (useAuth, useToast, etc.)
+├── lib/                # Utilities and configuration
+│   ├── supabaseClient.ts # Supabase client initialization
+│   └── utils.ts        # Helper functions
+├── pages/              # Application Route Components (Views)
+│   ├── Admin*.tsx      # Admin Dashboard pages
+│   ├── Auth.tsx        # Login/Authentication page
+│   └── Index.tsx       # Landing page
+├── App.tsx             # Main Application component with Routing
+└── main.tsx            # Entry point
 ```
 
-**Edit a file directly in GitHub**
+## Getting Started
 
-- Navigate to the desired file(s).
-- Click the "Edit" button (pencil icon) at the top right of the file view.
-- Make your changes and commit the changes.
+### Prerequisites
+- **Node.js**: v18 or higher is recommended.
+- **npm** or **yarn** or **pnpm**.
 
-**Use GitHub Codespaces**
+### Installation
 
-- Navigate to the main page of your repository.
-- Click on the "Code" button (green button) near the top right.
-- Select the "Codespaces" tab.
-- Click on "New codespace" to launch a new Codespace environment.
-- Edit files directly within the Codespace and commit and push your changes once you're done.
+1.  **Clone the repository**
+    ```bash
+    git clone https://github.com/your-username/maafusion.git
+    cd maafusion
+    ```
 
-## What technologies are used for this project?
+2.  **Install dependencies**
+    ```bash
+    npm install
+    # or
+    yarn install
+    ```
 
-This project is built with:
+3.  **Environment Setup**
+    Create a `.env` file in the root directory and add your Supabase credentials:
 
-- Vite
-- TypeScript
-- React
-- shadcn-ui
-- Tailwind CSS
+    ```env
+    VITE_SUPABASE_URL=your_supabase_project_url
+    VITE_SUPABASE_ANON_KEY=your_supabase_anon_key
+    ```
 
-## How can I deploy this project?
+4.  **Run the Development Server**
+    ```bash
+    npm run dev
+    ```
+    Open [http://localhost:8080](http://localhost:8080) (or the port shown in your terminal) to view it in the browser.
 
-Simply open [Lovable](https://lovable.dev/projects/REPLACE_WITH_PROJECT_ID) and click on Share -> Publish.
+## Scripts
 
-## Can I connect a custom domain to my Lovable project?
+- `npm run dev`: Starts the development server.
+- `npm run build`: Builds the app for production.
+- `npm run lint`: Runs ESLint to check for code quality issues.
+- `npm run preview`: Locally preview the production build.
 
-Yes, you can!
+## Contributing
 
-To connect a domain, navigate to Project > Settings > Domains and click Connect Domain.
+1.  Fork the project.
+2.  Create your feature branch (`git checkout -b feature/AmazingFeature`).
+3.  Commit your changes (`git commit -m 'Add some AmazingFeature'`).
+4.  Push to the branch (`git push origin feature/AmazingFeature`).
+5.  Open a Pull Request.
 
-Read more here: [Setting up a custom domain](https://docs.lovable.dev/features/custom-domain#custom-domain)
+## License
+
+This project is licensed under the MIT License - see the LICENSE file for details.
