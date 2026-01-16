@@ -8,7 +8,7 @@ const ScrollToTop = () => {
         window.scrollTo({
             top: 0,
             left: 0,
-            behavior: "instant", // Force instant scroll to avoid smooth scroll lag
+            behavior: "auto",
         });
     }, [pathname]);
 

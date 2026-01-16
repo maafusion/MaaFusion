@@ -1,4 +1,4 @@
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { Plus, X } from "lucide-react";
 import { Link } from "react-router-dom";
 import { Layout } from "@/components/layout/Layout";
@@ -13,8 +13,8 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Textarea } from "@/components/ui/textarea";
 import { useToast } from "@/hooks/use-toast";
 import { supabase } from "@/lib/supabaseClient";
+import { createGallerySignedUploadUrl, delay, moveGalleryObject, removeGalleryObjects } from "@/lib/storage";
 import {
-  GALLERY_BUCKET,
   MAX_IMAGE_SIZE_BYTES,
   MAX_PRODUCT_IMAGES,
   PRODUCT_CATEGORIES,
@@ -27,6 +27,8 @@ const emptyForm = {
   price: "",
   category: "" as ProductCategory | "",
 };
+
+const DRAFT_TTL_MS = 30 * 60 * 1000;
 
 type UploadProgress = {
   filePercent: number;
@@ -54,10 +56,82 @@ export default function AdminAddProducts() {
   const [previewUrls, setPreviewUrls] = useState<string[]>([]);
   const [uploadedImages, setUploadedImages] = useState<UploadedImage[]>([]);
   const createFileInputRef = useRef<HTMLInputElement | null>(null);
+  const uploadedImagesRef = useRef<UploadedImage[]>([]);
+  const previewUrlsRef = useRef<string[]>([]);
+  const draftTimeoutRef = useRef<number | null>(null);
   const totalBytes = createFiles.reduce((sum, file) => sum + (file.size || 0), 0);
   const selectedCount = createFiles.length + uploadedImages.length;
   const remainingSlots = MAX_PRODUCT_IMAGES - selectedCount;
   const hasPendingUpload = createFiles.length > 0 && uploadedImages.length === 0;
+
+  useEffect(() => {
+    uploadedImagesRef.current = uploadedImages;
+  }, [uploadedImages]);
+
+  useEffect(() => {
+    previewUrlsRef.current = previewUrls;
+  }, [previewUrls]);
+
+  useEffect(() => {
+    const cleanupDrafts = () => {
+      const paths = uploadedImagesRef.current.map((image) => image.storage_path);
+      if (!paths.length) return;
+      void (async () => {
+        try {
+          await removeGalleryObjects(paths);
+        } catch {
+          // Ignore cleanup errors on unload.
+        }
+      })();
+    };
+
+    const handlePageHide = () => {
+      cleanupDrafts();
+    };
+
+    window.addEventListener("pagehide", handlePageHide);
+    return () => {
+      window.removeEventListener("pagehide", handlePageHide);
+      cleanupDrafts();
+      previewUrlsRef.current.forEach((url) => URL.revokeObjectURL(url));
+    };
+  }, []);
+
+  useEffect(() => {
+    if (draftTimeoutRef.current) {
+      window.clearTimeout(draftTimeoutRef.current);
+    }
+    if (!uploadedImages.length) {
+      draftTimeoutRef.current = null;
+      return;
+    }
+    draftTimeoutRef.current = window.setTimeout(() => {
+      const paths = uploadedImagesRef.current.map((image) => image.storage_path);
+      if (!paths.length) return;
+      void (async () => {
+        try {
+          await removeGalleryObjects(paths);
+        } catch {
+          // Ignore cleanup failures on timeout.
+        }
+        setUploadedImages([]);
+        setUploadProgress(null);
+        if (createFileInputRef.current) {
+          createFileInputRef.current.value = "";
+        }
+        toast({
+          title: "Draft expired",
+          description: "Uploaded images were cleared after inactivity.",
+        });
+      })();
+    }, DRAFT_TTL_MS);
+
+    return () => {
+      if (draftTimeoutRef.current) {
+        window.clearTimeout(draftTimeoutRef.current);
+      }
+    };
+  }, [toast, uploadedImages]);
 
   const formatBytes = (value: number) => {
     if (!Number.isFinite(value)) return "0 B";
@@ -72,7 +146,7 @@ export default function AdminAddProducts() {
   };
   const maxImageSizeLabel = formatBytes(MAX_IMAGE_SIZE_BYTES);
 
-  const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+  const handleFileChange = async (event: React.ChangeEvent<HTMLInputElement>) => {
     const selected = Array.from(event.target.files ?? []);
     const oversized = selected.filter((file) => file.size > MAX_IMAGE_SIZE_BYTES);
     if (oversized.length) {
@@ -92,6 +166,17 @@ export default function AdminAddProducts() {
       });
       event.target.value = "";
       return;
+    }
+    if (uploadedImages.length) {
+      try {
+        await removeGalleryObjects(uploadedImages.map((image) => image.storage_path));
+      } catch (error) {
+        toast({
+          title: "Cleanup failed",
+          description: error instanceof Error ? error.message : "Unable to remove previous uploads.",
+          variant: "destructive",
+        });
+      }
     }
     previewUrls.forEach((url) => URL.revokeObjectURL(url));
     setUploadedImages([]);
@@ -191,20 +276,72 @@ export default function AdminAddProducts() {
       return;
     }
 
+    let finalImages: UploadedImage[] = [];
     if (uploadedImages.length) {
+      const draftPaths = uploadedImages.map((image) => image.storage_path);
+      const movedPaths: string[] = [];
+      try {
+        finalImages = [];
+        for (let index = 0; index < uploadedImages.length; index += 1) {
+          const image = uploadedImages[index];
+          const fileName = image.storage_path.split("/").pop();
+          if (!fileName) {
+            throw new Error("Unable to determine the uploaded image name.");
+          }
+          const nextPath = `products/${createdProduct.id}/${fileName}`;
+          if (image.storage_path !== nextPath) {
+            await moveGalleryObject(image.storage_path, nextPath);
+          }
+          movedPaths.push(nextPath);
+          finalImages.push({ storage_path: nextPath, sort_order: index });
+        }
+      } catch (error) {
+        try {
+          await removeGalleryObjects([...movedPaths, ...draftPaths]);
+        } catch {
+          // Ignore cleanup failures after a move error.
+        }
+        await supabase.from("products").delete().eq("id", createdProduct.id);
+        toast({
+          title: "Image move failed",
+          description: error instanceof Error ? error.message : "Unable to move uploaded images.",
+          variant: "destructive",
+        });
+        setUploadedImages([]);
+        setCreateFiles([]);
+        setPreviewUrls([]);
+        if (createFileInputRef.current) {
+          createFileInputRef.current.value = "";
+        }
+        setIsCreating(false);
+        return;
+      }
+
       const { error: insertError } = await supabase.from("product_images").insert(
-        uploadedImages.map((image, index) => ({
+        finalImages.map((image) => ({
           product_id: createdProduct.id,
           storage_path: image.storage_path,
-          sort_order: index,
+          sort_order: image.sort_order ?? 0,
         })),
       );
       if (insertError) {
+        try {
+          await removeGalleryObjects(movedPaths);
+        } catch {
+          // Ignore cleanup failures after insert errors.
+        }
+        await supabase.from("products").delete().eq("id", createdProduct.id);
         toast({
           title: "Image save failed",
           description: insertError.message,
           variant: "destructive",
         });
+        setUploadedImages([]);
+        setCreateFiles([]);
+        setPreviewUrls([]);
+        if (createFileInputRef.current) {
+          createFileInputRef.current.value = "";
+        }
         setIsCreating(false);
         return;
       }
@@ -242,6 +379,14 @@ export default function AdminAddProducts() {
     });
     const draftId = crypto.randomUUID();
     const uploaded: UploadedImage[] = [];
+    const uploadedPaths: string[] = [];
+    const cleanupUploads = async (paths: string[]) => {
+      try {
+        await removeGalleryObjects(paths);
+      } catch {
+        // Ignore cleanup failures after upload errors.
+      }
+    };
 
     for (let index = 0; index < createFiles.length; index += 1) {
       const file = createFiles[index];
@@ -251,67 +396,72 @@ export default function AdminAddProducts() {
           description: `Each image must be ${maxImageSizeLabel} or smaller.`,
           variant: "destructive",
         });
+        await cleanupUploads(uploadedPaths);
         setIsUploading(false);
         setUploadProgress(null);
         return;
       }
       const path = `products/drafts/${draftId}/${crypto.randomUUID()}-${file.name}`;
-      const { data, error: uploadError } = await supabase
-        .storage
-        .from(GALLERY_BUCKET)
-        .createSignedUploadUrl(path);
-      if (uploadError || !data?.signedUrl) {
+      let uploadError: unknown = null;
+      const maxAttempts = 3;
+      for (let attempt = 0; attempt < maxAttempts; attempt += 1) {
+        try {
+          const { data } = await createGallerySignedUploadUrl(path);
+          if (!data?.signedUrl) {
+            throw new Error("Unable to create upload link.");
+          }
+          await new Promise<void>((resolve, reject) => {
+            const xhr = new XMLHttpRequest();
+            xhr.open("PUT", data.signedUrl);
+            xhr.setRequestHeader("Content-Type", file.type || "application/octet-stream");
+            xhr.upload.onprogress = (event) => {
+              if (!event.lengthComputable) return;
+              const loaded = Math.min(event.loaded, file.size);
+              const currentBytes = uploadedBytes + loaded;
+              const bytesPercent = totalBytes ? Math.round((currentBytes / totalBytes) * 100) : 0;
+              const filePercent = file.size
+                ? Math.round(((index + loaded / file.size) / totalFiles) * 100)
+                : Math.round(((index + 1) / totalFiles) * 100);
+              setUploadProgress({
+                filePercent,
+                bytesPercent,
+                fileIndex: index + 1,
+                totalFiles,
+                uploadedBytes: currentBytes,
+                totalBytes,
+              });
+            };
+            xhr.onload = () => {
+              if (xhr.status >= 200 && xhr.status < 300) {
+                resolve();
+                return;
+              }
+              reject(new Error("Upload failed."));
+            };
+            xhr.onerror = () => reject(new Error("Upload failed."));
+            xhr.send(file);
+          });
+          uploadError = null;
+          break;
+        } catch (error) {
+          uploadError = error;
+          if (attempt < maxAttempts - 1) {
+            await delay(400 * 2 ** attempt);
+          }
+        }
+      }
+      if (uploadError) {
         toast({
           title: "Upload failed",
-          description: uploadError?.message ?? "Unable to create upload link.",
+          description: uploadError instanceof Error ? uploadError.message : "Unable to upload image.",
           variant: "destructive",
         });
+        await cleanupUploads([...uploadedPaths, path]);
         setIsUploading(false);
         setUploadProgress(null);
         return;
       }
-      try {
-        await new Promise<void>((resolve, reject) => {
-          const xhr = new XMLHttpRequest();
-          xhr.open("PUT", data.signedUrl);
-          xhr.setRequestHeader("Content-Type", file.type || "application/octet-stream");
-          xhr.upload.onprogress = (event) => {
-            if (!event.lengthComputable) return;
-            const loaded = Math.min(event.loaded, file.size);
-            const currentBytes = uploadedBytes + loaded;
-            const bytesPercent = totalBytes ? Math.round((currentBytes / totalBytes) * 100) : 0;
-            const filePercent = file.size
-              ? Math.round(((index + loaded / file.size) / totalFiles) * 100)
-              : Math.round(((index + 1) / totalFiles) * 100);
-            setUploadProgress({
-              filePercent,
-              bytesPercent,
-              fileIndex: index + 1,
-              totalFiles,
-              uploadedBytes: currentBytes,
-              totalBytes,
-            });
-          };
-          xhr.onload = () => {
-            if (xhr.status >= 200 && xhr.status < 300) {
-              resolve();
-              return;
-            }
-            reject(new Error("Upload failed."));
-          };
-          xhr.onerror = () => reject(new Error("Upload failed."));
-          xhr.send(file);
-        });
-      } catch (error) {
-        toast({
-          title: "Upload failed",
-          description: error instanceof Error ? error.message : "Unable to upload image.",
-          variant: "destructive",
-        });
-        setIsUploading(false);
-        setUploadProgress(null);
-        return;
-      }
+      uploadedPaths.push(path);
       uploadedBytes += file.size || 0;
       setUploadProgress({
         filePercent: Math.round(((index + 1) / totalFiles) * 100),
@@ -341,11 +491,12 @@ export default function AdminAddProducts() {
     setIsDiscarding(true);
     if (uploadedImages.length) {
       const paths = uploadedImages.map((image) => image.storage_path);
-      const { error: storageError } = await supabase.storage.from(GALLERY_BUCKET).remove(paths);
-      if (storageError) {
+      try {
+        await removeGalleryObjects(paths);
+      } catch (error) {
         toast({
           title: "Discard failed",
-          description: storageError.message,
+          description: error instanceof Error ? error.message : "Unable to remove uploaded images.",
           variant: "destructive",
         });
         setIsDiscarding(false);
@@ -379,11 +530,12 @@ export default function AdminAddProducts() {
   const handleRemoveUploadedImage = async (image: UploadedImage) => {
     if (removingImage || isUploading || isDiscarding) return;
     setRemovingImage(image.storage_path);
-    const { error } = await supabase.storage.from(GALLERY_BUCKET).remove([image.storage_path]);
-    if (error) {
+    try {
+      await removeGalleryObjects([image.storage_path]);
+    } catch (error) {
       toast({
         title: "Remove failed",
-        description: error.message,
+        description: error instanceof Error ? error.message : "Unable to remove image.",
         variant: "destructive",
       });
       setRemovingImage(null);
