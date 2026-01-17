@@ -80,6 +80,10 @@ export default function Terms() {
                 <p>
                   Final high-resolution files and project assets will be released exclusively upon <strong>confirmation of full payment</strong>.
                 </p>
+                <ul className="list-disc pl-6 space-y-2 marker:text-gold-dark">
+                  <li>We primarily work in .3dm format on our side.</li>
+                  <li>Raw .stl deliveries may not include metal material settings (gold/brass/silver).</li>
+                </ul>
               </section>
 
               <section className="space-y-4">
