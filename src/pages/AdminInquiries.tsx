@@ -154,12 +154,15 @@ export default function AdminInquiries() {
       "To finalize the order, please complete the payment details below:",
       "",
       priceLabel
-        ? `Amount: *${priceLabel}* UPI ID: notkek@upi`
-        : "Amount: (Pending) UPI ID: notkek@upi",
+        ? `Amount: *${priceLabel}* UPI ID: tumpabera101@oksbi`
+        : "Amount: (Pending) UPI ID: tumpabera101@oksbi",
       "",
       `Once confirmed, we will email the high-resolution file to *${email}*.`,
       "",
-      "Note: By proceeding with the payment, you confirm that you have read and agreed to our Terms & Conditions.",
+      "Notes:",
+      "1. We primarily work in .3dm format on our side.",
+      "2. Sharing the raw .stl file. It may not carry metal material settings (gold/brass/silver).",
+      "3. By proceeding with the payment, you confirm that you have read and agreed to our Terms & Conditions.",
     ];
     const message = messageLines.join("\n");
     const phone = normalizePhone(inquiry.phone);
