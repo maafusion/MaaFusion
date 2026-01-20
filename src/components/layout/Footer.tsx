@@ -1,4 +1,4 @@
-import { Link } from 'react-router-dom';
+import { Link } from "react-router-dom";
 
 export function Footer() {
   const currentYear = new Date().getFullYear();
@@ -7,14 +7,14 @@ export function Footer() {
     <footer className="bg-cream border-t border-charcoal/10 pt-16 pb-10 md:pt-24 md:pb-12">
       <div className="container mx-auto px-4 sm:px-6 lg:px-12">
         <div className="grid grid-cols-1 gap-10 md:grid-cols-4 md:gap-12 mb-16 md:mb-24">
-
           {/* Brand Column */}
           <div className="md:col-span-2 space-y-6">
             <Link to="/" className="inline-block">
-              <img src="/logo.svg" alt="MaaFusion" className="h-20 w-auto" />
+              <img src="/logo-v2.svg" alt="MaaFusion" className="h-10 w-auto" />
             </Link>
             <p className="font-sans text-charcoal/80 text-sm max-w-sm leading-relaxed mt-2">
-              A digital homage to tradition. Blending culture and creativity under the guiding light of motherly blessings.
+              A digital homage to tradition. Blending culture and creativity
+              under the guiding light of motherly blessings.
             </p>
           </div>
 
@@ -23,10 +23,10 @@ export function Footer() {
             <h4 className="font-serif text-xl text-charcoal mb-6">Studio</h4>
             <ul className="space-y-4">
               {[
-                { label: 'Home', path: '/' },
-                { label: 'About Us', path: '/about' },
-                { label: 'Contact', path: '/contact' },
-                { label: 'Gallery', path: '/gallery' }
+                { label: "Home", path: "/" },
+                { label: "About Us", path: "/about" },
+                { label: "Contact", path: "/contact" },
+                { label: "Gallery", path: "/gallery" },
               ].map((item) => (
                 <li key={item.label}>
                   <Link
@@ -45,8 +45,8 @@ export function Footer() {
             <h4 className="font-serif text-xl text-charcoal mb-6">Legal</h4>
             <ul className="space-y-4">
               {[
-                { label: 'Terms of Use', path: '/terms' },
-                { label: 'Privacy Policy', path: '/privacy' }
+                { label: "Terms of Use", path: "/terms" },
+                { label: "Privacy Policy", path: "/privacy" },
               ].map((item) => (
                 <li key={item.label}>
                   <Link

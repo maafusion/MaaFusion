@@ -22,7 +22,7 @@ export function FeaturedSection() {
           <div className="hidden md:block">
             <Button variant="ghost" asChild className="group hover:bg-transparent px-0 hover:text-gold-dark text-charcoal transition-colors">
               <Link to="/gallery" className="gap-2">
-                <span className="font-serif italic tracking-wider text-sm border-b border-charcoal/30 group-hover:border-gold-dark pb-1">View Full Gallery</span>
+                <span className="font-serif italic font-medium tracking-wider text-base sm:text-lg border-b border-charcoal/30 group-hover:border-gold-dark pb-1">View Full Gallery</span>
                 <ArrowRight className="w-4 h-4 transition-transform duration-300 group-hover:translate-x-1" />
               </Link>
             </Button>
@@ -56,7 +56,7 @@ export function FeaturedSection() {
                   <h3 className="font-serif text-3xl text-charcoal group-hover:text-gold-dark transition-colors duration-300 mb-2">
                     {category.title}
                   </h3>
-                  <Link to="/gallery" className="mt-1 inline-flex items-center gap-2 text-sm font-serif italic border-b border-transparent group-hover:border-charcoal/30 hover:text-gold-dark hover:border-gold-dark transition-all">
+                  <Link to="/gallery" className="mt-1 inline-flex items-center gap-2 text-base sm:text-lg font-serif italic font-medium border-b border-transparent group-hover:border-charcoal/30 hover:text-gold-dark hover:border-gold-dark transition-all">
                     Explore
                     <ArrowRight className="w-4 h-4 transition-transform duration-300 group-hover:translate-x-1" />
                   </Link>
@@ -90,7 +90,7 @@ export function FeaturedSection() {
                   <h3 className="font-serif text-2xl text-charcoal group-hover:text-gold-dark transition-colors duration-300 mb-2">
                     {category.title}
                   </h3>
-                  <Link to="/gallery" className="mt-1 inline-flex items-center gap-2 text-sm font-serif italic border-b border-transparent group-hover:border-charcoal/30 hover:text-gold-dark hover:border-gold-dark transition-all">
+                  <Link to="/gallery" className="mt-1 inline-flex items-center gap-2 text-base sm:text-lg font-serif italic font-medium border-b border-transparent group-hover:border-charcoal/30 hover:text-gold-dark hover:border-gold-dark transition-all">
                     Explore
                     <ArrowRight className="w-4 h-4 transition-transform duration-300 group-hover:translate-x-1" />
                   </Link>
@@ -104,7 +104,7 @@ export function FeaturedSection() {
         <div className="mt-10 text-center md:hidden">
           <Button variant="ghost" asChild className="group hover:bg-transparent px-0 hover:text-gold-dark text-charcoal transition-colors">
             <Link to="/gallery" className="gap-2">
-              <span className="font-serif italic tracking-wider text-sm border-b border-charcoal/30 group-hover:border-gold-dark pb-1">View Full Gallery</span>
+              <span className="font-serif italic font-medium tracking-wider text-base sm:text-lg border-b border-charcoal/30 group-hover:border-gold-dark pb-1">View Full Gallery</span>
               <ArrowRight className="w-4 h-4 transition-transform duration-300 group-hover:translate-x-1" />
             </Link>
           </Button>

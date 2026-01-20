@@ -29,7 +29,7 @@ export function HeroSection() {
           <div className="flex flex-wrap gap-4 pt-4 animate-fade-up mt-6 justify-center sm:gap-6" style={{ animationDelay: '0.8s' }}>
             <Button variant="ghost" asChild className="group hover:bg-transparent px-0 hover:text-gold-dark text-charcoal transition-colors">
               <Link to="/about" className="gap-2">
-                <span className="font-serif italic tracking-wider text-sm border-b border-charcoal/30 group-hover:border-gold-dark pb-1">Discover Our Story</span>
+                <span className="font-serif italic font-medium tracking-wider text-base sm:text-lg border-b border-charcoal/30 group-hover:border-gold-dark pb-1">Discover Our Story</span>
                 <ArrowRight className="w-4 h-4 transition-transform duration-300 group-hover:translate-x-1" />
               </Link>
             </Button>
