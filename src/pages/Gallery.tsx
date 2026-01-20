@@ -1,4 +1,5 @@
 import { Link } from "react-router-dom";
+import { Check } from "lucide-react";
 import { useEffect, useMemo, useState } from "react";
 import { Layout } from "@/components/layout/Layout";
 import { SEO } from "@/components/SEO";
@@ -71,6 +72,7 @@ export default function Gallery() {
   const [detailsProduct, setDetailsProduct] = useState<ProductRow | null>(null);
   const [inquiryForm, setInquiryForm] = useState(emptyInquiryForm);
   const [isSending, setIsSending] = useState(false);
+  const [isSuccessOpen, setIsSuccessOpen] = useState(false);
   const [termsAccepted, setTermsAccepted] = useState(false);
   const pageSize = 12;
 
@@ -222,12 +224,9 @@ export default function Gallery() {
       return;
     }
 
-    toast({
-      title: "Inquiry sent",
-      description: "We'll review your request and get back to you shortly.",
-    });
     setIsSending(false);
     setIsEnquiryOpen(false);
+    setIsSuccessOpen(true);
     setSelectedProduct(null);
     setInquiryForm(emptyInquiryForm);
     setTermsAccepted(false);
@@ -576,6 +575,27 @@ export default function Gallery() {
               </div>
             </div>
           )}
+        </DialogContent>
+      </Dialog>
+
+      <Dialog open={isSuccessOpen} onOpenChange={setIsSuccessOpen}>
+        <DialogContent className="sm:max-w-[420px] p-6">
+          <div className="flex flex-col items-center gap-5 py-4 text-center">
+            <div className="flex h-16 w-16 items-center justify-center rounded-full bg-gold/20 text-gold-dark shadow-soft animate-pulse">
+              <Check className="h-8 w-8" />
+            </div>
+            <div className="space-y-2">
+              <h3 className="font-serif text-2xl text-charcoal sm:text-3xl md:text-4xl">
+                Thank you!
+              </h3>
+              <p className="text-base text-charcoal/80 sm:text-lg md:text-xl">
+                Thanks for trusting Maa Fusion. We'll be in touch soon.
+              </p>
+            </div>
+            <Button variant="luxury" onClick={() => setIsSuccessOpen(false)}>
+              Close
+            </Button>
+          </div>
         </DialogContent>
       </Dialog>
     </Layout>

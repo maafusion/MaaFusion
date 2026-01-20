@@ -1,7 +1,7 @@
-import { useMemo, useState, useEffect } from 'react';
-import { createPortal } from 'react-dom';
-import { Link, useLocation } from 'react-router-dom';
-import { Menu, UserRound, X } from 'lucide-react';
+import { useMemo, useState, useEffect } from "react";
+import { createPortal } from "react-dom";
+import { Link, useLocation } from "react-router-dom";
+import { Menu, UserRound, X } from "lucide-react";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -9,14 +9,14 @@ import {
   DropdownMenuLabel,
   DropdownMenuSeparator,
   DropdownMenuTrigger,
-} from '@/components/ui/dropdown-menu';
-import { useAuth } from '@/hooks/use-auth';
+} from "@/components/ui/dropdown-menu";
+import { useAuth } from "@/hooks/use-auth";
 
 const publicLinks = [
-  { name: 'Home', href: '/' },
-  { name: 'Gallery', href: '/gallery' },
-  { name: 'About', href: '/about' },
-  { name: 'Contact', href: '/contact' },
+  { name: "Home", href: "/" },
+  { name: "Gallery", href: "/gallery" },
+  { name: "About", href: "/about" },
+  { name: "Contact", href: "/contact" },
 ];
 
 export function Navbar() {
@@ -26,61 +26,70 @@ export function Navbar() {
   const { user, loading, signOut, isAdmin } = useAuth();
 
   const isActive = (path: string) => location.pathname === path;
-  const isAuthPage = location.pathname === '/auth';
-  const userMetadata = useMemo(() => (user?.user_metadata ?? {}) as Record<string, unknown>, [user]);
+  const isAuthPage = location.pathname === "/auth";
+  const userMetadata = useMemo(
+    () => (user?.user_metadata ?? {}) as Record<string, unknown>,
+    [user],
+  );
   const fullName = useMemo(() => {
-    const first = typeof userMetadata.first_name === 'string' ? userMetadata.first_name.trim() : '';
-    const last = typeof userMetadata.last_name === 'string' ? userMetadata.last_name.trim() : '';
+    const first =
+      typeof userMetadata.first_name === "string"
+        ? userMetadata.first_name.trim()
+        : "";
+    const last =
+      typeof userMetadata.last_name === "string"
+        ? userMetadata.last_name.trim()
+        : "";
     return `${first} ${last}`.trim();
   }, [userMetadata]);
-  const displayName = fullName || user?.email || 'Account';
-  const phone = typeof userMetadata.phone === 'string' ? userMetadata.phone : undefined;
+  const displayName = fullName || user?.email || "Account";
+  const phone =
+    typeof userMetadata.phone === "string" ? userMetadata.phone : undefined;
   const initials = useMemo(() => {
     if (fullName) {
       return fullName
-        .split(' ')
+        .split(" ")
         .filter(Boolean)
         .slice(0, 2)
         .map((part) => part[0]?.toUpperCase())
-        .join('');
+        .join("");
     }
     if (user?.email) {
       return user.email.slice(0, 2).toUpperCase();
     }
-    return 'ME';
+    return "ME";
   }, [fullName, user]);
 
   useEffect(() => {
     const handleScroll = () => {
       setIsScrolled(window.scrollY > 50);
     };
-    window.addEventListener('scroll', handleScroll);
-    return () => window.removeEventListener('scroll', handleScroll);
+    window.addEventListener("scroll", handleScroll);
+    return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
   useEffect(() => {
     if (isOpen) {
-      document.body.style.overflow = 'hidden';
+      document.body.style.overflow = "hidden";
       return () => {
-        document.body.style.overflow = '';
+        document.body.style.overflow = "";
       };
     }
-    document.body.style.overflow = '';
+    document.body.style.overflow = "";
   }, [isOpen]);
 
   return (
     <nav
-      className={`fixed top-0 left-0 right-0 transition-all duration-500 ${isOpen ? 'z-[95]' : 'z-50'} ${isScrolled ? 'py-4' : 'py-8'} ${!isOpen && isScrolled ? 'bg-cream/80 backdrop-blur-md shadow-sm' : 'bg-transparent'}`}
+      className={`fixed top-0 left-0 right-0 transition-all duration-500 ${isOpen ? "z-[95]" : "z-50"} ${isScrolled ? "py-4" : "py-8"} ${!isOpen && isScrolled ? "bg-cream/80 backdrop-blur-md shadow-sm" : "bg-transparent"}`}
     >
       <div className="container mx-auto px-6 lg:px-12">
         <div className="flex items-center justify-between">
-
           {/* Logo */}
           <Link to="/" className="group relative z-50">
-            <img 
-              src="/logo.svg" 
-              alt="MaaFusion Studio" 
-              className="h-20 w-auto transition-transform duration-300 group-hover:scale-105"
+            <img
+              src="/logo-v2.svg"
+              alt="MaaFusion Studio"
+              className="h-12 w-auto transition-transform duration-300 group-hover:scale-105"
             />
           </Link>
 
@@ -90,10 +99,11 @@ export function Navbar() {
               <Link
                 key={link.name}
                 to={link.href}
-                className={`relative text-sm font-sans font-medium tracking-widest uppercase transition-all duration-300 hover:-translate-y-1 ${isActive(link.href)
-                  ? 'text-gold-dark'
-                  : 'text-charcoal hover:text-charcoal'
-                  }`}
+                className={`relative text-sm font-sans font-medium tracking-widest uppercase transition-all duration-300 hover:-translate-y-1 ${
+                  isActive(link.href)
+                    ? "text-gold-dark"
+                    : "text-charcoal hover:text-charcoal"
+                }`}
               >
                 {link.name}
                 {isActive(link.href) && (
@@ -115,7 +125,9 @@ export function Navbar() {
                       aria-label="Open account menu"
                     >
                       {initials ? (
-                        <span className="text-xs font-semibold tracking-widest">{initials}</span>
+                        <span className="text-xs font-semibold tracking-widest">
+                          {initials}
+                        </span>
                       ) : (
                         <UserRound className="h-5 w-5" />
                       )}
@@ -127,24 +139,37 @@ export function Navbar() {
                     </DropdownMenuLabel>
                     <div className="px-2 py-2 text-sm text-charcoal">
                       <p className="font-medium">{displayName}</p>
-                      {user?.email && <p className="text-xs text-charcoal/80">{user.email}</p>}
-                      {phone && <p className="text-xs text-charcoal/80">{phone}</p>}
+                      {user?.email && (
+                        <p className="text-xs text-charcoal/80">{user.email}</p>
+                      )}
+                      {phone && (
+                        <p className="text-xs text-charcoal/80">{phone}</p>
+                      )}
                     </div>
                     <DropdownMenuSeparator />
                     {isAdmin && (
                       <>
                         <DropdownMenuItem asChild>
-                          <Link to="/admin/products/add" className="text-charcoal/80">
+                          <Link
+                            to="/admin/products/add"
+                            className="text-charcoal/80"
+                          >
                             Add
                           </Link>
                         </DropdownMenuItem>
                         <DropdownMenuItem asChild>
-                          <Link to="/admin/products/manage" className="text-charcoal/80">
+                          <Link
+                            to="/admin/products/manage"
+                            className="text-charcoal/80"
+                          >
                             Manage
                           </Link>
                         </DropdownMenuItem>
                         <DropdownMenuItem asChild>
-                          <Link to="/admin/products/inquiries" className="text-charcoal/80">
+                          <Link
+                            to="/admin/products/inquiries"
+                            className="text-charcoal/80"
+                          >
                             Inquiries
                           </Link>
                         </DropdownMenuItem>
@@ -165,10 +190,11 @@ export function Navbar() {
               ) : (
                 <Link
                   to="/auth?mode=sign-in"
-                  className={`rounded-full border border-charcoal/20 bg-cream/70 px-6 py-2 text-xs uppercase tracking-[0.3em] text-charcoal transition-all hover:border-gold/40 ${isAuthPage
-                    ? 'border-gold/50 bg-gold/20 text-charcoal shadow-sm'
-                    : ''
-                    }`}
+                  className={`rounded-full border border-charcoal/20 bg-cream/70 px-6 py-2 text-xs uppercase tracking-[0.3em] text-charcoal transition-all hover:border-gold/40 ${
+                    isAuthPage
+                      ? "border-gold/50 bg-gold/20 text-charcoal shadow-sm"
+                      : ""
+                  }`}
                 >
                   Login
                 </Link>
@@ -187,17 +213,27 @@ export function Navbar() {
 
         {/* Mobile Navigation */}
         {createPortal(
-          <div className={`fixed inset-0 bg-cream/95 backdrop-blur-xl z-[90] flex items-center justify-center transition-all duration-500 ease-in-out md:hidden ${isOpen ? 'opacity-100 translate-y-0' : 'opacity-0 -translate-y-full pointer-events-none'
-            }`}>
+          <div
+            className={`fixed inset-0 bg-cream/95 backdrop-blur-xl z-[90] flex items-center justify-center transition-all duration-500 ease-in-out md:hidden ${
+              isOpen
+                ? "opacity-100 translate-y-0"
+                : "opacity-0 -translate-y-full pointer-events-none"
+            }`}
+          >
             <div className="flex flex-col items-center gap-8">
               {publicLinks.map((link, idx) => (
                 <Link
                   key={link.name}
                   to={link.href}
                   onClick={() => setIsOpen(false)}
-                  className={`text-3xl font-serif text-charcoal hover:text-gold-dark transition-all duration-700 ${isOpen ? 'translate-y-0 opacity-100 blur-0' : 'translate-y-8 opacity-0 blur-sm'
-                    }`}
-                  style={{ transitionDelay: `${isOpen ? 100 + idx * 100 : 0}ms` }}
+                  className={`text-3xl font-serif text-charcoal hover:text-gold-dark transition-all duration-700 ${
+                    isOpen
+                      ? "translate-y-0 opacity-100 blur-0"
+                      : "translate-y-8 opacity-0 blur-sm"
+                  }`}
+                  style={{
+                    transitionDelay: `${isOpen ? 100 + idx * 100 : 0}ms`,
+                  }}
                 >
                   {link.name}
                 </Link>
@@ -206,11 +242,17 @@ export function Navbar() {
                 <div className="mt-6 flex flex-col items-center gap-4">
                   <div className="flex items-center gap-3 rounded-full border border-charcoal/10 bg-white/70 px-5 py-2">
                     <div className="flex h-10 w-10 items-center justify-center rounded-full bg-charcoal text-cream">
-                      <span className="text-xs font-semibold tracking-widest">{initials}</span>
+                      <span className="text-xs font-semibold tracking-widest">
+                        {initials}
+                      </span>
                     </div>
                     <div className="text-left">
-                      <p className="text-sm font-medium text-charcoal">{displayName}</p>
-                      {user?.email && <p className="text-xs text-charcoal/80">{user.email}</p>}
+                      <p className="text-sm font-medium text-charcoal">
+                        {displayName}
+                      </p>
+                      {user?.email && (
+                        <p className="text-xs text-charcoal/80">{user.email}</p>
+                      )}
                     </div>
                   </div>
                   {isAdmin && (
@@ -264,7 +306,7 @@ export function Navbar() {
               )}
             </div>
           </div>,
-          document.body
+          document.body,
         )}
       </div>
     </nav>

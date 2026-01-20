@@ -11,14 +11,19 @@ export function StatsSection() {
               <span className="italic text-charcoal/80">Crafted in Digital.</span>
             </h2>
             <div className="h-px w-16 bg-gold-dark" />
-            <p className="text-base sm:text-lg italic text-gold-dark leading-relaxed font-serif">
-              "Taking the blessings of a mother and the wisdom of the past, we mold them into the style of a new era."
+            <p className="font-sans text-base text-gold-dark font-medium leading-relaxed sm:text-lg text-justify">
+              From the earliest days of childhood to every step of growing up, one blessing has never
+              left us — a mother’s. Her love has quietly guided our path, and her prayers have kept us
+              grounded.
             </p>
-            <p className="font-sans text-base text-charcoal/80 leading-relaxed sm:text-lg">
-              <span className="font-serif italic font-bold text-charcoal">'Maa'</span> represents the beginning. It stands as a symbol of love, tradition, and the enduring blessings of the mothers who inspire our journey.
+            <p className="font-sans text-base text-gold-dark font-medium leading-relaxed sm:text-lg text-justify">
+              <span className="font-serif font-semibold italic text-lg sm:text-xl">Maa Fusion</span> is our thank-you to her. It
+              is a tribute to the strength, grace, and care that shaped who we are, and the constant
+              kindness that still lights our way.
             </p>
-            <p className="font-sans text-base text-charcoal/80 leading-relaxed sm:text-lg">
-              <span className="font-serif italic font-bold text-charcoal">'Fusion'</span> defines our craft, where we blend timeless values with contemporary 3D artistry. We don't just design; we carry a legacy forward.
+            <p className="font-sans text-base text-gold-dark font-medium leading-relaxed sm:text-lg text-justify">
+              In every design we create, we carry that blessing forward — blending tradition with
+              contemporary artistry so her love lives on in a new era.
             </p>
 
             <div className="grid grid-cols-3 gap-6 pt-6 sm:gap-8 sm:pt-8">

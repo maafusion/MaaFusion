@@ -550,18 +550,11 @@ export default function AdminAddProducts() {
       <section className="bg-cream py-10 md:py-12">
         <div className="container mx-auto space-y-6 px-4 sm:px-6 lg:px-12">
           <div className="flex flex-col gap-3">
-            <Badge className="w-fit rounded-full border border-charcoal/20 bg-white/70 px-4 py-1 text-[10px] uppercase tracking-[0.35em] text-charcoal/80">
-              Admin dashboard
-            </Badge>
             <h1 className="font-serif text-3xl text-charcoal sm:text-4xl md:text-5xl">Add</h1>
             <p className="max-w-2xl text-base text-charcoal/80 md:text-lg font-sans leading-relaxed text-pretty">
               Add new items to the gallery. Each product supports up to {MAX_PRODUCT_IMAGES} images.
             </p>
-            <div className="flex flex-wrap gap-3">
-              <Button asChild variant="outline">
-                <Link to="/admin/products/manage">Manage</Link>
-              </Button>
-            </div>
+            
           </div>
         </div>
       </section>

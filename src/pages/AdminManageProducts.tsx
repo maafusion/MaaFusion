@@ -478,9 +478,6 @@ export default function AdminManageProducts() {
       <section className="bg-cream py-10 md:py-12">
         <div className="container mx-auto space-y-6 px-4 sm:px-6 lg:px-12">
           <div className="flex flex-col gap-3">
-            <Badge className="w-fit rounded-full border border-charcoal/20 bg-white/70 px-4 py-1 text-[10px] uppercase tracking-[0.35em] text-charcoal/80">
-              Admin dashboard
-            </Badge>
             <h1 className="font-serif text-3xl text-charcoal sm:text-4xl md:text-5xl">Manage</h1>
             <p className="max-w-2xl text-base text-charcoal/80 md:text-lg font-sans leading-relaxed text-pretty">
               Edit details, upload images, or remove products from the gallery.
