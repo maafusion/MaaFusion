@@ -89,7 +89,7 @@ export function Navbar() {
             <img
               src="/logo-v5.svg"
               alt="MaaFusion Studio"
-              className="h-13 w-auto transition-transform duration-300 group-hover:scale-105"
+              className="h-12 w-auto transition-transform duration-300 group-hover:scale-105"
             />
           </Link>
 

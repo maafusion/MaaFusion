@@ -10,7 +10,7 @@ export function Footer() {
           {/* Brand Column */}
           <div className="md:col-span-2 space-y-6">
             <Link to="/" className="inline-block">
-              <img src="/logo-v5.svg" alt="MaaFusion" className="h-11 w-auto" />
+              <img src="/logo-v5.svg" alt="MaaFusion" className="h-10 w-auto" />
             </Link>
             <p className="font-sans text-charcoal/80 text-sm max-w-sm leading-relaxed mt-2">
               A digital homage to tradition. Blending culture and creativity
