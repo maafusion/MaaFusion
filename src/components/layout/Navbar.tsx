@@ -87,7 +87,7 @@ export function Navbar() {
           {/* Logo */}
           <Link to="/" className="group relative z-50">
             <img
-              src="/logo-v3.svg"
+              src="/logo-v5.svg"
               alt="MaaFusion Studio"
               className="h-12 w-auto transition-transform duration-300 group-hover:scale-105"
             />
@@ -312,4 +312,5 @@ export function Navbar() {
     </nav>
   );
 }
+
 
