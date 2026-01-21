@@ -17,13 +17,7 @@ export function StatsSection() {
               grounded.
             </p>
             <p className="font-sans text-base text-gold-dark font-medium leading-relaxed sm:text-lg text-justify">
-              <span className="font-serif font-semibold italic text-lg sm:text-xl">Maa Fusion</span> is our thank-you to her. It
-              is a tribute to the strength, grace, and care that shaped who we are, and the constant
-              kindness that still lights our way.
-            </p>
-            <p className="font-sans text-base text-gold-dark font-medium leading-relaxed sm:text-lg text-justify">
-              In every design we create, we carry that blessing forward — blending tradition with
-              contemporary artistry so her love lives on in a new era.
+              A small token of appreciation and a gift for you, Mom. Thank you for everything.
             </p>
 
             <div className="grid grid-cols-3 gap-6 pt-6 sm:gap-8 sm:pt-8">
