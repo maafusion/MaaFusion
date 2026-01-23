@@ -57,7 +57,7 @@ export const FEATURED_COLLECTIONS: Collection[] = [
         ],
     },
     {
-        title: 'Temple Jewellery',
+        title: 'Nakashi Rings',
         description: 'Richly engraved deity motifs honoring the grandeur of India\'s temples.',
         images: [
             'https://p7fzjac0b1.ufs.sh/f/XMtknvqcEipyl6GCqNnB9rt54VLndWaO7PqKgm2JwoUj1cDQ', // Pendant-P4.png

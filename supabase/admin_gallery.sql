@@ -10,7 +10,7 @@ begin
       'Ring Designs',
       'Pendant Designs',
       'Earring Designs',
-      'Temple Jewellery'
+      'Nakashi Rings'
     );
   end if;
 end

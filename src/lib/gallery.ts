@@ -8,7 +8,7 @@ export const PRODUCT_CATEGORIES = [
   "Ring Designs",
   "Pendant Designs",
   "Earring Designs",
-  "Temple Jewellery",
+  "Nakashi Rings",
 ] as const;
 export type ProductCategory = (typeof PRODUCT_CATEGORIES)[number];
 

@@ -15,8 +15,8 @@ export function HeroSection() {
         <div className="max-w-3xl mx-auto text-center">
           <div className="space-y-6 animate-fade-up mt-12 sm:mt-0" style={{ animationDelay: '0.2s' }}>
             <h1 className="font-serif text-5xl leading-[1.1] text-charcoal tracking-tight sm:text-5xl md:text-6xl lg:text-7xl">
-              Timeless <span className="italic">Heritage</span>. <br />
-              Digital <span className="italic">Fusion</span>.
+              Timeless Heritage. <br />
+              Digital Fusion.
             </h1>
           </div>
 
