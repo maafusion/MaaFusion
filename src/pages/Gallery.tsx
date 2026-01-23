@@ -350,7 +350,7 @@ export default function Gallery() {
                         </div>
                       </div>
                       <div>
-                        <h3 className="font-serif text-xl text-charcoal transition-colors duration-300 group-hover:text-gold-dark sm:text-2xl">{product.name}</h3>
+                        <h3 className="line-clamp-1 font-serif text-xl text-charcoal transition-colors duration-300 group-hover:text-gold-dark sm:text-2xl">{product.name}</h3>
                         <p className="mt-3 text-lg font-semibold text-gold-dark">
                           {currencyFormatter.format(product.price)}
                         </p>
