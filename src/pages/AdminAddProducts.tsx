@@ -18,6 +18,8 @@ import {
   MAX_IMAGE_SIZE_BYTES,
   MAX_PRODUCT_IMAGES,
   PRODUCT_CATEGORIES,
+  isAllowedImage,
+  safeStorageName,
   type ProductCategory,
 } from "@/lib/gallery";
 
@@ -153,6 +155,15 @@ export default function AdminAddProducts() {
       toast({
         title: "Images too large",
         description: `Each image must be ${maxImageSizeLabel} or smaller.`,
+        variant: "destructive",
+      });
+      event.target.value = "";
+      return;
+    }
+    if (selected.some((file) => !isAllowedImage(file))) {
+      toast({
+        title: "Unsupported file type",
+        description: "Only JPEG, PNG, WebP, or GIF images are allowed.",
         variant: "destructive",
       });
       event.target.value = "";
@@ -401,7 +412,7 @@ export default function AdminAddProducts() {
         setUploadProgress(null);
         return;
       }
-      const path = `products/drafts/${draftId}/${crypto.randomUUID()}-${file.name}`;
+      const path = `products/drafts/${draftId}/${crypto.randomUUID()}-${safeStorageName(file.name)}`;
       let uploadError: unknown = null;
       const maxAttempts = 3;
       for (let attempt = 0; attempt < maxAttempts; attempt += 1) {

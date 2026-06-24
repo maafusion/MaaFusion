@@ -41,6 +41,14 @@ export const removeGalleryObjects = async (paths: string[]) => {
     if (result.error) {
       throw result.error;
     }
+    // remove() reports success even when it deletes nothing (object absent or RLS-filtered).
+    // Surface the mismatch so a silent no-op can't masquerade as a clean delete.
+    if ((result.data?.length ?? 0) < uniquePaths.length) {
+      console.warn(
+        `removeGalleryObjects: requested ${uniquePaths.length}, removed ${result.data?.length ?? 0}`,
+        uniquePaths,
+      );
+    }
     return result;
   });
 };
