@@ -1,24 +1,7 @@
 -- Storage cleanup helpers for gallery images.
-
-create or replace function public.delete_gallery_object_for_product_image()
-returns trigger
-language plpgsql
-security definer
-set search_path = public
-as $$
-begin
-  delete from storage.objects
-  where bucket_id = 'gallery'
-    and name = old.storage_path;
-  return old;
-end;
-$$;
-
-drop trigger if exists product_images_storage_cleanup on public.product_images;
-create trigger product_images_storage_cleanup
-after delete on public.product_images
-for each row
-execute function public.delete_gallery_object_for_product_image();
+-- Object deletion is handled in the app via the storage API (src/lib/storage.ts
+-- removeGalleryObjects). A DB trigger doing `delete from storage.objects` is no
+-- longer allowed by Supabase, so it was removed. The views below only read.
 
 create or replace view public.gallery_storage_orphans as
 select o.id, o.name, o.created_at
@@ -36,37 +19,9 @@ left join storage.objects o
   and o.name = pi.storage_path
 where o.id is null;
 
-create or replace function public.cleanup_gallery_storage_orphans()
-returns integer
-language plpgsql
-security definer
-set search_path = public
-as $$
-declare
-  deleted_count integer;
-  role_name text;
-  auth_role text;
-begin
-  role_name := coalesce(auth.jwt() -> 'app_metadata' ->> 'role', '');
-  auth_role := coalesce(auth.role(), '');
-  if role_name <> 'admin'
-    and auth_role <> 'service_role'
-    and current_user not in ('postgres', 'supabase_admin')
-  then
-    raise exception 'Admin privileges required';
-  end if;
-
-  delete from storage.objects o
-  where o.bucket_id = 'gallery'
-    and not exists (
-      select 1
-      from public.product_images pi
-      where pi.storage_path = o.name
-    );
-  get diagnostics deleted_count = row_count;
-  return deleted_count;
-end;
-$$;
-
-revoke execute on function public.cleanup_gallery_storage_orphans() from public;
-grant execute on function public.cleanup_gallery_storage_orphans() to authenticated;
+-- The cleanup_gallery_storage_orphans() function did a raw `delete from
+-- storage.objects`, which Supabase forbids ("direct deletion from storage
+-- tables is not allowed"). It is removed. To sweep orphans, read the views
+-- above and delete the listed objects through the storage API
+-- (removeGalleryObjects), not SQL.
+drop function if exists public.cleanup_gallery_storage_orphans();

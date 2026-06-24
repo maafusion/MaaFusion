@@ -30,6 +30,12 @@ alter table public.products
   add column if not exists description text not null default '',
   add column if not exists price numeric(10,2) not null default 0;
 
+alter table public.products
+  drop constraint if exists products_price_non_negative,
+  add constraint products_price_non_negative check (price >= 0);
+
+create unique index if not exists products_name_unique_idx on public.products (name);
+
 create table if not exists public.product_images (
   id uuid primary key default gen_random_uuid(),
   product_id uuid not null references public.products (id) on delete cascade,
@@ -94,6 +100,12 @@ with check ((auth.jwt() -> 'app_metadata' ->> 'role') = 'admin');
 insert into storage.buckets (id, name, public)
 values ('gallery', 'gallery', true)
 on conflict (id) do nothing;
+
+-- Constrain uploads: 200 KB (matches MAX_IMAGE_SIZE_BYTES) and image types only.
+update storage.buckets
+set file_size_limit = 204800,
+    allowed_mime_types = array['image/jpeg', 'image/png', 'image/webp', 'image/gif']
+where id = 'gallery';
 
 drop policy if exists "Public read gallery images" on storage.objects;
 create policy "Public read gallery images"
