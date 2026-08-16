@@ -1,0 +1,34 @@
+name: Supabase keep-alive
+
+# Supabase pauses free-tier projects after 7 days of no API activity.
+# A daily read against the REST API resets that timer.
+# The publishable key is safe to commit - it is already inlined into the
+# client bundle at build time and is gated by RLS.
+
+on:
+  schedule:
+    - cron: "0 6 * * *"
+  workflow_dispatch:
+
+jobs:
+  ping:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Ping Supabase REST API
+        env:
+          SUPABASE_URL: https://amlrvevuqlfqgeepwwej.supabase.co
+          SUPABASE_PUBLISHABLE_KEY: sb_publishable_YIwiXTmm8cFZNlkSs6LOFw_lQgSHYdv
+        run: |
+          status=$(curl -sS -o /tmp/body -w "%{http_code}" \
+            -H "apikey: $SUPABASE_PUBLISHABLE_KEY" \
+            -H "Authorization: Bearer $SUPABASE_PUBLISHABLE_KEY" \
+            "$SUPABASE_URL/rest/v1/products?select=id&limit=1")
+          echo "HTTP $status"
+          cat /tmp/body
+          echo
+          # RLS restricts products to authenticated users, so an empty 200 is
+          # the expected result - we only care that the request was served.
+          if [ "$status" != "200" ]; then
+            echo "::error::Unexpected status $status from Supabase"
+            exit 1
+          fi
