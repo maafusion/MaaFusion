@@ -48,3 +48,10 @@ for update
 to authenticated
 using ((auth.jwt() -> 'app_metadata' ->> 'role') = 'admin')
 with check ((auth.jwt() -> 'app_metadata' ->> 'role') = 'admin');
+
+drop policy if exists "Admin delete inquiries" on public.product_inquiries;
+create policy "Admin delete inquiries"
+on public.product_inquiries
+for delete
+to authenticated
+using ((auth.jwt() -> 'app_metadata' ->> 'role') = 'admin');

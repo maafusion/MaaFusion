@@ -1,6 +1,16 @@
 import { useEffect, useState } from "react";
-import { MessageCircle } from "lucide-react";
+import { MessageCircle, Trash2 } from "lucide-react";
 import { Layout } from "@/components/layout/Layout";
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from "@/components/ui/alert-dialog";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -46,6 +56,8 @@ export default function AdminInquiries() {
   const [statusFilter, setStatusFilter] = useState<string>("all");
   const [searchQuery, setSearchQuery] = useState("");
   const [selectedInquiry, setSelectedInquiry] = useState<InquiryRow | null>(null);
+  const [inquiryToDelete, setInquiryToDelete] = useState<InquiryRow | null>(null);
+  const [isDeleting, setIsDeleting] = useState(false);
   const [page, setPage] = useState(1);
   const pageSize = 9;
   const currencyFormatter = new Intl.NumberFormat("en-IN", { style: "currency", currency: "INR" });
@@ -90,6 +102,42 @@ export default function AdminInquiries() {
     setInquiries((prev) =>
       prev.map((item) => (item.id === inquiryId ? { ...item, status: nextStatus } : item)),
     );
+  };
+
+  const handleDelete = async (inquiry: InquiryRow) => {
+    setIsDeleting(true);
+    // Select the deleted rows back: RLS denials are not errors, they simply
+    // match nothing, so an empty result is how a blocked delete surfaces.
+    const { data, error } = await supabase
+      .from("product_inquiries")
+      .delete()
+      .eq("id", inquiry.id)
+      .select("id");
+
+    setIsDeleting(false);
+
+    if (error) {
+      toast({
+        title: "Delete failed",
+        description: error.message,
+        variant: "destructive",
+      });
+      return;
+    }
+
+    if (!data || data.length === 0) {
+      toast({
+        title: "Delete failed",
+        description: "This inquiry was not removed. You may not have permission to delete it.",
+        variant: "destructive",
+      });
+      return;
+    }
+
+    toast({ title: "Inquiry deleted" });
+    setInquiries((prev) => prev.filter((item) => item.id !== inquiry.id));
+    setInquiryToDelete(null);
+    setSelectedInquiry((prev) => (prev?.id === inquiry.id ? null : prev));
   };
 
   useEffect(() => {
@@ -282,13 +330,24 @@ export default function AdminInquiries() {
                             </SelectContent>
                           </Select>
                         </div>
-                        <Button
-                          variant="outline"
-                          className="w-full"
-                          onClick={() => setSelectedInquiry(inquiry)}
-                        >
-                          View details
-                        </Button>
+                        <div className="flex items-center gap-2">
+                          <Button
+                            variant="outline"
+                            className="flex-1"
+                            onClick={() => setSelectedInquiry(inquiry)}
+                          >
+                            View details
+                          </Button>
+                          <Button
+                            variant="outline"
+                            size="icon"
+                            aria-label={`Delete inquiry from ${inquiry.email}`}
+                            className="shrink-0 text-destructive hover:bg-destructive/10 hover:text-destructive"
+                            onClick={() => setInquiryToDelete(inquiry)}
+                          >
+                            <Trash2 className="h-4 w-4" />
+                          </Button>
+                        </div>
                       </CardContent>
                     </Card>
                   );
@@ -376,6 +435,39 @@ export default function AdminInquiries() {
           </DialogFooter>
         </DialogContent>
       </Dialog>
+
+      <AlertDialog
+        open={Boolean(inquiryToDelete)}
+        onOpenChange={(open) => {
+          if (!open && !isDeleting) setInquiryToDelete(null);
+        }}
+      >
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>Delete this inquiry?</AlertDialogTitle>
+            <AlertDialogDescription>
+              {inquiryToDelete
+                ? `The inquiry from ${inquiryToDelete.email} about ${inquiryToDelete.product_name} will be permanently removed. This cannot be undone.`
+                : ""}
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel disabled={isDeleting}>Cancel</AlertDialogCancel>
+            <AlertDialogAction
+              className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
+              disabled={isDeleting}
+              onClick={(event) => {
+                // Keep the dialog mounted while the request is in flight so the
+                // pending state stays visible; handleDelete closes it on success.
+                event.preventDefault();
+                if (inquiryToDelete) void handleDelete(inquiryToDelete);
+              }}
+            >
+              {isDeleting ? "Deleting..." : "Delete"}
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
     </Layout>
   );
 }
