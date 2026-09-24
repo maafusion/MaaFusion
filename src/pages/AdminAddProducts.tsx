@@ -17,8 +17,11 @@ import { createGallerySignedUploadUrl, delay, moveGalleryObject, removeGalleryOb
 import {
   MAX_IMAGE_SIZE_BYTES,
   MAX_PRODUCT_IMAGES,
+  MAX_SOURCE_IMAGE_SIZE_BYTES,
+  compressImage,
   PRODUCT_CATEGORIES,
   isAllowedImage,
+  parsePriceInput,
   safeStorageName,
   type ProductCategory,
 } from "@/lib/gallery";
@@ -51,6 +54,7 @@ export default function AdminAddProducts() {
   const [form, setForm] = useState(emptyForm);
   const [isCreating, setIsCreating] = useState(false);
   const [isUploading, setIsUploading] = useState(false);
+  const [isOptimizing, setIsOptimizing] = useState(false);
   const [isDiscarding, setIsDiscarding] = useState(false);
   const [removingImage, setRemovingImage] = useState<string | null>(null);
   const [createFiles, setCreateFiles] = useState<File[]>([]);
@@ -147,35 +151,56 @@ export default function AdminAddProducts() {
     return `${size.toFixed(size >= 10 || unitIndex === 0 ? 0 : 1)} ${units[unitIndex]}`;
   };
   const maxImageSizeLabel = formatBytes(MAX_IMAGE_SIZE_BYTES);
+  const maxSourceImageSizeLabel = formatBytes(MAX_SOURCE_IMAGE_SIZE_BYTES);
 
   const handleFileChange = async (event: React.ChangeEvent<HTMLInputElement>) => {
-    const selected = Array.from(event.target.files ?? []);
-    const oversized = selected.filter((file) => file.size > MAX_IMAGE_SIZE_BYTES);
-    if (oversized.length) {
-      toast({
-        title: "Images too large",
-        description: `Each image must be ${maxImageSizeLabel} or smaller.`,
-        variant: "destructive",
-      });
-      event.target.value = "";
-      return;
-    }
-    if (selected.some((file) => !isAllowedImage(file))) {
+    const picked = Array.from(event.target.files ?? []);
+    event.target.value = "";
+    if (picked.some((file) => !isAllowedImage(file))) {
       toast({
         title: "Unsupported file type",
         description: "Only JPEG, PNG, WebP, or GIF images are allowed.",
         variant: "destructive",
       });
-      event.target.value = "";
       return;
     }
-    if (selected.length > MAX_PRODUCT_IMAGES) {
+    if (picked.length > MAX_PRODUCT_IMAGES) {
       toast({
         title: "Too many images",
         description: `You can upload up to ${MAX_PRODUCT_IMAGES} images per product.`,
         variant: "destructive",
       });
-      event.target.value = "";
+      return;
+    }
+    if (picked.some((file) => file.size > MAX_SOURCE_IMAGE_SIZE_BYTES)) {
+      toast({
+        title: "Images too large",
+        description: `Each image must be ${maxSourceImageSizeLabel} or smaller.`,
+        variant: "destructive",
+      });
+      return;
+    }
+    let selected: File[];
+    setIsOptimizing(true);
+    try {
+      selected = await Promise.all(picked.map(compressImage));
+    } catch (error) {
+      toast({
+        title: "Could not process images",
+        description: error instanceof Error ? error.message : "Try a different image.",
+        variant: "destructive",
+      });
+      return;
+    } finally {
+      setIsOptimizing(false);
+    }
+    // Only GIFs (which aren't re-encoded) can still be over the storage limit here.
+    if (selected.some((file) => file.size > MAX_IMAGE_SIZE_BYTES)) {
+      toast({
+        title: "Images too large",
+        description: `GIFs must be ${maxImageSizeLabel} or smaller.`,
+        variant: "destructive",
+      });
       return;
     }
     if (uploadedImages.length) {
@@ -207,19 +232,19 @@ export default function AdminAddProducts() {
     }
     const name = form.name.trim();
     const description = form.description.trim();
-    const priceValue = Number.parseFloat(form.price);
+    const priceValue = parsePriceInput(form.price);
     if (!name || !description || !form.category) {
       toast({
         title: "Missing details",
-        description: "Provide a product name, description, price, and category.",
+        description: "Provide a product name, description, and category.",
         variant: "destructive",
       });
       return;
     }
-    if (!Number.isFinite(priceValue) || priceValue < 0) {
+    if (priceValue === undefined) {
       toast({
         title: "Invalid price",
-        description: "Enter a valid price.",
+        description: "Enter a valid price, or leave it blank for price on request.",
         variant: "destructive",
       });
       return;
@@ -590,9 +615,7 @@ export default function AdminAddProducts() {
                   />
                 </div>
                 <div className="space-y-2">
-                  <Label htmlFor="product-price">
-                    Price <span className="text-red-500">*</span>
-                  </Label>
+                  <Label htmlFor="product-price">Price</Label>
                   <Input
                     id="product-price"
                     type="number"
@@ -600,7 +623,7 @@ export default function AdminAddProducts() {
                     step="0.01"
                     value={form.price}
                     onChange={(event) => setForm((prev) => ({ ...prev, price: event.target.value }))}
-                    placeholder="Enter price"
+                    placeholder="Leave blank for price on request"
                   />
                 </div>
                 <div className="space-y-2">
@@ -647,7 +670,9 @@ export default function AdminAddProducts() {
                     <button
                       type="button"
                       onClick={() => createFileInputRef.current?.click()}
-                      disabled={isCreating || isUploading || remainingSlots <= 0 || uploadedImages.length > 0}
+                      disabled={
+                        isCreating || isUploading || isOptimizing || remainingSlots <= 0 || uploadedImages.length > 0
+                      }
                       className="flex min-h-[96px] flex-col items-center justify-center gap-2 rounded-2xl border border-dashed border-charcoal/20 bg-cream/40 text-xs font-medium text-charcoal/80 transition hover:border-charcoal/40 hover:text-charcoal disabled:cursor-not-allowed disabled:opacity-50"
                     >
                       <span className="flex h-10 w-10 items-center justify-center rounded-full border border-charcoal/20 bg-white/80 text-charcoal">
@@ -663,20 +688,25 @@ export default function AdminAddProducts() {
                     accept="image/*"
                     multiple
                     onChange={handleFileChange}
-                    disabled={isCreating || isUploading || remainingSlots <= 0 || uploadedImages.length > 0}
+                    disabled={
+                      isCreating || isUploading || isOptimizing || remainingSlots <= 0 || uploadedImages.length > 0
+                    }
                     className="hidden"
                   />
                   <div className="flex flex-col gap-2 text-xs text-charcoal/80">
                     <span>Selected files: {selectedCount}</span>
                     <span>Remaining slots: {remainingSlots}</span>
-                    <span>Max size per image: {maxImageSizeLabel}</span>
+                    <span>
+                      Max size per image: {maxSourceImageSizeLabel} (photos are resized and compressed automatically)
+                    </span>
+                    {isOptimizing && <span>Optimizing images...</span>}
                   </div>
                   {createFiles.length > 0 && (
                     <div className="flex flex-wrap gap-2">
                       <Button
                         type="button"
                         variant="outline"
-                        disabled={isUploading || uploadedImages.length > 0}
+                        disabled={isUploading || isOptimizing || uploadedImages.length > 0}
                         onClick={handleUploadImages}
                       >
                         {isUploading ? "Uploading..." : "Upload"}

@@ -27,8 +27,12 @@ import { createGallerySignedUploadUrl, delay, removeGalleryObjects } from "@/lib
 import {
   MAX_IMAGE_SIZE_BYTES,
   MAX_PRODUCT_IMAGES,
+  MAX_SOURCE_IMAGE_SIZE_BYTES,
+  compressImage,
   PRODUCT_CATEGORIES,
   isAllowedImage,
+  parsePriceInput,
+  PRICE_ON_REQUEST_LABEL,
   safeStorageName,
   type ProductCategory,
   getPublicImageUrl,
@@ -44,7 +48,7 @@ type ProductRow = {
   id: string;
   name: string;
   description: string;
-  price: number;
+  price: number | null;
   category: ProductCategory;
   created_at: string;
   product_images?: ProductImageRow[];
@@ -139,7 +143,7 @@ export default function AdminManageProducts() {
     productId: string,
     name: string,
     description: string,
-    price: number,
+    price: number | null,
     category: ProductCategory,
   ) => {
     const trimmedName = name.trim();
@@ -152,7 +156,7 @@ export default function AdminManageProducts() {
       });
       return;
     }
-    if (!Number.isFinite(price) || price < 0) {
+    if (price !== null && (!Number.isFinite(price) || price < 0)) {
       toast({
         title: "Invalid price",
         description: "Enter a valid price.",
@@ -594,7 +598,7 @@ type AdminProductCardProps = {
     productId: string,
     name: string,
     description: string,
-    price: number,
+    price: number | null,
     category: ProductCategory,
   ) => Promise<void> | void;
   onDelete: (product: ProductRow) => Promise<void> | void;
@@ -632,10 +636,11 @@ function AdminProductCard({
   );
   const [name, setName] = useState(product.name);
   const [description, setDescription] = useState(product.description ?? "");
-  const [price, setPrice] = useState(product.price.toString());
+  const [price, setPrice] = useState(product.price?.toString() ?? "");
   const [category, setCategory] = useState<ProductCategory>(product.category);
   const [isSaving, setIsSaving] = useState(false);
   const [isUploading, setIsUploading] = useState(false);
+  const [isOptimizing, setIsOptimizing] = useState(false);
   const fileInputRef = useRef<HTMLInputElement | null>(null);
   const blockDialogCloseRef = useRef(false);
   const [confirmState, setConfirmState] = useState<ConfirmState>({
@@ -647,15 +652,16 @@ function AdminProductCard({
   const [uploadReview, setUploadReview] = useState<ProductImageRow[] | null>(null);
   const [isDiscarding, setIsDiscarding] = useState(false);
   const [isImageDialogOpen, setIsImageDialogOpen] = useState(false);
-  const isBusy = isSaving || isUploading;
+  const isBusy = isSaving || isUploading || isOptimizing;
   const isUploadDialog = confirmState.intent === "upload";
   const shouldBlockDialogClose = blockDialogCloseRef.current || (isUploadDialog && !!uploadReview);
   const maxImageSizeLabel = formatBytes(MAX_IMAGE_SIZE_BYTES);
+  const maxSourceImageSizeLabel = formatBytes(MAX_SOURCE_IMAGE_SIZE_BYTES);
 
   useEffect(() => {
     setName(product.name);
     setDescription(product.description ?? "");
-    setPrice(product.price.toString());
+    setPrice(product.price?.toString() ?? "");
     setCategory(product.category);
   }, [product.category, product.description, product.name, product.price]);
 
@@ -671,37 +677,57 @@ function AdminProductCard({
 
   const remainingSlots = MAX_PRODUCT_IMAGES - (product.product_images?.length ?? 0);
 
-  const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    const selected = Array.from(event.target.files ?? []);
-    const oversized = selected.filter((file) => file.size > MAX_IMAGE_SIZE_BYTES);
-    if (oversized.length) {
-      toast({
-        title: "Images too large",
-        description: `Each image must be ${maxImageSizeLabel} or smaller.`,
-        variant: "destructive",
-      });
-      event.target.value = "";
-      return;
-    }
-    if (selected.some((file) => !isAllowedImage(file))) {
+  const handleFileChange = async (event: React.ChangeEvent<HTMLInputElement>) => {
+    const picked = Array.from(event.target.files ?? []);
+    event.target.value = "";
+    if (picked.some((file) => !isAllowedImage(file))) {
       toast({
         title: "Unsupported file type",
         description: "Only JPEG, PNG, WebP, or GIF images are allowed.",
         variant: "destructive",
       });
-      event.target.value = "";
       return;
     }
-    if (selected.length > remainingSlots) {
+    if (picked.length > remainingSlots) {
       toast({
         title: "Too many images",
         description: `You can add ${remainingSlots} more image${remainingSlots === 1 ? "" : "s"}.`,
         variant: "destructive",
       });
-      event.target.value = "";
       return;
     }
-    if (!selected.length) return;
+    if (picked.some((file) => file.size > MAX_SOURCE_IMAGE_SIZE_BYTES)) {
+      toast({
+        title: "Images too large",
+        description: `Each image must be ${maxSourceImageSizeLabel} or smaller.`,
+        variant: "destructive",
+      });
+      return;
+    }
+    if (!picked.length) return;
+    let selected: File[];
+    setIsOptimizing(true);
+    try {
+      selected = await Promise.all(picked.map(compressImage));
+    } catch (error) {
+      toast({
+        title: "Could not process images",
+        description: error instanceof Error ? error.message : "Try a different image.",
+        variant: "destructive",
+      });
+      return;
+    } finally {
+      setIsOptimizing(false);
+    }
+    // Only GIFs (which aren't re-encoded) can still be over the storage limit here.
+    if (selected.some((file) => file.size > MAX_IMAGE_SIZE_BYTES)) {
+      toast({
+        title: "Images too large",
+        description: `GIFs must be ${maxImageSizeLabel} or smaller.`,
+        variant: "destructive",
+      });
+      return;
+    }
     setPendingFiles(selected);
     setUploadReview(null);
     setConfirmState({
@@ -747,7 +773,7 @@ function AdminProductCard({
   };
 
   const handleUpdateClick = async () => {
-    const priceValue = Number.parseFloat(price);
+    const priceValue = parsePriceInput(price);
     const trimmedName = name.trim();
     const trimmedDescription = description.trim();
     if (!trimmedName || !trimmedDescription || !category) {
@@ -758,10 +784,10 @@ function AdminProductCard({
       });
       return;
     }
-    if (!Number.isFinite(priceValue) || priceValue < 0) {
+    if (priceValue === undefined) {
       toast({
         title: "Invalid price",
-        description: "Enter a valid price.",
+        description: "Enter a valid price, or leave it blank for price on request.",
         variant: "destructive",
       });
       return;
@@ -825,7 +851,8 @@ function AdminProductCard({
             <CardTitle className="font-serif text-xl text-charcoal">{product.name}</CardTitle>
             <p className="text-xs uppercase tracking-[0.3em] text-charcoal/50">{product.category}</p>
             <p className="mt-2 text-sm text-charcoal/80">
-              Price: {currencyFormatter.format(product.price)}
+              Price:{" "}
+              {product.price !== null ? currencyFormatter.format(product.price) : PRICE_ON_REQUEST_LABEL}
             </p>
           </div>
           <Button variant="outline" onClick={handleDeleteProduct} disabled={isBusy}>
@@ -861,13 +888,12 @@ function AdminProductCard({
         </div>
         <div className="grid gap-4 md:grid-cols-2">
           <div className="space-y-2">
-            <Label>
-              Price <span className="text-red-500">*</span>
-            </Label>
+            <Label>Price</Label>
             <Input
               type="number"
               min="0"
               step="0.01"
+              placeholder="Leave blank for price on request"
               value={price}
               onChange={(event) => setPrice(event.target.value)}
             />
@@ -966,7 +992,10 @@ function AdminProductCard({
               />
               <div className="flex flex-col gap-2 text-xs text-charcoal/80">
                 <span>Remaining slots: {remainingSlots}</span>
-                <span>Max size per image: {maxImageSizeLabel}</span>
+                <span>
+                  Max size per image: {maxSourceImageSizeLabel} (photos are resized and compressed automatically)
+                </span>
+                {isOptimizing && <span>Optimizing images...</span>}
               </div>
             </div>
           </div>

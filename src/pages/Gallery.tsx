@@ -26,6 +26,7 @@ import {
   PRODUCT_CATEGORIES,
   type ProductCategory,
   getPublicImageUrl,
+  PRICE_ON_REQUEST_LABEL,
 } from "@/lib/gallery";
 
 type ProductImageRow = {
@@ -38,7 +39,7 @@ type ProductRow = {
   id: string;
   name: string;
   description: string;
-  price: number;
+  price: number | null;
   category: ProductCategory;
   created_at: string;
   product_images?: ProductImageRow[];
@@ -118,8 +119,14 @@ export default function Gallery() {
   const sortedProducts = useMemo(() => {
     const next = [...filteredProducts];
     next.sort((a, b) => {
-      if (sortOption === "price-asc") return a.price - b.price;
-      if (sortOption === "price-desc") return b.price - a.price;
+      if (sortOption !== "name") {
+        // Products without a price always sort after priced ones.
+        if (a.price === null || b.price === null) {
+          if (a.price !== b.price) return a.price === null ? 1 : -1;
+        } else if (a.price !== b.price) {
+          return sortOption === "price-asc" ? a.price - b.price : b.price - a.price;
+        }
+      }
       return a.name.localeCompare(b.name);
     });
     return next;
@@ -352,7 +359,9 @@ export default function Gallery() {
                       <div>
                         <h3 className="line-clamp-1 font-serif text-xl text-charcoal transition-colors duration-300 group-hover:text-gold-dark sm:text-2xl">{product.name}</h3>
                         <p className="mt-3 text-lg font-semibold text-gold-dark">
-                          {currencyFormatter.format(product.price)}
+                          {product.price !== null
+                            ? currencyFormatter.format(product.price)
+                            : PRICE_ON_REQUEST_LABEL}
                         </p>
                         <p className="mt-2 text-sm text-charcoal/80">
                           {product.category}
@@ -558,7 +567,9 @@ export default function Gallery() {
                 <div>
                   <p className="text-xs uppercase tracking-[0.3em] text-charcoal/80">Price</p>
                   <p className="mt-2 text-xl font-semibold text-charcoal sm:text-2xl">
-                    {currencyFormatter.format(detailsProduct.price)}
+                    {detailsProduct.price !== null
+                      ? currencyFormatter.format(detailsProduct.price)
+                      : PRICE_ON_REQUEST_LABEL}
                   </p>
                 </div>
                 <DialogFooter className="sm:justify-start">

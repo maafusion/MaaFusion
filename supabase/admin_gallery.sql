@@ -20,7 +20,7 @@ create table if not exists public.products (
   id uuid primary key default gen_random_uuid(),
   name text not null,
   description text not null default '',
-  price numeric(10,2) not null default 0,
+  price numeric(10,2),
   category public.product_category not null,
   created_at timestamptz not null default now(),
   created_by uuid default auth.uid()
@@ -28,7 +28,12 @@ create table if not exists public.products (
 
 alter table public.products
   add column if not exists description text not null default '',
-  add column if not exists price numeric(10,2) not null default 0;
+  add column if not exists price numeric(10,2);
+
+-- Price is optional: null means "price on request".
+alter table public.products
+  alter column price drop not null,
+  alter column price drop default;
 
 alter table public.products
   drop constraint if exists products_price_non_negative,
@@ -101,9 +106,10 @@ insert into storage.buckets (id, name, public)
 values ('gallery', 'gallery', true)
 on conflict (id) do nothing;
 
--- Constrain uploads: 200 KB (matches MAX_IMAGE_SIZE_BYTES) and image types only.
+-- Constrain uploads: 1 MB (matches MAX_IMAGE_SIZE_BYTES) and image types only.
+-- The admin UI compresses photos in the browser before upload, so this is a safety net.
 update storage.buckets
-set file_size_limit = 204800,
+set file_size_limit = 1048576,
     allowed_mime_types = array['image/jpeg', 'image/png', 'image/webp', 'image/gif']
 where id = 'gallery';
 
